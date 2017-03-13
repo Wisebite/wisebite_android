@@ -5,9 +5,10 @@ import android.content.Context;
 import com.firebase.client.DataSnapshot;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.utils.FirebaseRepository;
 
@@ -56,27 +57,27 @@ public class RestaurantRepository extends FirebaseRepository<Restaurant> {
             } else if (d.getKey().equals(NUMBER_OF_TABLES_REFERENCE)) {
                 restaurant.setNumberOfTables(d.getValue(Integer.class));
             } else if (d.getKey().equals(OPEN_TIMES_REFERENCE)) {
-                List<String> openTimes = new ArrayList<>();
+                Map<String, Object> openTimes = new LinkedHashMap<>();
                 for (DataSnapshot openTime : d.getChildren()) {
-                    openTimes.add(openTime.getKey());
+                    openTimes.put(openTime.getKey(), true);
                 }
                 restaurant.setOpenTimes(openTimes);
             } else if (d.getKey().equals(IMAGES_REFERENCE)) {
-                List<String> images = new ArrayList<>();
+                Map<String, Object> images = new LinkedHashMap<>();
                 for (DataSnapshot image : d.getChildren()) {
-                    images.add(image.getKey());
+                    images.put(image.getKey(), true);
                 }
                 restaurant.setImages(images);
             } else if (d.getKey().equals(MENUS_REFERENCE)) {
-                List<String> menus = new ArrayList<>();
+                Map<String, Object> menus = new LinkedHashMap<>();
                 for (DataSnapshot menu : d.getChildren()) {
-                    menus.add(menu.getKey());
+                    menus.put(menu.getKey(), true);
                 }
                 restaurant.setMenus(menus);
             } else if (d.getKey().equals(DISHES_REFERENCE)) {
-                List<String> dishes = new ArrayList<>();
+                Map<String, Object> dishes = new LinkedHashMap<>();
                 for (DataSnapshot dish : d.getChildren()) {
-                    dishes.add(dish.getKey());
+                    dishes.put(dish.getKey(), true);
                 }
                 restaurant.setDishes(dishes);
             }
@@ -88,4 +89,5 @@ public class RestaurantRepository extends FirebaseRepository<Restaurant> {
     public String getObjectReference() {
         return OBJECT_REFERENCE;
     }
+
 }

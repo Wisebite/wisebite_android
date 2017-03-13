@@ -5,9 +5,10 @@ import android.content.Context;
 import com.firebase.client.DataSnapshot;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.utils.FirebaseRepository;
 
@@ -43,9 +44,9 @@ public class MenuRepository extends FirebaseRepository<Menu> {
             } else if (d.getKey().equals(DESCRIPTION_REFERENCE)) {
                 menu.setDescription(d.getValue(String.class));
             } else if (d.getKey().equals(DISHES_REFERENCE)) {
-                List<String> dishes = new ArrayList<>();
+                Map<String, Object> dishes = new LinkedHashMap<>();
                 for (DataSnapshot dish : d.getChildren()) {
-                    dishes.add(dish.getKey());
+                    dishes.put(dish.getKey(), true);
                 }
                 menu.setDishes(dishes);
             }
@@ -57,4 +58,5 @@ public class MenuRepository extends FirebaseRepository<Menu> {
     public String getObjectReference() {
         return OBJECT_REFERENCE;
     }
+
 }

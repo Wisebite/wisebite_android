@@ -16,7 +16,7 @@ import lombok.experimental.Builder;
  */
 @Getter
 @Setter
-@AllArgsConstructor
+@AllArgsConstructor(suppressConstructorProperties = true)
 @NoArgsConstructor
 @ToString
 @Builder

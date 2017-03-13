@@ -46,4 +46,5 @@ public class DishRepository extends FirebaseRepository<Dish> {
     public String getObjectReference() {
         return OBJECT_REFERENCE;
     }
+
 }

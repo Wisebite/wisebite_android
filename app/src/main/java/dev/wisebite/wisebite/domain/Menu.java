@@ -18,7 +18,7 @@ import lombok.experimental.Builder;
  */
 @Getter
 @Setter
-@AllArgsConstructor
+@AllArgsConstructor(suppressConstructorProperties = true)
 @NoArgsConstructor
 @ToString
 @Builder
@@ -41,10 +41,4 @@ public class Menu implements Entity {
         this.id = id;
     }
 
-    public void setDishes(List<String> dishes) {
-        this.dishes = new LinkedHashMap<>();
-        for (String dishKey : dishes) {
-            this.dishes.put(dishKey, true);
-        }
-    }
 }

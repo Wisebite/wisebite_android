@@ -43,4 +43,5 @@ public class ImageRepository extends FirebaseRepository<Image> {
     public String getObjectReference() {
         return OBJECT_REFERENCE;
     }
+
 }

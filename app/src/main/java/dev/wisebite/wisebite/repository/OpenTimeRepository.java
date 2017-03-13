@@ -46,4 +46,5 @@ public class OpenTimeRepository extends FirebaseRepository<OpenTime> {
     public String getObjectReference() {
         return OBJECT_REFERENCE;
     }
+
 }
