@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Wisebite</string>
+    <string name="title_activity_create_restaurant">New Restaurant</string>
+    <string name="action_settings">Settings</string>
+    <string name="hint_name">Name</string>
+    <string name="hint_location">Location</string>
+    <string name="hint_phone">Phone</string>
+    <string name="hint_description">Description</string>
+    <string name="hint_website">Website</string>
+    <string name="hint_number_of_tables">Number of tables</string>
+    <string name="err_msg_name">Enter your restaurant\'s name</string>
+    <string name="err_msg_location">Enter your restaurant\'s location</string>
+    <string name="err_msg_phone">Enter your restaurant\'s phone</string>
+    <string name="err_msg_description">Enter your restaurant\'s description</string>
+    <string name="err_msg_website">Enter your restaurant\'s website</string>
+    <string name="err_msg_number_of_tables">Enter the number of tables of your restaurant</string>
+    <string name="title_activity_create_restaurant_open_times">CreateRestaurantOpenTimesActivity
+    </string>
 </resources>

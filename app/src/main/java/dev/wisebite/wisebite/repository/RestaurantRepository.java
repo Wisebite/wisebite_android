@@ -62,12 +62,6 @@ public class RestaurantRepository extends FirebaseRepository<Restaurant> {
                     openTimes.put(openTime.getKey(), true);
                 }
                 restaurant.setOpenTimes(openTimes);
-            } else if (d.getKey().equals(IMAGES_REFERENCE)) {
-                Map<String, Object> images = new LinkedHashMap<>();
-                for (DataSnapshot image : d.getChildren()) {
-                    images.put(image.getKey(), true);
-                }
-                restaurant.setImages(images);
             } else if (d.getKey().equals(MENUS_REFERENCE)) {
                 Map<String, Object> menus = new LinkedHashMap<>();
                 for (DataSnapshot menu : d.getChildren()) {

@@ -33,7 +33,6 @@ public class Restaurant implements Entity {
     private Integer numberOfTables;
 
     private Map<String, Object> openTimes = new LinkedHashMap<>();
-    private Map<String, Object> images = new LinkedHashMap<>();
     private Map<String, Object> menus = new LinkedHashMap<>();
     private Map<String, Object> dishes = new LinkedHashMap<>();
 
