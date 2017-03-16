@@ -108,7 +108,10 @@ public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
         Integer dayOfOpenTime = calendar.get(Calendar.DAY_OF_WEEK);
         for (OpenTime time : this.openTimes) {
             calendar.setTime(time.getStartDate());
-            if (calendar.get(Calendar.DAY_OF_WEEK) == dayOfOpenTime) return;
+            if (calendar.get(Calendar.DAY_OF_WEEK) == dayOfOpenTime) {
+                this.openTimes.remove(time);
+                break;
+            }
         }
 
         this.openTimes.add(openTime);

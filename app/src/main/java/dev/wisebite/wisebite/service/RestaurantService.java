@@ -1,5 +1,6 @@
 package dev.wisebite.wisebite.service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,5 +44,13 @@ public class RestaurantService extends Service<Restaurant> {
             openTimeMap.put(insertedId, true);
         }
         restaurant.setOpenTimes(openTimeMap);
+    }
+
+    public List<OpenTime> getOpenTimesOf(String restaurantId) {
+        List<OpenTime> openTimes = new ArrayList<>();
+        for (String id : repository.get(restaurantId).getOpenTimes().keySet()) {
+            openTimes.add(openTimeRepository.get(id));
+        }
+        return openTimes;
     }
 }

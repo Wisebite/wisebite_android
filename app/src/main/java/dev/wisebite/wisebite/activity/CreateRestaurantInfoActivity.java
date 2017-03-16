@@ -18,6 +18,7 @@ import java.io.Serializable;
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.ServiceFactory;
 
 public class CreateRestaurantInfoActivity extends AppCompatActivity {
 
@@ -26,14 +27,14 @@ public class CreateRestaurantInfoActivity extends AppCompatActivity {
     private TextInputLayout inputLayoutName, inputLayoutLocation, inputLayoutPhone,
             inputLayoutDescription, inputLayoutWebsite, inputLayoutNumberOfTables;
 
-    private RestaurantService restaurantService;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_restaurant_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ServiceFactory.getRestaurantService(CreateRestaurantInfoActivity.this);
 
         initializeForm();
         initializeSubmit();
