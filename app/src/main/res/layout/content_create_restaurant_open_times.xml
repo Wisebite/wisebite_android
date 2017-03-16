@@ -12,4 +12,210 @@
     tools:context="dev.wisebite.wisebite.activity.CreateRestaurantOpenTimesActivity"
     tools:showIn="@layout/activity_create_restaurant_open_times">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_create_restaurant_opentimes"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp">
+
+            <!-- Labels -->
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/monday_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/tuesday_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/wednesday_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/thursday_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/friday_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/saturday_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/sunday_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <!-- Date pickers -->
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/monday_date_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/time_picker_test"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"
+                        android:onClick="showTimePicker"/>
+
+                    <TextView
+                        android:id="@+id/tuesday_date_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/time_picker_test"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"
+                        android:onClick="showTimePicker"/>
+
+                    <TextView
+                        android:id="@+id/wednesday_date_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/time_picker_test"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"
+                        android:onClick="showTimePicker"/>
+
+                    <TextView
+                        android:id="@+id/thursday_date_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/time_picker_test"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"
+                        android:onClick="showTimePicker"/>
+
+                    <TextView
+                        android:id="@+id/friday_date_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/time_picker_test"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"
+                        android:onClick="showTimePicker"/>
+
+                    <TextView
+                        android:id="@+id/saturday_date_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/time_picker_test"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"
+                        android:onClick="showTimePicker"/>
+
+                    <TextView
+                        android:id="@+id/sunday_date_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_date_picker"
+                        android:layout_marginBottom="@dimen/margin_date_picker"
+                        android:text="@string/time_picker_test"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/time_picker_text"
+                        android:onClick="showTimePicker"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>
