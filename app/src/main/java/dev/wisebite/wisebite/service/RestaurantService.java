@@ -1,5 +1,9 @@
 package dev.wisebite.wisebite.service;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Menu;
@@ -32,4 +36,12 @@ public class RestaurantService extends Service<Restaurant> {
         this.openTimeRepository = openTimeRepository;
     }
 
+    public void addOpenTimesToRestaurant(Restaurant restaurant, List<OpenTime> openTimeList) {
+        Map<String, Object> openTimeMap = new LinkedHashMap<>();
+        for (OpenTime time : openTimeList) {
+            String insertedId = openTimeRepository.insert(time).getId();
+            openTimeMap.put(insertedId, true);
+        }
+        restaurant.setOpenTimes(openTimeMap);
+    }
 }

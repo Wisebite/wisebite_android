@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -12,8 +11,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.domain.OpenTime;
 import dev.wisebite.wisebite.domain.Restaurant;
+import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.Utils;
 
 public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
@@ -22,6 +28,9 @@ public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
 
     private Restaurant restaurant;
     private LayoutInflater inflater;
+
+    private List<OpenTime> openTimes;
+    private RestaurantService restaurantService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +45,15 @@ public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
             this.restaurant = (Restaurant) getIntent().getSerializableExtra(RESTAURANT);
         }
 
+        openTimes = new ArrayList<>();
+        restaurantService = ServiceFactory.getRestaurantService(CreateRestaurantOpenTimesActivity.this);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, restaurant.toString(), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                restaurantService.addOpenTimesToRestaurant(restaurant, openTimes);
+                restaurantService.save(restaurant);
             }
         });
     }
@@ -67,6 +79,7 @@ public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         TextView textView = (TextView) view;
                                         textView.setText(Utils.parseStartEndDate(firstTimePicker, secondTimePicker));
+                                        addOpenTimeToList(Utils.createOpenTimeByTimePicker(firstTimePicker, secondTimePicker, view.getId()));
                                     }
                                 })
                                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -86,5 +99,18 @@ public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
                 })
                 .show();
 
+    }
+
+    private void addOpenTimeToList(OpenTime openTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(openTime.getStartDate());
+
+        Integer dayOfOpenTime = calendar.get(Calendar.DAY_OF_WEEK);
+        for (OpenTime time : this.openTimes) {
+            calendar.setTime(time.getStartDate());
+            if (calendar.get(Calendar.DAY_OF_WEEK) == dayOfOpenTime) return;
+        }
+
+        this.openTimes.add(openTime);
     }
 }
