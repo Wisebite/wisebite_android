@@ -33,6 +33,7 @@ public class CreateRestaurantInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_restaurant_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ServiceFactory.getRestaurantService(CreateRestaurantInfoActivity.this);
 

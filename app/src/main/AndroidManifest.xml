@@ -16,14 +16,27 @@
             android:theme="@style/MyMaterialTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.CreateRestaurantOpenTimesActivity"
             android:label="@string/title_activity_create_restaurant_open_times"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:parentActivityName=".activity.CreateRestaurantInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.CreateRestaurantInfoActivity" />
+        </activity>
+        <activity
+            android:name=".activity.CreateRestaurantDishesActivity"
+            android:label="@string/title_activity_create_restaurant_dishes"
+            android:parentActivityName=".activity.CreateRestaurantOpenTimesActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.CreateRestaurantOpenTimesActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -14,8 +14,7 @@
     <string name="err_msg_description">Enter your restaurant\'s description</string>
     <string name="err_msg_website">Enter your restaurant\'s website</string>
     <string name="err_msg_number_of_tables">Enter the number of tables of your restaurant</string>
-    <string name="title_activity_create_restaurant_open_times">CreateRestaurantOpenTimesActivity
-    </string>
+    <string name="title_activity_create_restaurant_open_times">Add Open Times to Restaurant</string>
     <string name="title_create_restaurant_info">General information</string>
     <string name="title_create_restaurant_opentimes">Open times</string>
     <string name="monday_text">Monday</string>
@@ -30,4 +29,6 @@
     <string name="title_second_time_picker">End time</string>
     <string name="message_first_time_picker">Select a start time</string>
     <string name="message_second_time_picker">Select a end time</string>
+    <string name="title_activity_create_restaurant_dishes">Add Dishes and Menus to Restaurant</string>
+    <string name="title_create_restaurant_dishes">Restaurant dishes</string>
 </resources>

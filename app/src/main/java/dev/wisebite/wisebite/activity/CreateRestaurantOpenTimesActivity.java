@@ -2,6 +2,7 @@ package dev.wisebite.wisebite.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,7 @@ public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_restaurant_open_times);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         inflater = LayoutInflater.from(CreateRestaurantOpenTimesActivity.this);
 
@@ -53,7 +55,10 @@ public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 restaurantService.addOpenTimesToRestaurant(restaurant, openTimes);
-                restaurantService.save(restaurant);
+                Intent intent = new Intent(CreateRestaurantOpenTimesActivity.this, CreateRestaurantDishesActivity.class);
+                intent.putExtra(CreateRestaurantDishesActivity.RESTAURANT, restaurant);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
     }
