@@ -15,5 +15,7 @@
     <color name="colorRippleLabel">#66efecec</color>
     <color name="textColorLabel">#f2f1f1</color>
     <color name="shadowColor">#66aff198</color>
+    <color name="white">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
 
 </resources>
