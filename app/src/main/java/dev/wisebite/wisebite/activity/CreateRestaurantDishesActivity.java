@@ -28,14 +28,17 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
             this.restaurant = (Restaurant) getIntent().getSerializableExtra(RESTAURANT);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
+    public void typeDish(View view) {
+
+
+
+    }
+
+    public void redirectToMenuActivity(View view) {
+
+
+
+    }
 }

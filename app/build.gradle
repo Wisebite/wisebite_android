@@ -32,7 +32,7 @@ dependencies {
     compile 'com.google.firebase:firebase-core:9.6.1'
     compile 'com.firebaseui:firebase-ui:0.3.1'
     compile 'com.firebase:firebase-client-android:2.3.1'
-    compile 'org.jetbrains:annotations:13.0'
+    compile 'com.github.clans:fab:1.6.4'
     provided 'org.projectlombok:lombok:1.12.6'
 
 }
