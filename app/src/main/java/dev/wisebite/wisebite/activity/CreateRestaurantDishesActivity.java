@@ -2,6 +2,7 @@ package dev.wisebite.wisebite.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,8 @@ import dev.wisebite.wisebite.adapter.MenuAdapter;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.Restaurant;
+import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.Utils;
 
 public class CreateRestaurantDishesActivity extends AppCompatActivity {
@@ -41,7 +44,9 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
     private Restaurant restaurant;
     private LayoutInflater inflater;
     private FloatingActionMenu floatingActionMenu;
-    private TextView mockMenus, mockDishes;
+    private TextView mockMenus, mockDishes, done;
+
+    private RestaurantService restaurantService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,8 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        restaurantService = ServiceFactory.getRestaurantService(CreateRestaurantDishesActivity.this);
 
         inflater = LayoutInflater.from(CreateRestaurantDishesActivity.this);
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab);
@@ -65,6 +72,15 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
 
         initializeRecycleViewMenu();
         initializeRecycleViewDish();
+
+        done = (TextView) findViewById(R.id.done);
+        assert done != null;
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                done(v);
+            }
+        });
     }
 
     private void initializeRecycleViewMenu() {
@@ -124,8 +140,10 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
     }
 
     public void done(View view) {
-
-
-
+        restaurantService.addDishesAndMenusToRestaurant(restaurant, dishes, menus);
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

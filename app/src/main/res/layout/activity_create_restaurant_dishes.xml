@@ -34,8 +34,7 @@
                     android:textStyle="bold"
                     android:layout_marginEnd="16dp"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:onClick="done"/>
+                    android:layout_alignParentEnd="true"/>
 
             </RelativeLayout>
 

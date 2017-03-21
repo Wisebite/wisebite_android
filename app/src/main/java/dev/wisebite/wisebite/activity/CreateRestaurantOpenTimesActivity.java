@@ -54,6 +54,7 @@ public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                restaurantService.removeOpenTimesOf(restaurant.getId());
                 restaurantService.addOpenTimesToRestaurant(restaurant, openTimes);
                 Intent intent = new Intent(CreateRestaurantOpenTimesActivity.this, CreateRestaurantDishesActivity.class);
                 intent.putExtra(CreateRestaurantDishesActivity.RESTAURANT, restaurant);

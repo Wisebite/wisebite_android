@@ -46,11 +46,29 @@ public class RestaurantService extends Service<Restaurant> {
         restaurant.setOpenTimes(openTimeMap);
     }
 
-    public List<OpenTime> getOpenTimesOf(String restaurantId) {
-        List<OpenTime> openTimes = new ArrayList<>();
-        for (String id : repository.get(restaurantId).getOpenTimes().keySet()) {
-            openTimes.add(openTimeRepository.get(id));
+    public void removeOpenTimesOf(String restaurantId) {
+        Restaurant restaurant = repository.get(restaurantId);
+        if (restaurant == null || restaurant.getOpenTimes() == null || restaurant.getOpenTimes().isEmpty()) return;
+        for (String id : restaurant.getOpenTimes().keySet()) {
+            openTimeRepository.delete(id);
         }
-        return openTimes;
+    }
+
+    public void addDishesAndMenusToRestaurant(Restaurant restaurant, ArrayList<Dish> dishes, ArrayList<Menu> menus) {
+        Map<String, Object> dishesMap = new LinkedHashMap<>();
+        for (Dish dish : dishes) {
+            String insertedId = dishRepository.insert(dish).getId();
+            dishesMap.put(insertedId, true);
+        }
+        restaurant.setDishes(dishesMap);
+
+        Map<String, Object> menusMap = new LinkedHashMap<>();
+        for (Menu menu : menus) {
+            String insertedId = menuRepository.insert(menu).getId();
+            menusMap.put(insertedId, true);
+        }
+        restaurant.setMenus(menusMap);
+
+        repository.insert(restaurant);
     }
 }
