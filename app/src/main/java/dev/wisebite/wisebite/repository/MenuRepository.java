@@ -4,9 +4,7 @@ import android.content.Context;
 
 import com.firebase.client.DataSnapshot;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import dev.wisebite.wisebite.domain.Menu;
@@ -22,7 +20,9 @@ public class MenuRepository extends FirebaseRepository<Menu> {
     public static final String NAME_REFERENCE = "name";
     public static final String PRICE_REFERENCE = "price";
     public static final String DESCRIPTION_REFERENCE = "description";
-    public static final String DISHES_REFERENCE = "dishes";
+    public static final String MAIN_DISHES_REFERENCE = "mainDishes";
+    public static final String SECONDARY_DISHES_REFERENCE = "secondaryDishes";
+    public static final String OTHER_DISHES_REFERENCE = "otherDishes";
 
     /**
      * Constructor class
@@ -43,12 +43,24 @@ public class MenuRepository extends FirebaseRepository<Menu> {
                 menu.setPrice(d.getValue(Double.class));
             } else if (d.getKey().equals(DESCRIPTION_REFERENCE)) {
                 menu.setDescription(d.getValue(String.class));
-            } else if (d.getKey().equals(DISHES_REFERENCE)) {
+            } else if (d.getKey().equals(MAIN_DISHES_REFERENCE)) {
                 Map<String, Object> dishes = new LinkedHashMap<>();
                 for (DataSnapshot dish : d.getChildren()) {
                     dishes.put(dish.getKey(), true);
                 }
-                menu.setDishes(dishes);
+                menu.setMainDishes(dishes);
+            } else if (d.getKey().equals(SECONDARY_DISHES_REFERENCE)) {
+                Map<String, Object> dishes = new LinkedHashMap<>();
+                for (DataSnapshot dish : d.getChildren()) {
+                    dishes.put(dish.getKey(), true);
+                }
+                menu.setSecondaryDishes(dishes);
+            } else if (d.getKey().equals(OTHER_DISHES_REFERENCE)) {
+                Map<String, Object> dishes = new LinkedHashMap<>();
+                for (DataSnapshot dish : d.getChildren()) {
+                    dishes.put(dish.getKey(), true);
+                }
+                menu.setOtherDishes(dishes);
             }
         }
         return menu;

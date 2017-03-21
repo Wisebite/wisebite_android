@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="dev.wisebite.wisebite">
 
@@ -11,7 +10,43 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity
+            android:name=".activity.CreateRestaurantInfoActivity"
+            android:label="@string/title_activity_create_restaurant"
+            android:theme="@style/MyMaterialTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.CreateRestaurantOpenTimesActivity"
+            android:label="@string/title_activity_create_restaurant_open_times"
+            android:parentActivityName=".activity.CreateRestaurantInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.CreateRestaurantInfoActivity" />
+        </activity>
+        <activity
+            android:name=".activity.CreateRestaurantDishesActivity"
+            android:label="@string/title_activity_create_restaurant_dishes"
+            android:parentActivityName=".activity.CreateRestaurantOpenTimesActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.CreateRestaurantOpenTimesActivity" />
+        </activity>
+        <activity
+            android:name=".activity.CreateMenuActivity"
+            android:label="@string/title_activity_create_menu"
+            android:parentActivityName=".activity.CreateRestaurantDishesActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.CreateRestaurantDishesActivity" />
+        </activity>
     </application>
 
 </manifest>

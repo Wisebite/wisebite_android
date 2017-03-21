@@ -2,4 +2,8 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="time_picker_text">18sp</dimen>
+    <dimen name="margin_date_picker">10sp</dimen>
+    <dimen name="margin_info_menu">7sp</dimen>
 </resources>
