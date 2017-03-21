@@ -71,4 +71,27 @@ public class RestaurantService extends Service<Restaurant> {
 
         repository.insert(restaurant);
     }
+
+    public void addDishesToMenu(Menu menu, ArrayList<Dish> mainDishes, ArrayList<Dish> secondaryDishes, ArrayList<Dish> otherDishes) {
+        Map<String, Object> mainDishesMap = new LinkedHashMap<>();
+        for (Dish dish : mainDishes) {
+            String insertedId = dishRepository.insert(dish).getId();
+            mainDishesMap.put(insertedId, true);
+        }
+        menu.setMainDishes(mainDishesMap);
+
+        Map<String, Object> secondaryDishesMap = new LinkedHashMap<>();
+        for (Dish dish : secondaryDishes) {
+            String insertedId = dishRepository.insert(dish).getId();
+            secondaryDishesMap.put(insertedId, true);
+        }
+        menu.setSecondaryDishes(secondaryDishesMap);
+
+        Map<String, Object> otherDishesMap = new LinkedHashMap<>();
+        for (Dish dish : otherDishes) {
+            String insertedId = dishRepository.insert(dish).getId();
+            otherDishesMap.put(insertedId, true);
+        }
+        menu.setOtherDishes(otherDishesMap);
+    }
 }

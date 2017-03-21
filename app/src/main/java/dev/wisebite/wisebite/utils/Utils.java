@@ -9,6 +9,7 @@ import com.firebase.client.Firebase;
 import java.util.Calendar;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.OpenTime;
 
 /**
@@ -16,6 +17,8 @@ import dev.wisebite.wisebite.domain.OpenTime;
  * @author albert
  */
 public class Utils {
+
+    private static Menu tempMenu;
 
     public static String generateId() {
         return new Firebase("https://wisebite-f7a53.firebaseio.com/").push().getKey();
@@ -86,5 +89,13 @@ public class Utils {
             default:
                 return 0;
         }
+    }
+
+    public static void setTempMenu(Menu menu) {
+        tempMenu = menu;
+    }
+
+    public static Menu getTempMenu() {
+        return tempMenu;
     }
 }

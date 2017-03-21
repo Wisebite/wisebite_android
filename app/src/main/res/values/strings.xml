@@ -43,4 +43,17 @@
     <string name="mock_dishes">No dishes yet.</string>
     <string name="mock_menus">No menus yet.</string>
     <string name="done">Done</string>
+    <string name="title_activity_create_menu">CreateMenuActivity</string>
+    <string name="big_title_menu">Menu</string>
+    <string name="main_dishes_title">Main dishes</string>
+    <string name="secondary_dishes_title">Secondary dishes</string>
+    <string name="mock_main_dishes">No main dishes yet.</string>
+    <string name="mock_secondary_dishes">No secondary dishes yet.</string>
+    <string name="other_dishes_title">Other dishes</string>
+    <string name="mock_other_dishes">No other dishes yet.</string>
+    <string name="title_menu_form">Type menu information</string>
+    <string name="info_menu_title">Information</string>
+    <string name="name_test">Vegetarian Menu</string>
+    <string name="description_test">Green, very green</string>
+    <string name="price_test">10.50 €</string>
 </resources>

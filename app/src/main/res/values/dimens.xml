@@ -5,4 +5,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="time_picker_text">18sp</dimen>
     <dimen name="margin_date_picker">10sp</dimen>
+    <dimen name="margin_info_menu">7sp</dimen>
 </resources>

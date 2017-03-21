@@ -16,6 +16,7 @@
             android:theme="@style/MyMaterialTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -36,6 +37,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.wisebite.wisebite.activity.CreateRestaurantOpenTimesActivity" />
+        </activity>
+        <activity
+            android:name=".activity.CreateMenuActivity"
+            android:label="@string/title_activity_create_menu"
+            android:parentActivityName=".activity.CreateRestaurantDishesActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.CreateRestaurantDishesActivity" />
         </activity>
     </application>
 

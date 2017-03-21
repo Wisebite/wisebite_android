@@ -1,8 +1,10 @@
 package dev.wisebite.wisebite.activity;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -44,7 +47,8 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
     private Restaurant restaurant;
     private LayoutInflater inflater;
     private FloatingActionMenu floatingActionMenu;
-    private TextView mockMenus, mockDishes, done;
+    private TextView mockMenus;
+    private TextView mockDishes;
 
     private RestaurantService restaurantService;
 
@@ -73,7 +77,7 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
         initializeRecycleViewMenu();
         initializeRecycleViewDish();
 
-        done = (TextView) findViewById(R.id.done);
+        TextView done = (TextView) findViewById(R.id.done);
         assert done != null;
         done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +85,21 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
                 done(v);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Menu tempMenu = Utils.getTempMenu();
+        if (tempMenu != null) {
+            Log.d("onResume DishesActivity", tempMenu.toString());
+            menus.add(tempMenu);
+            if (menus.size() != 0) {
+                mockMenus.setVisibility(View.GONE);
+            }
+            menuAdapter.notifyDataSetChanged();
+            Utils.setTempMenu(null);
+        }
     }
 
     private void initializeRecycleViewMenu() {
@@ -135,15 +154,14 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
 
     public void redirectToMenuActivity(View view) {
         floatingActionMenu.close(true);
-
-
+        Intent intent = new Intent(CreateRestaurantDishesActivity.this, CreateMenuActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void done(View view) {
         restaurantService.addDishesAndMenusToRestaurant(restaurant, dishes, menus);
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        finishAndRemoveTask();
     }
 }
