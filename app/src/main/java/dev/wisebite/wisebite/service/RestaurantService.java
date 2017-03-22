@@ -9,6 +9,8 @@ import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.OpenTime;
+import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.utils.Repository;
 import dev.wisebite.wisebite.utils.Service;
@@ -24,17 +26,23 @@ public class RestaurantService extends Service<Restaurant> {
     private final Repository<Dish> dishRepository;
     private final Repository<Image> imageRepository;
     private final Repository<OpenTime> openTimeRepository;
+    private final Repository<Order> orderRepository;
+    private final Repository<OrderItem> orderItemRepository;
 
     public RestaurantService(Repository<Restaurant> repository,
                              Repository<Menu> menuRepository,
                              Repository<Dish> dishRepository,
                              Repository<Image> imageRepository,
-                             Repository<OpenTime> openTimeRepository) {
+                             Repository<OpenTime> openTimeRepository,
+                             Repository<Order> orderRepository,
+                             Repository<OrderItem> orderItemRepository) {
         super(repository);
         this.menuRepository = menuRepository;
         this.dishRepository = dishRepository;
         this.imageRepository = imageRepository;
         this.openTimeRepository = openTimeRepository;
+        this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     public void addOpenTimesToRestaurant(Restaurant restaurant, List<OpenTime> openTimeList) {
