@@ -21,7 +21,6 @@ import dev.wisebite.wisebite.utils.Service;
  */
 public class RestaurantService extends Service<Restaurant> {
 
-    public static final String TAG = RestaurantService.class.getSimpleName();
     private final Repository<Menu> menuRepository;
     private final Repository<Dish> dishRepository;
     private final Repository<Image> imageRepository;
@@ -101,5 +100,75 @@ public class RestaurantService extends Service<Restaurant> {
             otherDishesMap.put(insertedId, true);
         }
         menu.setOtherDishes(otherDishesMap);
+    }
+
+    public double getPriceOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        double total = 0.0;
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem == null) return 100.0;
+            total += dishRepository.get(orderItem.getDishId()).getPrice();
+        }
+
+        return total;
+    }
+
+    public double getReadyOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        double total = order.getOrderItems().size();
+        double ready = 0.0;
+
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem == null) return 100.0;
+            if (orderItem.isReady()) ++ready;
+        }
+
+        return (ready/total)*100.0;
+    }
+
+    public double getDeliveredOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        double total = order.getOrderItems().size();
+        double delivered = 0.0;
+
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem == null) return 100.0;
+            if (orderItem.isDelivered()) ++delivered;
+        }
+
+        return (delivered/total)*100.0;
+    }
+
+    public double getPaidOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        double total = getPriceOfOrder(id);
+        double paid = 0.0;
+
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem == null) return 100.0;
+            if (orderItem.isPaid()) paid += dishRepository.get(orderItem.getDishId()).getPrice();
+        }
+
+        return (paid/total)*100.0;
+    }
+
+    public ArrayList<Order> getActiveOrders() {
+        ArrayList<Order> orders = new ArrayList<>();
+        for (Order order : orderRepository.all()) {
+            if (getPaidOfOrder(order.getId()) < 100.0) orders.add(order);
+        }
+        return orders;
     }
 }

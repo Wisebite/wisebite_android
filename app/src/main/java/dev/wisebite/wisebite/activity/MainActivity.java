@@ -1,8 +1,12 @@
 package dev.wisebite.wisebite.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,11 +16,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.adapter.OrderAdapter;
+import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.ServiceFactory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private RestaurantService restaurantService;
+
+    private NavigationView navigationView;
+
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +40,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        restaurantService = ServiceFactory.getRestaurantService(MainActivity.this);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,8 +57,15 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
+
+        setUserInfo(navigationView);
+
+        initFragment(R.layout.content_active_orders);
+        initializeActiveOrders();
+
     }
 
     @Override
@@ -50,7 +74,10 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Intent i = new Intent();
+            i.setAction(Intent.ACTION_MAIN);
+            i.addCategory(Intent.CATEGORY_HOME);
+            this.startActivity(i);
         }
     }
 
@@ -82,22 +109,38 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_active_orders) {
+            initFragment(R.layout.content_active_orders);
+            initializeActiveOrders();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void setUserInfo(NavigationView navigationView) {
+        // TODO set user info when we have user model
+    }
+
+    private void initFragment(int id) {
+        LayoutInflater inflater = getLayoutInflater();
+        View v;
+        if (id != -1) v = inflater.inflate(id, null);
+        else v = new View(getApplicationContext());
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.main_frame_layout);
+        frameLayout.removeAllViews();
+        frameLayout.addView(v);
+    }
+
+    private void initializeActiveOrders() {
+        setTitle(getResources().getString(R.string.active_orders));
+
+        OrderAdapter orderAdapter = new OrderAdapter(restaurantService.getActiveOrders(), restaurantService);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.active_order_list);
+        assert recyclerView != null;
+        recyclerView.setAdapter(orderAdapter);
+    }
+
 }

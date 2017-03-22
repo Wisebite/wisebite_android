@@ -22,7 +22,7 @@ public class OrderItem implements Entity {
 
     private String id;
     private String differentFeature;
-    private boolean payed;
+    private boolean paid;
     private boolean ready;
     private boolean delivered;
     private String dishId;

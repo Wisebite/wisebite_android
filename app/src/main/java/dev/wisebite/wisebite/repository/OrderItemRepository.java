@@ -15,7 +15,7 @@ public class OrderItemRepository extends FirebaseRepository<OrderItem> {
 
     public static final String OBJECT_REFERENCE = "orderItem";
     public static final String DIFFERENT_FEATURE_REFERENCE = "differentFeature";
-    public static final String PAYED_REFERENCE = "payed";
+    public static final String PAYED_REFERENCE = "paid";
     public static final String READY_REFERENCE = "ready";
     public static final String DELIVERED_REFERENCE = "delivered";
     public static final String DISH_ID_REFERENCE = "dishId";
@@ -36,7 +36,7 @@ public class OrderItemRepository extends FirebaseRepository<OrderItem> {
             if (d.getKey().equals(DIFFERENT_FEATURE_REFERENCE)) {
                 orderItem.setDifferentFeature(d.getValue(String.class));
             } else if (d.getKey().equals(PAYED_REFERENCE)) {
-                orderItem.setPayed(d.getValue(Boolean.class));
+                orderItem.setPaid(d.getValue(Boolean.class));
             } else if (d.getKey().equals(READY_REFERENCE)) {
                 orderItem.setReady(d.getValue(Boolean.class));
             } else if (d.getKey().equals(DELIVERED_REFERENCE)) {
