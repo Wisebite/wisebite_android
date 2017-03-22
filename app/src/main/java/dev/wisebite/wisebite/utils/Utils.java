@@ -6,6 +6,7 @@ import android.widget.TimePicker;
 
 import com.firebase.client.Firebase;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 import dev.wisebite.wisebite.R;
@@ -97,5 +98,11 @@ public class Utils {
 
     public static Menu getTempMenu() {
         return tempMenu;
+    }
+
+    public static String toStringWithTwoDecimals(double d) {
+        d = Math.round(d * 100);
+        d = d/100;
+        return String.valueOf(d);
     }
 }

@@ -6,6 +6,8 @@ import dev.wisebite.wisebite.repository.DishRepository;
 import dev.wisebite.wisebite.repository.ImageRepository;
 import dev.wisebite.wisebite.repository.MenuRepository;
 import dev.wisebite.wisebite.repository.OpenTimeRepository;
+import dev.wisebite.wisebite.repository.OrderItemRepository;
+import dev.wisebite.wisebite.repository.OrderRepository;
 import dev.wisebite.wisebite.repository.RestaurantRepository;
 
 /**
@@ -23,7 +25,9 @@ public final class ServiceFactory {
                     new MenuRepository(context),
                     new DishRepository(context),
                     new ImageRepository(context),
-                    new OpenTimeRepository(context));
+                    new OpenTimeRepository(context),
+                    new OrderRepository(context),
+                    new OrderItemRepository(context));
         return restaurantService;
     }
 

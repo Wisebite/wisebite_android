@@ -162,6 +162,8 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void done(View view) {
         restaurantService.addDishesAndMenusToRestaurant(restaurant, dishes, menus);
-        finishAndRemoveTask();
+        Intent intent = new Intent(CreateRestaurantDishesActivity.this, MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

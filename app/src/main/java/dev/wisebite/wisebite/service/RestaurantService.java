@@ -1,14 +1,19 @@
 package dev.wisebite.wisebite.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.wisebite.wisebite.comparator.OrderComparator;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.OpenTime;
+import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.utils.Repository;
 import dev.wisebite.wisebite.utils.Service;
@@ -19,22 +24,27 @@ import dev.wisebite.wisebite.utils.Service;
  */
 public class RestaurantService extends Service<Restaurant> {
 
-    public static final String TAG = RestaurantService.class.getSimpleName();
     private final Repository<Menu> menuRepository;
     private final Repository<Dish> dishRepository;
     private final Repository<Image> imageRepository;
     private final Repository<OpenTime> openTimeRepository;
+    private final Repository<Order> orderRepository;
+    private final Repository<OrderItem> orderItemRepository;
 
     public RestaurantService(Repository<Restaurant> repository,
                              Repository<Menu> menuRepository,
                              Repository<Dish> dishRepository,
                              Repository<Image> imageRepository,
-                             Repository<OpenTime> openTimeRepository) {
+                             Repository<OpenTime> openTimeRepository,
+                             Repository<Order> orderRepository,
+                             Repository<OrderItem> orderItemRepository) {
         super(repository);
         this.menuRepository = menuRepository;
         this.dishRepository = dishRepository;
         this.imageRepository = imageRepository;
         this.openTimeRepository = openTimeRepository;
+        this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     public void addOpenTimesToRestaurant(Restaurant restaurant, List<OpenTime> openTimeList) {
@@ -93,5 +103,76 @@ public class RestaurantService extends Service<Restaurant> {
             otherDishesMap.put(insertedId, true);
         }
         menu.setOtherDishes(otherDishesMap);
+    }
+
+    public double getPriceOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        double total = 0.0;
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem == null) return 100.0;
+            total += dishRepository.get(orderItem.getDishId()).getPrice();
+        }
+
+        return total;
+    }
+
+    public double getReadyOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        double total = order.getOrderItems().size();
+        double ready = 0.0;
+
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem == null) return 100.0;
+            if (orderItem.isReady()) ++ready;
+        }
+
+        return (ready/total)*100.0;
+    }
+
+    public double getDeliveredOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        double total = order.getOrderItems().size();
+        double delivered = 0.0;
+
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem == null) return 100.0;
+            if (orderItem.isDelivered()) ++delivered;
+        }
+
+        return (delivered/total)*100.0;
+    }
+
+    public double getPaidOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        double total = getPriceOfOrder(id);
+        double paid = 0.0;
+
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem == null) return 100.0;
+            if (orderItem.isPaid()) paid += dishRepository.get(orderItem.getDishId()).getPrice();
+        }
+
+        return (paid/total)*100.0;
+    }
+
+    public ArrayList<Order> getActiveOrders() {
+        ArrayList<Order> orders = new ArrayList<>();
+        for (Order order : orderRepository.all()) {
+            if (getPaidOfOrder(order.getId()) < 100.0) orders.add(order);
+        }
+        Collections.sort(orders, new OrderComparator());
+        return orders;
     }
 }

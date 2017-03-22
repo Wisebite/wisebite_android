@@ -56,4 +56,16 @@
     <string name="name_test">Vegetarian Menu</string>
     <string name="description_test">Green, very green</string>
     <string name="price_test">10.50 €</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="active_orders">Active orders</string>
+    <string name="table_number_test">Table 23</string>
+    <string name="price_order_test">15.26 €</string>
+    <string name="ready_test">Ready: 80%</string>
+    <string name="delivered_test">Delivered: 65%</string>
+    <string name="payed_test">Paid: 0%</string>
+    <string name="user_image_content">User image</string>
+    <string name="user_image_test">Juan Palomo</string>
 </resources>
