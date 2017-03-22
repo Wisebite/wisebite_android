@@ -1,10 +1,13 @@
 package dev.wisebite.wisebite.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.wisebite.wisebite.comparator.OrderComparator;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Menu;
@@ -169,6 +172,7 @@ public class RestaurantService extends Service<Restaurant> {
         for (Order order : orderRepository.all()) {
             if (getPaidOfOrder(order.getId()) < 100.0) orders.add(order);
         }
+        Collections.sort(orders, new OrderComparator());
         return orders;
     }
 }
