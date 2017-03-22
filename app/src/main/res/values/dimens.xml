@@ -6,4 +6,7 @@
     <dimen name="time_picker_text">18sp</dimen>
     <dimen name="margin_date_picker">10sp</dimen>
     <dimen name="margin_info_menu">7sp</dimen>
+    <dimen name="nav_header_vertical_spacing">15sp</dimen>
+    <dimen name="nav_header_height">15sp</dimen>
+    <dimen name="navigational_activity_horizontal_margin">64sp</dimen>
 </resources>

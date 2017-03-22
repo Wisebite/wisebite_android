@@ -56,4 +56,8 @@
     <string name="name_test">Vegetarian Menu</string>
     <string name="description_test">Green, very green</string>
     <string name="price_test">10.50 €</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
