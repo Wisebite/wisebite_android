@@ -3,6 +3,7 @@ package dev.wisebite.wisebite.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -185,5 +186,24 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
         return dishes;
+    }
+
+    public void addOrder(ArrayList<Dish> selectedDishes, Integer tableNumber) {
+        Map<String, Object> orderItems = new LinkedHashMap<>();
+        for (Dish dish : selectedDishes) {
+            String insertedId = orderItemRepository.insert(OrderItem.builder()
+                                                                    .dishId(dish.getId())
+                                                                    .ready(false)
+                                                                    .delivered(false)
+                                                                    .paid(false)
+                                                                    .build()).getId();
+            orderItems.put(insertedId, true);
+        }
+        orderRepository.insert(Order.builder()
+                .date(new Date())
+                .tableNumber(tableNumber)
+                .lastDate(new Date())
+                .orderItems(orderItems)
+                .build());
     }
 }

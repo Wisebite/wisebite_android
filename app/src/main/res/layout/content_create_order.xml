@@ -29,10 +29,20 @@
             android:textStyle="bold"/>
 
         <TextView
+            android:id="@+id/table_number_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_table_number_order"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginStart="5dp"
+            android:gravity="start"
+            android:textSize="12sp"/>
+
+        <TextView
             android:id="@+id/total_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/price_test"
+            android:text="@string/price_test_zero"
             android:textColor="@color/black"
             android:gravity="end"
             android:textSize="18sp"/>

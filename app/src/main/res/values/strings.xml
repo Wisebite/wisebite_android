@@ -72,4 +72,11 @@
     <string name="title_create_order">New order</string>
     <string name="name_dish_test">Fish</string>
     <string name="main">Main</string>
+    <string name="minus">-</string>
+    <string name="zero">0</string>
+    <string name="plus">+</string>
+    <string name="price_test_zero">0.00 €</string>
+    <string name="form_hint_table_number">Table number</string>
+    <string name="title_table_number_form">Type table number</string>
+    <string name="title_table_number_order">at table ?</string>
 </resources>

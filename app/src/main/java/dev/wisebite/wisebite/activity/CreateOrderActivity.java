@@ -1,18 +1,23 @@
 package dev.wisebite.wisebite.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.adapter.DishAdapter;
 import dev.wisebite.wisebite.adapter.OrderItemDishAdapter;
+import dev.wisebite.wisebite.domain.Dish;
+import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 
@@ -21,7 +26,12 @@ public class CreateOrderActivity extends AppCompatActivity {
     private static final String RESTAURANT_MOCK_ID = "-KfvAq-HC6SSapHSBzsm";
     private OrderItemDishAdapter orderItemDishAdapter;
 
+    private LayoutInflater inflater;
+
     private RestaurantService restaurantService;
+    private TextView totalPriceView;
+    private ArrayList<Dish> selectedDishes;
+    private Integer tableNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +40,8 @@ public class CreateOrderActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        inflater = LayoutInflater.from(CreateOrderActivity.this);
 
         restaurantService = ServiceFactory.getRestaurantService(CreateOrderActivity.this);
 
@@ -44,10 +56,47 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         initializeDishesItems();
 
+        showTableNumberForm();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(android.R.anim.slide_out_right, android.R.anim.slide_in_left);
+    }
+
+    private void showTableNumberForm() {
+        final LinearLayout tableNumberForm = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.table_number_form), null);
+        new AlertDialog.Builder(CreateOrderActivity.this)
+                .setTitle(getResources().getString(R.string.title_table_number_form))
+                .setView(tableNumberForm)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TextView tableNumberView = (TextView) tableNumberForm.findViewById(R.id.form_number);
+                        tableNumber = Integer.valueOf(tableNumberView.getText().toString());
+
+                        TextView titleTableNumber = (TextView) findViewById(R.id.table_number_title);
+                        titleTableNumber.setText(String.valueOf("at table " + tableNumber));
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onBackPressed();
+                    }
+                })
+                .show();
+
     }
 
     private void initializeDishesItems() {
-        orderItemDishAdapter = new OrderItemDishAdapter(restaurantService.getDishesOf(RESTAURANT_MOCK_ID));
+        selectedDishes = new ArrayList<>();
+        totalPriceView = (TextView) findViewById(R.id.total_price);
+        orderItemDishAdapter = new OrderItemDishAdapter(restaurantService.getDishesOf(RESTAURANT_MOCK_ID),
+                                                        totalPriceView,
+                                                        selectedDishes);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -56,7 +105,8 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     private void done(View v) {
-
+        restaurantService.addOrder(selectedDishes, tableNumber);
+        finish();
     }
 
 }
