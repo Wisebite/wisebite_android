@@ -175,4 +175,15 @@ public class RestaurantService extends Service<Restaurant> {
         Collections.sort(orders, new OrderComparator());
         return orders;
     }
+
+    public ArrayList<Dish> getDishesOf(String restaurantId) {
+        ArrayList<Dish> dishes = new ArrayList<>();
+        Restaurant restaurant = repository.get(restaurantId);
+        if (restaurant != null) {
+            for (String dishId : restaurant.getDishes().keySet()) {
+                dishes.add(dishRepository.get(dishId));
+            }
+        }
+        return dishes;
+    }
 }

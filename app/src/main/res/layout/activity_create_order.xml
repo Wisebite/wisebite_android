@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.CreateRestaurantInfoActivity">
+    tools:context="dev.wisebite.wisebite.activity.CreateOrderActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,10 +24,10 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/main"
+                    android:id="@+id/done"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/main"
+                    android:text="@string/done"
                     android:textSize="20sp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
@@ -41,14 +41,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_create_restaurant_info" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_arrow_right" />
+    <include layout="@layout/content_create_order" />
 
 </android.support.design.widget.CoordinatorLayout>

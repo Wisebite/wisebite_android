@@ -68,4 +68,8 @@
     <string name="payed_test">Paid: 0%</string>
     <string name="user_image_content">User image</string>
     <string name="user_image_test">Juan Palomo</string>
+    <string name="title_activity_create_order">CreateOrderActivity</string>
+    <string name="title_create_order">New order</string>
+    <string name="name_dish_test">Fish</string>
+    <string name="main">Main</string>
 </resources>
