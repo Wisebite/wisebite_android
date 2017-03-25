@@ -17,5 +17,7 @@
     <color name="shadowColor">#66aff198</color>
     <color name="white">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+    <color name="green">#4aba1d</color>
+    <color name="red">#da2929</color>
 
 </resources>

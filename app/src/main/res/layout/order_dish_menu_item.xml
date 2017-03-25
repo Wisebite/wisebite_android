@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.75">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:text="@string/name_dish_test"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:id="@+id/different_feature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.25">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_margin="10dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end">
+
+                    <Button
+                        android:id="@+id/minus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:text="@string/minus"
+                        android:background="@drawable/rounded_button_red"/>
+
+                    <TextView
+                        android:id="@+id/counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textColor="@color/black"
+                        android:text="@string/zero"/>
+
+                    <Button
+                        android:id="@+id/plus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:text="@string/plus"
+                        android:background="@drawable/rounded_button_green"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

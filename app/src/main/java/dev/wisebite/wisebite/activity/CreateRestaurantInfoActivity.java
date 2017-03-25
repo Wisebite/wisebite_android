@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
@@ -39,6 +40,20 @@ public class CreateRestaurantInfoActivity extends AppCompatActivity {
         initializeForm();
         initializeSubmit();
 
+        TextView main = (TextView) findViewById(R.id.main);
+        assert main != null;
+        main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main(v);
+            }
+        });
+
+    }
+
+    private void main(View v) {
+        Intent intent = new Intent(CreateRestaurantInfoActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void initializeForm() {

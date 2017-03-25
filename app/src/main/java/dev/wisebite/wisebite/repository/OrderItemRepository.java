@@ -19,6 +19,7 @@ public class OrderItemRepository extends FirebaseRepository<OrderItem> {
     public static final String READY_REFERENCE = "ready";
     public static final String DELIVERED_REFERENCE = "delivered";
     public static final String DISH_ID_REFERENCE = "dishId";
+    public static final String MENU_ID_REFERENCE = "menuId";
 
     /**
      * Constructor class
@@ -43,6 +44,8 @@ public class OrderItemRepository extends FirebaseRepository<OrderItem> {
                 orderItem.setDelivered(d.getValue(Boolean.class));
             } else if (d.getKey().equals(DISH_ID_REFERENCE)) {
                 orderItem.setDishId(d.getValue(String.class));
+            } else if (d.getKey().equals(MENU_ID_REFERENCE)) {
+                orderItem.setMenuId(d.getValue(String.class));
             }
         }
         return orderItem;

@@ -68,4 +68,16 @@
     <string name="payed_test">Paid: 0%</string>
     <string name="user_image_content">User image</string>
     <string name="user_image_test">Juan Palomo</string>
+    <string name="title_activity_create_order">CreateOrderActivity</string>
+    <string name="title_create_order">New order</string>
+    <string name="name_dish_test">Fish</string>
+    <string name="main">Main</string>
+    <string name="minus">-</string>
+    <string name="zero">0</string>
+    <string name="plus">+</string>
+    <string name="price_test_zero">0.00 €</string>
+    <string name="form_hint_table_number">Table number</string>
+    <string name="title_table_number_form">Type table number</string>
+    <string name="title_table_number_order">at table ?</string>
+    <string name="title_menu_dishes_form">Select your dishes</string>
 </resources>
