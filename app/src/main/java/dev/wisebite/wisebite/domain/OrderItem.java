@@ -26,6 +26,7 @@ public class OrderItem implements Entity {
     private boolean ready;
     private boolean delivered;
     private String dishId;
+    private String menuId;
 
     @Override
     public String getId() {

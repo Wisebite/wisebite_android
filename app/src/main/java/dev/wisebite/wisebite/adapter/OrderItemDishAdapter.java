@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
@@ -35,7 +33,7 @@ public class OrderItemDishAdapter extends RecyclerView.Adapter<OrderItemDishAdap
     @Override
     public OrderItemDishHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.order_dish_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.order_dish_menu_item, parent, false);
         return new OrderItemDishHolder(view);
     }
 

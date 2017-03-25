@@ -62,8 +62,29 @@
         android:textStyle="bold"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_order_item"
+        android:id="@+id/recycler_view_order_item_dish"
         android:layout_below="@id/dish_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/menu_title"
+        android:layout_below="@id/recycler_view_order_item_dish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="10sp"
+        android:text="@string/menu_title"
+        android:textColor="@color/colorPrimaryDark"
+        android:gravity="start"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_order_item_menu"
+        android:layout_below="@id/menu_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

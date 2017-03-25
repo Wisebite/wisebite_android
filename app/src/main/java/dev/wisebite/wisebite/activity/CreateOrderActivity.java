@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.OrderItemDishAdapter;
+import dev.wisebite.wisebite.adapter.OrderItemMenuAdapter;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.service.RestaurantService;
@@ -25,12 +26,14 @@ public class CreateOrderActivity extends AppCompatActivity {
 
     private static final String RESTAURANT_MOCK_ID = "-KfvAq-HC6SSapHSBzsm";
     private OrderItemDishAdapter orderItemDishAdapter;
+    private OrderItemMenuAdapter orderItemMenuAdapter;
 
     private LayoutInflater inflater;
 
     private RestaurantService restaurantService;
     private TextView totalPriceView;
     private ArrayList<Dish> selectedDishes;
+    private ArrayList<Menu> selectedMenusDishes;
     private Integer tableNumber;
 
     @Override
@@ -55,6 +58,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         });
 
         initializeDishesItems();
+        initializeMenusItems();
 
         showTableNumberForm();
 
@@ -97,15 +101,29 @@ public class CreateOrderActivity extends AppCompatActivity {
         orderItemDishAdapter = new OrderItemDishAdapter(restaurantService.getDishesOf(RESTAURANT_MOCK_ID),
                                                         totalPriceView,
                                                         selectedDishes);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(orderItemDishAdapter);
     }
 
+    private void initializeMenusItems() {
+        selectedMenusDishes = new ArrayList<>();
+        totalPriceView = (TextView) findViewById(R.id.total_price);
+        orderItemMenuAdapter = new OrderItemMenuAdapter(restaurantService.getMenusOf(RESTAURANT_MOCK_ID),
+                                                        totalPriceView,
+                                                        selectedMenusDishes,
+                                                        CreateOrderActivity.this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_menu);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(orderItemMenuAdapter);
+    }
+
     private void done(View v) {
-        restaurantService.addOrder(selectedDishes, tableNumber);
+        restaurantService.addOrder(selectedDishes, tableNumber, selectedMenusDishes);
         finish();
     }
 

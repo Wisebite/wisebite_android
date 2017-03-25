@@ -79,4 +79,5 @@
     <string name="form_hint_table_number">Table number</string>
     <string name="title_table_number_form">Type table number</string>
     <string name="title_table_number_order">at table ?</string>
+    <string name="title_menu_dishes_form">Select your dishes</string>
 </resources>

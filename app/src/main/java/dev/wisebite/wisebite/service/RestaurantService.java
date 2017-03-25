@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import dev.wisebite.wisebite.comparator.OrderComparator;
 import dev.wisebite.wisebite.domain.Dish;
@@ -188,16 +189,44 @@ public class RestaurantService extends Service<Restaurant> {
         return dishes;
     }
 
-    public void addOrder(ArrayList<Dish> selectedDishes, Integer tableNumber) {
+    public ArrayList<Menu> getMenusOf(String restaurantId) {
+        ArrayList<Menu> menus = new ArrayList<>();
+        Restaurant restaurant = repository.get(restaurantId);
+        if (restaurant != null) {
+            for (String menuId : restaurant.getMenus().keySet()) {
+                menus.add(menuRepository.get(menuId));
+            }
+        }
+        return menus;
+    }
+
+    public void addOrder(ArrayList<Dish> selectedDishes, Integer tableNumber, ArrayList<Menu> selectedMenus) {
         Map<String, Object> orderItems = new LinkedHashMap<>();
         for (Dish dish : selectedDishes) {
             String insertedId = orderItemRepository.insert(OrderItem.builder()
-                                                                    .dishId(dish.getId())
-                                                                    .ready(false)
-                                                                    .delivered(false)
-                                                                    .paid(false)
-                                                                    .build()).getId();
+                    .dishId(dish.getId())
+                    .ready(false)
+                    .delivered(false)
+                    .paid(false)
+                    .build()).getId();
             orderItems.put(insertedId, true);
+        }
+        for (Menu menu : selectedMenus) {
+            ArrayList<String> dishesId = new ArrayList<>();
+            for (String key : menu.getMainDishes().keySet()) dishesId.add(key);
+            for (String key : menu.getSecondaryDishes().keySet()) dishesId.add(key);
+            for (String key : menu.getOtherDishes().keySet()) dishesId.add(key);
+            for (String dishId : dishesId) {
+                Dish dish = dishRepository.get(dishId);
+                String insertedId = orderItemRepository.insert(OrderItem.builder()
+                        .dishId(dish.getId())
+                        .menuId(menu.getId())
+                        .ready(false)
+                        .delivered(false)
+                        .paid(false)
+                        .build()).getId();
+                orderItems.put(insertedId, true);
+            }
         }
         orderRepository.insert(Order.builder()
                 .date(new Date())
@@ -205,5 +234,15 @@ public class RestaurantService extends Service<Restaurant> {
                 .lastDate(new Date())
                 .orderItems(orderItems)
                 .build());
+    }
+
+    public ArrayList<Dish> parseDishMapToDishModel(Map<String, Object> dishesMap) {
+        ArrayList<Dish> dishes = new ArrayList<>();
+        if (dishesMap != null) {
+            for (String dishKey : dishesMap.keySet()) {
+                dishes.add(dishRepository.get(dishKey));
+            }
+        }
+        return dishes;
     }
 }
