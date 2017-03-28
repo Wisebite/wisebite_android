@@ -3,6 +3,7 @@ package dev.wisebite.wisebite.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -78,7 +79,7 @@ public class OrderItemMenuAdapter extends RecyclerView.Adapter<OrderItemMenuAdap
         });
         holder.plus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 final LinearLayout menuDishesForm = (LinearLayout) inflater.inflate(context.getResources().getLayout(R.layout.menu_dishes_form), null);
                 initializeMenuDishesForm(current, menuDishesForm);
                 new AlertDialog.Builder(context)
@@ -87,14 +88,16 @@ public class OrderItemMenuAdapter extends RecyclerView.Adapter<OrderItemMenuAdap
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                setSelectedMenu(current);
-                                Integer currentCounter = Integer.valueOf(holder.counter.getText().toString());
-                                ++currentCounter;
-                                double totalPrice = Double.parseDouble(totalPriceView.getText().toString().split(" ")[0]);
-                                totalPrice += current.getPrice();
-                                totalPriceView.setText(String.format("%s €", Utils.toStringWithTwoDecimals(totalPrice)));
-                                selectedMenus.add(current);
-                                holder.counter.setText(String.valueOf(currentCounter));
+                                Menu selected = setSelectedMenu(current, v);
+                                if (selected != null) {
+                                    Integer currentCounter = Integer.valueOf(holder.counter.getText().toString());
+                                    ++currentCounter;
+                                    double totalPrice = Double.parseDouble(totalPriceView.getText().toString().split(" ")[0]);
+                                    totalPrice += selected.getPrice();
+                                    totalPriceView.setText(String.format("%s €", Utils.toStringWithTwoDecimals(totalPrice)));
+                                    selectedMenus.add(selected);
+                                    holder.counter.setText(String.valueOf(currentCounter));
+                                }
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -108,7 +111,14 @@ public class OrderItemMenuAdapter extends RecyclerView.Adapter<OrderItemMenuAdap
         });
     }
 
-    private void setSelectedMenu(Menu current) {
+    private Menu setSelectedMenu(Menu selected, View view) {
+        if (    selected.getMainDishes().isEmpty() != mainDishSelected.isEmpty() ||
+                selected.getSecondaryDishes().isEmpty() != secondaryDishSelected.isEmpty() ||
+                selected.getOtherDishes().isEmpty() != otherDishSelected.isEmpty()) {
+            Snackbar.make(view, "Some dishes are not selected", Snackbar.LENGTH_LONG).show();
+            return null;
+        }
+
         Map<String, Object> mainMap = new LinkedHashMap<>();
         Map<String, Object> secondaryMap = new LinkedHashMap<>();
         Map<String, Object> otherMap = new LinkedHashMap<>();
@@ -116,9 +126,14 @@ public class OrderItemMenuAdapter extends RecyclerView.Adapter<OrderItemMenuAdap
         for (Dish dish : secondaryDishSelected) secondaryMap.put(dish.getId(), true);
         for (Dish dish : otherDishSelected) otherMap.put(dish.getId(), true);
 
-        current.setMainDishes(mainMap);
-        current.setSecondaryDishes(secondaryMap);
-        current.setOtherDishes(otherMap);
+        return Menu.builder()
+                .id(selected.getId())
+                .name(selected.getName())
+                .description(selected.getDescription())
+                .price(selected.getPrice())
+                .mainDishes(mainMap)
+                .secondaryDishes(secondaryMap)
+                .otherDishes(otherMap).build();
     }
 
     private void initializeMenuDishesForm(Menu current, LinearLayout menuDishesForm) {

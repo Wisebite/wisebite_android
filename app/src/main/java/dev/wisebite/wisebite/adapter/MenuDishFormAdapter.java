@@ -49,7 +49,7 @@ public class MenuDishFormAdapter extends RecyclerView.Adapter<MenuDishFormAdapte
                 selectedDish.add(current);
                 Log.d("After change dish", selectedDish.toString());
                 Snackbar.make(v, "You have selected " + holder.name.getText().toString() + " as a dish.",
-                        Snackbar.LENGTH_LONG)
+                        Snackbar.LENGTH_SHORT)
                         .show();
             }
         });

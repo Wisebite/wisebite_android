@@ -109,13 +109,32 @@ public class RestaurantService extends Service<Restaurant> {
 
     public double getPriceOfOrder(String id) {
         Order order = orderRepository.get(id);
-        if (order == null) return 100.0;
+        if (order == null) return 0.0;
+
+        Map<String, List<String>> menuMap = new LinkedHashMap<>();
 
         double total = 0.0;
         for (String orderItemId : order.getOrderItems().keySet()) {
             OrderItem orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem == null) return 100.0;
-            total += dishRepository.get(orderItem.getDishId()).getPrice();
+            if (orderItem.getMenuId() == null) {
+                total += dishRepository.get(orderItem.getDishId()).getPrice();
+            } else {
+                List<String> dishes = menuMap.get(orderItem.getMenuId());
+                if (dishes == null) {
+                    dishes = new ArrayList<>();
+                }
+                dishes.add(orderItem.getDishId());
+                menuMap.put(orderItem.getMenuId(), dishes);
+            }
+        }
+        Menu menu;
+        for (String key : menuMap.keySet()) {
+            menu = menuRepository.get(key);
+            Integer numberOptions = (!menu.getMainDishes().isEmpty() ? 1 : 0) +
+                                    (!menu.getSecondaryDishes().isEmpty() ? 1 : 0) +
+                                    (!menu.getOtherDishes().isEmpty() ? 1 : 0);
+            double totalMenus = (double) (menuMap.get(key).size() / numberOptions);
+            total += totalMenus*menu.getPrice();
         }
 
         return total;
