@@ -1,5 +1,6 @@
 package dev.wisebite.wisebite.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.activity.GetOrderActivity;
 import dev.wisebite.wisebite.activity.MainActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.service.RestaurantService;
@@ -41,6 +43,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
     @Override
     public void onBindViewHolder(OrderHolder holder, int position) {
         Order current = orders.get(position);
+        holder.item = current;
         holder.numberTable.setText(String.valueOf("Table " + current.getTableNumber()));
         holder.price.setText(String.valueOf(calculatePrice(current) + " €"));
         holder.ready.setText(String.valueOf("Ready: " + calculateReady(current) + "%"));
@@ -72,6 +75,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
     class OrderHolder extends RecyclerView.ViewHolder {
 
         public View view;
+        Order item;
         TextView numberTable;
         TextView price;
         TextView ready;
@@ -86,6 +90,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
             this.ready = (TextView) itemView.findViewById(R.id.ready);
             this.delivered = (TextView) itemView.findViewById(R.id.delivered);
             this.paid = (TextView) itemView.findViewById(R.id.paid);
+
+            this.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), GetOrderActivity.class);
+                    intent.putExtra(GetOrderActivity.INTENT_ORDER, item.getId());
+                    v.getContext().startActivity(intent);
+                }
+            });
         }
     }
 }

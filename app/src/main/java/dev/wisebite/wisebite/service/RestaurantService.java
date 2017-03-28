@@ -264,4 +264,8 @@ public class RestaurantService extends Service<Restaurant> {
         }
         return dishes;
     }
+
+    public Order getOrder(String orderId) {
+        return orderRepository.get(orderId);
+    }
 }
