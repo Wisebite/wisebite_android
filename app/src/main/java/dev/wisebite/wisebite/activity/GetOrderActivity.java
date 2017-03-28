@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.adapter.OrderItemAdapter;
 import dev.wisebite.wisebite.domain.Order;
-import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 
@@ -44,6 +46,27 @@ public class GetOrderActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        initializeDishes();
+        initializeMenus();
+    }
+
+    private void initializeDishes() {
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(restaurantService.getOnlyDishItemsOf(order), GetOrderActivity.this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(orderItemAdapter);
+    }
+
+    private void initializeMenus() {
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(restaurantService.getOnlyMenuItemsOf(order), GetOrderActivity.this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_menu);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(orderItemAdapter);
     }
 
 }
