@@ -8,10 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.OrderItemAdapter;
 import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.repository.DishRepository;
 import dev.wisebite.wisebite.repository.MenuRepository;
 import dev.wisebite.wisebite.service.RestaurantService;
@@ -54,7 +58,12 @@ public class GetOrderActivity extends AppCompatActivity {
     }
 
     private void initializeDishes() {
-        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(restaurantService.getOnlyDishItemsOf(order),
+        ArrayList<OrderItem> orderItems = restaurantService.getOnlyDishItemsOf(order);
+        if (orderItems != null && !orderItems.isEmpty()) {
+            TextView textView = (TextView) findViewById(R.id.mock_dishes);
+            textView.setVisibility(View.GONE);
+        }
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(orderItems,
                 restaurantService, this.order, DishRepository.OBJECT_REFERENCE);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -64,7 +73,12 @@ public class GetOrderActivity extends AppCompatActivity {
     }
 
     private void initializeMenus() {
-        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(restaurantService.getOnlyMenuItemsOf(order),
+        ArrayList<OrderItem> orderItems = restaurantService.getOnlyMenuItemsOf(order);
+        if (orderItems != null && !orderItems.isEmpty()) {
+            TextView textView = (TextView) findViewById(R.id.mock_menus);
+            textView.setVisibility(View.GONE);
+        }
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(orderItems,
                 restaurantService, this.order, MenuRepository.OBJECT_REFERENCE);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_menu);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

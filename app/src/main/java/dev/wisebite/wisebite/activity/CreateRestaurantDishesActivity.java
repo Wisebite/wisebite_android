@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,12 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.DishAdapter;
@@ -64,7 +60,7 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
 
         inflater = LayoutInflater.from(CreateRestaurantDishesActivity.this);
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab);
-        mockMenus = (TextView) findViewById(R.id.mock_menus);
+        mockMenus = (TextView) findViewById(R.id.mock_dishes);
         mockDishes = (TextView) findViewById(R.id.mock_dishes);
 
         if (getIntent().getSerializableExtra(RESTAURANT) != null) {

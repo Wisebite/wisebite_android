@@ -85,4 +85,5 @@
     <string name="delivered_capital">DELIVERED</string>
     <string name="paid_capital">PAID</string>
     <string name="menu_dish_title">Menu\'s dishes</string>
+    <string name="mock_dish_item">No dishes in this order.</string>
 </resources>
