@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="dev.wisebite.wisebite.activity.GetOrderActivity">
+    tools:context="dev.wisebite.wisebite.activity.CollectOrderActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_get_order" />
+    <include layout="@layout/content_collect_order" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -29,6 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_money" />
+        android:src="@drawable/ic_add" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -69,6 +69,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.wisebite.wisebite.activity.MainActivity" />
         </activity>
+        <activity
+            android:name=".activity.CollectOrderActivity"
+            android:label="@string/title_activity_collect_order"
+            android:parentActivityName=".activity.GetOrderActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.GetOrderActivity" />
+        </activity>
     </application>
 
 </manifest>

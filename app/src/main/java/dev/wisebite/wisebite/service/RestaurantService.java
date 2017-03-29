@@ -271,9 +271,11 @@ public class RestaurantService extends Service<Restaurant> {
         return orderRepository.get(orderId);
     }
 
-    public void setDelivered(OrderItem item, boolean b) {
+    public void setDelivered(OrderItem item, boolean b, Order order) {
         item.setDelivered(b);
         orderItemRepository.update(item);
+        order.setLastDate(new Date());
+        orderRepository.update(order);
     }
 
     public String getDishNameOf(OrderItem orderItem) {
@@ -310,5 +312,16 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
         return orderItems;
+    }
+
+    public void collectAll(Order order) {
+        OrderItem orderItem;
+        for (String key : order.getOrderItems().keySet()) {
+            orderItem = orderItemRepository.get(key);
+            orderItem.setPaid(true);
+            orderItemRepository.update(orderItem);
+        }
+        order.setLastDate(new Date());
+        orderRepository.update(order);
     }
 }

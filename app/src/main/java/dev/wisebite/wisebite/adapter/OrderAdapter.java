@@ -19,6 +19,7 @@ import dev.wisebite.wisebite.activity.GetOrderActivity;
 import dev.wisebite.wisebite.activity.MainActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.repository.OrderItemRepository;
+import dev.wisebite.wisebite.repository.OrderRepository;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.FirebaseRepository;
@@ -113,6 +114,20 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
 
     private void setListener() {
         Firebase firebase;
+        firebase = new Firebase(FirebaseRepository.FIREBASE_URI + OrderRepository.OBJECT_REFERENCE);
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                orders = restaurantService.getActiveOrders();
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                // do nothing
+            }
+        });
+
         for (Order order : this.orders) {
             for (String key : order.getOrderItems().keySet()) {
                 firebase = new Firebase(FirebaseRepository.FIREBASE_URI +

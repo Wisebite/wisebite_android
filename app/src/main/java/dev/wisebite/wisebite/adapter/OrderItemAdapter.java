@@ -85,7 +85,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
             this.mark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    restaurantService.setDelivered(item, true);
+                    restaurantService.setDelivered(item, true, order);
                 }
             });
         }
