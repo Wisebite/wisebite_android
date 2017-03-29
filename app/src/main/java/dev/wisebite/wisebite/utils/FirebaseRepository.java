@@ -21,7 +21,7 @@ public abstract class FirebaseRepository<T extends Entity> extends Repository<T>
 
     private OnChangedListener listener;
 
-    protected final String FIREBASE_URI = "https://wisebite-f7a53.firebaseio.com/";
+    public static final String FIREBASE_URI = "https://wisebite-f7a53.firebaseio.com/";
     private static final String TAG = FirebaseRepository.class.getSimpleName();
     private final HashMap<String, T> map;
     protected Firebase firebase;

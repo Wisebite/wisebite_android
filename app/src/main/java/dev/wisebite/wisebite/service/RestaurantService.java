@@ -116,15 +116,17 @@ public class RestaurantService extends Service<Restaurant> {
         double total = 0.0;
         for (String orderItemId : order.getOrderItems().keySet()) {
             OrderItem orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem.getMenuId() == null) {
-                total += dishRepository.get(orderItem.getDishId()).getPrice();
-            } else {
-                List<String> dishes = menuMap.get(orderItem.getMenuId());
-                if (dishes == null) {
-                    dishes = new ArrayList<>();
+            if (orderItem != null) {
+                if (orderItem.getMenuId() == null) {
+                    total += dishRepository.get(orderItem.getDishId()).getPrice();
+                } else {
+                    List<String> dishes = menuMap.get(orderItem.getMenuId());
+                    if (dishes == null) {
+                        dishes = new ArrayList<>();
+                    }
+                    dishes.add(orderItem.getDishId());
+                    menuMap.put(orderItem.getMenuId(), dishes);
                 }
-                dishes.add(orderItem.getDishId());
-                menuMap.put(orderItem.getMenuId(), dishes);
             }
         }
         Menu menu;
@@ -263,5 +265,50 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
         return dishes;
+    }
+
+    public Order getOrder(String orderId) {
+        return orderRepository.get(orderId);
+    }
+
+    public void setDelivered(OrderItem item, boolean b) {
+        item.setDelivered(b);
+        orderItemRepository.update(item);
+    }
+
+    public String getDishNameOf(OrderItem orderItem) {
+        return dishRepository.get(orderItem.getDishId()).getName();
+    }
+
+    public ArrayList<OrderItem> getOnlyDishItemsOf(Order order) {
+        ArrayList<OrderItem> orderItems = new ArrayList<>();
+        OrderItem orderItem;
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem != null) {
+                if (orderItem.getMenuId() == null) {
+                    orderItems.add(orderItem);
+                }
+            }
+        }
+        return orderItems;
+    }
+
+    public OrderItem getOrderItem(String id) {
+        return orderItemRepository.get(id);
+    }
+
+    public ArrayList<OrderItem> getOnlyMenuItemsOf(Order order) {
+        ArrayList<OrderItem> orderItems = new ArrayList<>();
+        OrderItem orderItem;
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem != null) {
+                if (orderItem.getMenuId() != null) {
+                    orderItems.add(orderItem);
+                }
+            }
+        }
+        return orderItems;
     }
 }

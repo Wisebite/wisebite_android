@@ -80,4 +80,9 @@
     <string name="title_table_number_form">Type table number</string>
     <string name="title_table_number_order">at table ?</string>
     <string name="title_menu_dishes_form">Select your dishes</string>
+    <string name="title_activity_get_order">GetOrderActivity</string>
+    <string name="ready_capital">READY</string>
+    <string name="delivered_capital">DELIVERED</string>
+    <string name="paid_capital">PAID</string>
+    <string name="menu_dish_title">Menu\'s dishes</string>
 </resources>
