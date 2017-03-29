@@ -12,6 +12,8 @@ import android.view.View;
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.OrderItemAdapter;
 import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.repository.DishRepository;
+import dev.wisebite.wisebite.repository.MenuRepository;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 
@@ -52,7 +54,8 @@ public class GetOrderActivity extends AppCompatActivity {
     }
 
     private void initializeDishes() {
-        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(restaurantService.getOnlyDishItemsOf(order), GetOrderActivity.this);
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(restaurantService.getOnlyDishItemsOf(order),
+                restaurantService, this.order, DishRepository.OBJECT_REFERENCE);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -61,7 +64,8 @@ public class GetOrderActivity extends AppCompatActivity {
     }
 
     private void initializeMenus() {
-        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(restaurantService.getOnlyMenuItemsOf(order), GetOrderActivity.this);
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(restaurantService.getOnlyMenuItemsOf(order),
+                restaurantService, this.order, MenuRepository.OBJECT_REFERENCE);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_menu);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;

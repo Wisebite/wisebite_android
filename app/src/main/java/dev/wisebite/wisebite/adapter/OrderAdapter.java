@@ -7,14 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.activity.GetOrderActivity;
 import dev.wisebite.wisebite.activity.MainActivity;
 import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.repository.OrderItemRepository;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.FirebaseRepository;
+import dev.wisebite.wisebite.utils.Repository;
 import dev.wisebite.wisebite.utils.Utils;
 
 /**
@@ -27,10 +35,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
 
     private RestaurantService restaurantService;
 
-    public OrderAdapter(ArrayList<Order> orders, RestaurantService restaurantService) {
-        this.orders = orders;
+    public OrderAdapter(ArrayList<Order> ordersList, final RestaurantService restaurantService) {
+        this.orders = ordersList;
         this.restaurantService = restaurantService;
         notifyDataSetChanged();
+        setListener();
     }
 
     @Override
@@ -99,6 +108,29 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
                     v.getContext().startActivity(intent);
                 }
             });
+        }
+    }
+
+    private void setListener() {
+        Firebase firebase;
+        for (Order order : this.orders) {
+            for (String key : order.getOrderItems().keySet()) {
+                firebase = new Firebase(FirebaseRepository.FIREBASE_URI +
+                                        OrderItemRepository.OBJECT_REFERENCE + '/' +
+                                        key);
+                firebase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        orders = restaurantService.getActiveOrders();
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                        // do nothing
+                    }
+                });
+            }
         }
     }
 }

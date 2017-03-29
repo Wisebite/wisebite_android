@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -17,12 +16,13 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.domain.Dish;
+import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
+import dev.wisebite.wisebite.repository.DishRepository;
+import dev.wisebite.wisebite.repository.OrderItemRepository;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.FirebaseRepository;
-import dev.wisebite.wisebite.utils.Utils;
 
 /**
  * Created by albert on 20/03/17.
@@ -30,16 +30,18 @@ import dev.wisebite.wisebite.utils.Utils;
  */
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.OrderItemHolder> {
 
-    private final Context context;
-    private final ArrayList<OrderItem> orderItems;
-
     private RestaurantService restaurantService;
+    private ArrayList<OrderItem> orderItems;
+    private final Order order;
+    private final String typeSearch;
 
-    public OrderItemAdapter(ArrayList<OrderItem> orderItems, Context context) {
+    public OrderItemAdapter(ArrayList<OrderItem> orderItems, RestaurantService restaurantService, Order order, String typeSearch) {
         this.orderItems = orderItems;
-        this.context = context;
-        this.restaurantService = ServiceFactory.getRestaurantService(context);
+        this.restaurantService = restaurantService;
+        this.order = order;
+        this.typeSearch = typeSearch;
         notifyDataSetChanged();
+        setListener();
     }
 
     @Override
@@ -84,8 +86,6 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
                 @Override
                 public void onClick(View v) {
                     restaurantService.setDelivered(item, true);
-                    delivered.setVisibility(View.VISIBLE);
-                    mark.setVisibility(View.INVISIBLE);
                 }
             });
         }
@@ -103,6 +103,31 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
         }
         if (holder.item.isPaid()) {
             holder.paid.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setListener() {
+        Firebase firebase;
+        for (final OrderItem orderItem : this.orderItems) {
+            firebase = new Firebase(FirebaseRepository.FIREBASE_URI +
+                    OrderItemRepository.OBJECT_REFERENCE + '/' +
+                    orderItem.getId());
+            firebase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (typeSearch.equals(DishRepository.OBJECT_REFERENCE)) {
+                        orderItems = restaurantService.getOnlyDishItemsOf(order);
+                    } else {
+                        orderItems = restaurantService.getOnlyMenuItemsOf(order);
+                    }
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    // do nothing
+                }
+            });
         }
     }
 

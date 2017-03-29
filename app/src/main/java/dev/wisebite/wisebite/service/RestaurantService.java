@@ -116,15 +116,17 @@ public class RestaurantService extends Service<Restaurant> {
         double total = 0.0;
         for (String orderItemId : order.getOrderItems().keySet()) {
             OrderItem orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem.getMenuId() == null) {
-                total += dishRepository.get(orderItem.getDishId()).getPrice();
-            } else {
-                List<String> dishes = menuMap.get(orderItem.getMenuId());
-                if (dishes == null) {
-                    dishes = new ArrayList<>();
+            if (orderItem != null) {
+                if (orderItem.getMenuId() == null) {
+                    total += dishRepository.get(orderItem.getDishId()).getPrice();
+                } else {
+                    List<String> dishes = menuMap.get(orderItem.getMenuId());
+                    if (dishes == null) {
+                        dishes = new ArrayList<>();
+                    }
+                    dishes.add(orderItem.getDishId());
+                    menuMap.put(orderItem.getMenuId(), dishes);
                 }
-                dishes.add(orderItem.getDishId());
-                menuMap.put(orderItem.getMenuId(), dishes);
             }
         }
         Menu menu;
@@ -283,8 +285,10 @@ public class RestaurantService extends Service<Restaurant> {
         OrderItem orderItem;
         for (String orderItemId : order.getOrderItems().keySet()) {
             orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem.getMenuId() == null) {
-                orderItems.add(orderItem);
+            if (orderItem != null) {
+                if (orderItem.getMenuId() == null) {
+                    orderItems.add(orderItem);
+                }
             }
         }
         return orderItems;
@@ -299,8 +303,10 @@ public class RestaurantService extends Service<Restaurant> {
         OrderItem orderItem;
         for (String orderItemId : order.getOrderItems().keySet()) {
             orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem.getMenuId() != null) {
-                orderItems.add(orderItem);
+            if (orderItem != null) {
+                if (orderItem.getMenuId() != null) {
+                    orderItems.add(orderItem);
+                }
             }
         }
         return orderItems;
