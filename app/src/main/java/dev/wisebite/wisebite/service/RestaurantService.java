@@ -324,4 +324,36 @@ public class RestaurantService extends Service<Restaurant> {
         order.setLastDate(new Date());
         orderRepository.update(order);
     }
+
+    public ArrayList<OrderItem> getItemsToCollect(Order order) {
+        ArrayList<OrderItem> orderItems = new ArrayList<>();
+
+        Map<String, List<OrderItem>> menuIds = new LinkedHashMap<>();
+        OrderItem orderItem;
+        for (String key : order.getOrderItems().keySet()) {
+            orderItem = orderItemRepository.get(key);
+            if (orderItem.getMenuId() == null) {
+                orderItems.add(orderItem);
+            } else {
+                List<OrderItem> count = menuIds.get(orderItem.getMenuId());
+                if (count == null) {
+                    count = new ArrayList<>();
+                }
+                count.add(orderItem);
+                menuIds.put(orderItem.getMenuId(), count);
+            }
+        }
+        for (String key : menuIds.keySet()) {
+            List<OrderItem> count = menuIds.get(key);
+            Menu menu = menuRepository.get(key);
+            Integer numberOptions = (!menu.getMainDishes().isEmpty() ? 1 : 0) +
+                    (!menu.getSecondaryDishes().isEmpty() ? 1 : 0) +
+                    (!menu.getOtherDishes().isEmpty() ? 1 : 0);
+            for (int i = 0; i < count.size()/numberOptions; ++i) {
+                orderItems.add(count.get(i));
+            }
+        }
+
+        return orderItems;
+    }
 }

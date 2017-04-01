@@ -60,7 +60,7 @@ public class CreateRestaurantDishesActivity extends AppCompatActivity {
 
         inflater = LayoutInflater.from(CreateRestaurantDishesActivity.this);
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab);
-        mockMenus = (TextView) findViewById(R.id.mock_dishes);
+        mockMenus = (TextView) findViewById(R.id.mock_menus);
         mockDishes = (TextView) findViewById(R.id.mock_dishes);
 
         if (getIntent().getSerializableExtra(RESTAURANT) != null) {
