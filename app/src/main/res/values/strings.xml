@@ -92,4 +92,6 @@
     <string name="all">All</string>
     <string name="in_groups">In groups</string>
     <string name="collect_all_title">Collect all order items</string>
+    <string name="order_item_title">Non payed items</string>
+    <string name="mock_order_item">All items are payed in this order</string>
 </resources>

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,9 +16,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.adapter.CollectOrderItemAdapter;
+import dev.wisebite.wisebite.adapter.OrderItemAdapter;
 import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
+import dev.wisebite.wisebite.repository.DishRepository;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 
@@ -51,6 +59,8 @@ public class CollectOrderActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        initializeOrderItems();
 
         showFirstDialog();
     }
@@ -95,7 +105,7 @@ public class CollectOrderActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.in_groups, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Snackbar.make((View) getResources().getLayout(R.layout.activity_collect_order), "Select some dishes to collect", Snackbar.LENGTH_SHORT);
+                        // do nothing
                     }
                 })
                 .show();
@@ -104,6 +114,21 @@ public class CollectOrderActivity extends AppCompatActivity {
 
     private String getCollectAllMessage() {
         return "Do you have already collected " + restaurantService.getPriceOfOrder(order.getId()) + "€?";
+    }
+
+    private void initializeOrderItems() {
+        ArrayList<OrderItem> orderItems = restaurantService.getItemsToCollect(order);
+        if (orderItems != null && !orderItems.isEmpty()) {
+            TextView textView = (TextView) findViewById(R.id.mock_order_items);
+            textView.setVisibility(View.GONE);
+        }
+        CollectOrderItemAdapter collectOrderItemAdapter = new CollectOrderItemAdapter(orderItems,
+                restaurantService, this.order);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(collectOrderItemAdapter);
     }
 
 }

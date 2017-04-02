@@ -332,15 +332,17 @@ public class RestaurantService extends Service<Restaurant> {
         OrderItem orderItem;
         for (String key : order.getOrderItems().keySet()) {
             orderItem = orderItemRepository.get(key);
-            if (orderItem.getMenuId() == null) {
-                orderItems.add(orderItem);
-            } else {
-                List<OrderItem> count = menuIds.get(orderItem.getMenuId());
-                if (count == null) {
-                    count = new ArrayList<>();
+            if (!orderItem.isPaid()) {
+                if (orderItem.getMenuId() == null) {
+                    orderItems.add(orderItem);
+                } else {
+                    List<OrderItem> count = menuIds.get(orderItem.getMenuId());
+                    if (count == null) {
+                        count = new ArrayList<>();
+                    }
+                    count.add(orderItem);
+                    menuIds.put(orderItem.getMenuId(), count);
                 }
-                count.add(orderItem);
-                menuIds.put(orderItem.getMenuId(), count);
             }
         }
         for (String key : menuIds.keySet()) {
@@ -355,5 +357,29 @@ public class RestaurantService extends Service<Restaurant> {
         }
 
         return orderItems;
+    }
+
+    public String getName(OrderItem current) {
+        if (current.getMenuId() == null) {
+            return dishRepository.get(current.getDishId()).getName();
+        } else {
+            return menuRepository.get(current.getMenuId()).getName();
+        }
+    }
+
+    public String getDescription(OrderItem current) {
+        if (current.getMenuId() == null) {
+            return dishRepository.get(current.getDishId()).getDescription();
+        } else {
+            return menuRepository.get(current.getMenuId()).getDescription();
+        }
+    }
+
+    public double getPrice(OrderItem current) {
+        if (current.getMenuId() == null) {
+            return dishRepository.get(current.getDishId()).getPrice();
+        } else {
+            return menuRepository.get(current.getMenuId()).getPrice();
+        }
     }
 }
