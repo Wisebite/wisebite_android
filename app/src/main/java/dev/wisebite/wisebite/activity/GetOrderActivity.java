@@ -60,6 +60,13 @@ public class GetOrderActivity extends AppCompatActivity {
         initializeMenus();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initializeDishes();
+        initializeMenus();
+    }
+
     private void initializeDishes() {
         ArrayList<OrderItem> orderItems = restaurantService.getOnlyDishItemsOf(order);
         if (orderItems != null && !orderItems.isEmpty()) {

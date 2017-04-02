@@ -86,38 +86,40 @@ public class CollectOrderActivity extends AppCompatActivity {
     }
 
     private void showFirstDialog() {
-        new AlertDialog.Builder(CollectOrderActivity.this)
-                .setTitle(getResources().getString(R.string.title_collect_order_form))
-                .setMessage(getResources().getString(R.string.message_collect_order_form))
-                .setPositiveButton(R.string.all, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        new AlertDialog.Builder(CollectOrderActivity.this)
-                                .setTitle(getResources().getString(R.string.collect_all_title))
-                                .setMessage(getCollectAllMessage())
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        restaurantService.collectAll(order);
-                                        onBackPressed();
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        onBackPressed();
-                                    }
-                                })
-                                .show();
-                    }
-                })
-                .setNegativeButton(R.string.in_groups, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .show();
+        if (!restaurantService.isPartially(order)) {
+            new AlertDialog.Builder(CollectOrderActivity.this)
+                    .setTitle(getResources().getString(R.string.title_collect_order_form))
+                    .setMessage(getResources().getString(R.string.message_collect_order_form))
+                    .setPositiveButton(R.string.all, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new AlertDialog.Builder(CollectOrderActivity.this)
+                                    .setTitle(getResources().getString(R.string.collect_all_title))
+                                    .setMessage(getCollectAllMessage())
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            restaurantService.collectAll(order);
+                                            onBackPressed();
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            onBackPressed();
+                                        }
+                                    })
+                                    .show();
+                        }
+                    })
+                    .setNegativeButton(R.string.in_groups, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .show();
+        }
 
     }
 

@@ -422,4 +422,11 @@ public class RestaurantService extends Service<Restaurant> {
         }
         return total;
     }
+
+    public boolean isPartially(Order order) {
+        for (String key : order.getOrderItems().keySet()) {
+            if (orderItemRepository.get(key).isPaid()) return true;
+        }
+        return false;
+    }
 }
