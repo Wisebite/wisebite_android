@@ -132,9 +132,7 @@ public class RestaurantService extends Service<Restaurant> {
         Menu menu;
         for (String key : menuMap.keySet()) {
             menu = menuRepository.get(key);
-            Integer numberOptions = (!menu.getMainDishes().isEmpty() ? 1 : 0) +
-                                    (!menu.getSecondaryDishes().isEmpty() ? 1 : 0) +
-                                    (!menu.getOtherDishes().isEmpty() ? 1 : 0);
+            Integer numberOptions = getNumberOptions(menu);
             double totalMenus = (double) (menuMap.get(key).size() / numberOptions);
             total += totalMenus*menu.getPrice();
         }
@@ -348,9 +346,7 @@ public class RestaurantService extends Service<Restaurant> {
         for (String key : menuIds.keySet()) {
             List<OrderItem> count = menuIds.get(key);
             Menu menu = menuRepository.get(key);
-            Integer numberOptions = (!menu.getMainDishes().isEmpty() ? 1 : 0) +
-                    (!menu.getSecondaryDishes().isEmpty() ? 1 : 0) +
-                    (!menu.getOtherDishes().isEmpty() ? 1 : 0);
+            Integer numberOptions = getNumberOptions(menu);
             for (int i = 0; i < count.size()/numberOptions; ++i) {
                 orderItems.add(count.get(i));
             }
@@ -381,5 +377,49 @@ public class RestaurantService extends Service<Restaurant> {
         } else {
             return menuRepository.get(current.getMenuId()).getPrice();
         }
+    }
+
+    public void collectSomeItems(ArrayList<OrderItem> selectedItems, Order order) {
+        List<String> menus = new ArrayList<>();
+        for (OrderItem item : selectedItems) {
+            if (item.getMenuId() == null) {
+                item.setPaid(true);
+                orderItemRepository.update(item);
+            } else {
+                menus.add(item.getMenuId());
+            }
+        }
+        for (String id : menus) {
+            Integer numberOptions = getNumberOptions(menuRepository.get(id));
+            List<OrderItem> orderItems = new ArrayList<>();
+            for (String key : order.getOrderItems().keySet()) {
+                orderItems.add(orderItemRepository.get(key));
+            }
+            for (OrderItem item : orderItems) {
+                if (item.getMenuId() != null && item.getMenuId().equals(id)) {
+                    item.setPaid(true);
+                    orderItemRepository.update(item);
+                    if (--numberOptions == 0) break;
+                }
+            }
+        }
+    }
+
+    private Integer getNumberOptions(Menu menu) {
+        return  (!menu.getMainDishes().isEmpty() ? 1 : 0) +
+                (!menu.getSecondaryDishes().isEmpty() ? 1 : 0) +
+                (!menu.getOtherDishes().isEmpty() ? 1 : 0);
+    }
+
+    public double getPriceOfOrderItems(ArrayList<OrderItem> selectedItems) {
+        double total = 0.0;
+        for (OrderItem orderItem : selectedItems) {
+            if (orderItem.getMenuId() == null) {
+                total += dishRepository.get(orderItem.getDishId()).getPrice();
+            } else {
+                total += menuRepository.get(orderItem.getMenuId()).getPrice();
+            }
+        }
+        return total;
     }
 }

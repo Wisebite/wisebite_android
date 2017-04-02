@@ -1,6 +1,8 @@
 package dev.wisebite.wisebite.adapter;
 
+import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,15 +31,17 @@ import dev.wisebite.wisebite.utils.FirebaseRepository;
 public class CollectOrderItemAdapter extends RecyclerView.Adapter<CollectOrderItemAdapter.CollectOrderItemHolder> {
 
     private RestaurantService restaurantService;
-    private ArrayList<OrderItem> orderItems;
+    private ArrayList<OrderItem> orderItems, selectedItems;
     private final Order order;
+    private final Context context;
 
-    public CollectOrderItemAdapter(ArrayList<OrderItem> orderItems, RestaurantService restaurantService, Order order) {
+    public CollectOrderItemAdapter(ArrayList<OrderItem> orderItems, RestaurantService restaurantService, Order order, ArrayList<OrderItem> selectedOrderItems, Context context) {
         this.orderItems = orderItems;
         this.restaurantService = restaurantService;
         this.order = order;
+        this.selectedItems = selectedOrderItems;
+        this.context = context;
         notifyDataSetChanged();
-        setListener();
     }
 
     @Override
@@ -75,25 +79,18 @@ public class CollectOrderItemAdapter extends RecyclerView.Adapter<CollectOrderIt
             this.name = (TextView) itemView.findViewById(R.id.name);
             this.description = (TextView) itemView.findViewById(R.id.description);
             this.price = (TextView) itemView.findViewById(R.id.price);
-        }
-    }
-
-    private void setListener() {
-        Firebase firebase;
-        for (final OrderItem orderItem : this.orderItems) {
-            firebase = new Firebase(FirebaseRepository.FIREBASE_URI +
-                    OrderItemRepository.OBJECT_REFERENCE + '/' +
-                    orderItem.getId());
-            firebase.addValueEventListener(new ValueEventListener() {
+            this.view.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    orderItems = restaurantService.getItemsToCollect(order);
-                    notifyDataSetChanged();
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    // do nothing
+                public void onClick(View v) {
+                    if (selectedItems.contains(item)) {
+                        selectedItems.remove(item);
+                        v.setBackgroundColor(context.getResources().getColor(R.color.white));
+                        Snackbar.make(v, "You've removed the item.", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        selectedItems.add(item);
+                        v.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                        Snackbar.make(v, "You've added the item.", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
