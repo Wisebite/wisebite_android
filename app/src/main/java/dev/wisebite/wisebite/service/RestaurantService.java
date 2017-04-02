@@ -1,5 +1,7 @@
 package dev.wisebite.wisebite.service;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -172,17 +174,44 @@ public class RestaurantService extends Service<Restaurant> {
         return (delivered/total)*100.0;
     }
 
+    // TODO Check it
     public double getPaidOfOrder(String id) {
         Order order = orderRepository.get(id);
         if (order == null) return 100.0;
 
+        Map<String, List<Pair<String, Boolean>>> menuMap = new LinkedHashMap<>();
         double total = getPriceOfOrder(id);
         double paid = 0.0;
 
         for (String orderItemId : order.getOrderItems().keySet()) {
             OrderItem orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem == null) return 100.0;
-            if (orderItem.isPaid()) paid += dishRepository.get(orderItem.getDishId()).getPrice();
+            if (orderItem != null) {
+                if (orderItem.getMenuId() == null) {
+                    if (orderItem.isPaid()) {
+                        paid += dishRepository.get(orderItem.getDishId()).getPrice();
+                    }
+                } else {
+                    List<Pair<String, Boolean>> dishes = menuMap.get(orderItem.getMenuId());
+                    if (dishes == null) {
+                        dishes = new ArrayList<>();
+                    }
+                    dishes.add(new Pair<>(orderItem.getDishId(), orderItem.isPaid()));
+                    menuMap.put(orderItem.getMenuId(), dishes);
+                }
+            }
+        }
+        Menu menu;
+        for (String key : menuMap.keySet()) {
+            menu = menuRepository.get(key);
+
+            Integer numberPaid = 0;
+            for (Pair<String, Boolean> pair : menuMap.get(key)) {
+                if (pair.second) ++numberPaid;
+            }
+            if (numberPaid != 0) {
+                double totalPaid = (double) (menuMap.get(key).size() / numberPaid);
+                paid += totalPaid * getNumberOptions(menu) * menu.getPrice();
+            }
         }
 
         return (paid/total)*100.0;
@@ -393,7 +422,9 @@ public class RestaurantService extends Service<Restaurant> {
             Integer numberOptions = getNumberOptions(menuRepository.get(id));
             List<OrderItem> orderItems = new ArrayList<>();
             for (String key : order.getOrderItems().keySet()) {
-                orderItems.add(orderItemRepository.get(key));
+                if (!orderItemRepository.get(key).isPaid()) {
+                    orderItems.add(orderItemRepository.get(key));
+                }
             }
             for (OrderItem item : orderItems) {
                 if (item.getMenuId() != null && item.getMenuId().equals(id)) {
