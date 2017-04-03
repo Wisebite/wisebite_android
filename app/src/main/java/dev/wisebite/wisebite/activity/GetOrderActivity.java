@@ -1,5 +1,6 @@
 package dev.wisebite.wisebite.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -42,17 +43,26 @@ public class GetOrderActivity extends AppCompatActivity {
             this.order = restaurantService.getOrder(getIntent().getExtras().getString(INTENT_ORDER));
         }
 
-        setTitle(String.valueOf("Order at Table " + order.getTableNumber()));
+        setTitle("Order at Table " + (order != null ? String.valueOf(order.getTableNumber()) : "" ));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(view.getContext(), CollectOrderActivity.class);
+                intent.putExtra(CollectOrderActivity.INTENT_ORDER, order.getId());
+                view.getContext().startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
+        initializeDishes();
+        initializeMenus();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initializeDishes();
         initializeMenus();
     }

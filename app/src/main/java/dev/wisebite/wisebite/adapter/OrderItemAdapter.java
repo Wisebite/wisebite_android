@@ -41,7 +41,6 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
         this.order = order;
         this.typeSearch = typeSearch;
         notifyDataSetChanged();
-        setListener();
     }
 
     @Override
@@ -85,7 +84,8 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
             this.mark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    restaurantService.setDelivered(item, true);
+                    restaurantService.setDelivered(item, true, order);
+                    notifyDataSetChanged();
                 }
             });
         }
@@ -96,6 +96,8 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
             holder.ready.setVisibility(View.VISIBLE);
             if (!holder.item.isDelivered()) {
                 holder.mark.setVisibility(View.VISIBLE);
+            } else {
+                holder.mark.setVisibility(View.GONE);
             }
         }
         if (holder.item.isDelivered()) {
@@ -103,31 +105,6 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
         }
         if (holder.item.isPaid()) {
             holder.paid.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void setListener() {
-        Firebase firebase;
-        for (final OrderItem orderItem : this.orderItems) {
-            firebase = new Firebase(FirebaseRepository.FIREBASE_URI +
-                    OrderItemRepository.OBJECT_REFERENCE + '/' +
-                    orderItem.getId());
-            firebase.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (typeSearch.equals(DishRepository.OBJECT_REFERENCE)) {
-                        orderItems = restaurantService.getOnlyDishItemsOf(order);
-                    } else {
-                        orderItems = restaurantService.getOnlyMenuItemsOf(order);
-                    }
-                    notifyDataSetChanged();
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    // do nothing
-                }
-            });
         }
     }
 

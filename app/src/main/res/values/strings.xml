@@ -86,4 +86,12 @@
     <string name="paid_capital">PAID</string>
     <string name="menu_dish_title">Menu\'s dishes</string>
     <string name="mock_dish_item">No dishes in this order.</string>
+    <string name="title_activity_collect_order">CollectOrderActivity</string>
+    <string name="title_collect_order_form">Collect order</string>
+    <string name="message_collect_order_form">Do you want to collect all or in groups?</string>
+    <string name="all">All</string>
+    <string name="in_groups">In groups</string>
+    <string name="collect_all_title">Collect all order items</string>
+    <string name="order_item_title">Non payed items</string>
+    <string name="mock_order_item">All items are payed in this order</string>
 </resources>
