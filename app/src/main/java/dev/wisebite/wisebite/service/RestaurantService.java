@@ -174,7 +174,6 @@ public class RestaurantService extends Service<Restaurant> {
         return (delivered/total)*100.0;
     }
 
-    // TODO Check it
     public double getPaidOfOrder(String id) {
         Order order = orderRepository.get(id);
         if (order == null) return 100.0;
@@ -209,8 +208,9 @@ public class RestaurantService extends Service<Restaurant> {
                 if (pair.second) ++numberPaid;
             }
             if (numberPaid != 0) {
-                double totalPaid = (double) (menuMap.get(key).size() / numberPaid);
-                paid += totalPaid * getNumberOptions(menu) * menu.getPrice();
+                double totalPaid = (double) (numberPaid / menuMap.get(key).size());
+                double totalMenus = (double) (menuMap.get(key).size() / getNumberOptions(menu));
+                paid += totalPaid*totalMenus*menu.getPrice();
             }
         }
 
