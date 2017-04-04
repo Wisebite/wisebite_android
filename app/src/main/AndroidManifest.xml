@@ -78,6 +78,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.wisebite.wisebite.activity.GetOrderActivity" />
         </activity>
+        <activity
+            android:name=".activity.GetRestaurantActivity"
+            android:label="@string/title_activity_get_restaurant"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

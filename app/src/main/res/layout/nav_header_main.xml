@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="wrap_content"
     android:background="@color/colorPrimaryDark"
     android:gravity="bottom"
     android:orientation="vertical"
@@ -16,16 +16,34 @@
         android:id="@+id/user_picture_nav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:scaleY="1.5"
+        android:scaleX="1.5"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/sym_def_app_icon"
+        android:src="@mipmap/wisebite_logo"
         android:contentDescription="@string/user_image_content" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:layout_marginTop="10dp"
         android:id="@+id/user_name_nav"
+        android:gravity="center"
         android:text="@string/user_image_test"
+        android:textStyle="bold"
+        android:textSize="20sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/restaurant_name_nav"
+        android:gravity="center"
+        android:text="@string/restaurant_name_test"
+        android:textStyle="italic"
+        android:textSize="15sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
 
 </LinearLayout>

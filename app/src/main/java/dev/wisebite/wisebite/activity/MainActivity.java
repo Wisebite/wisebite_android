@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RestaurantService restaurantService;
+    private String restaurantId;
 
     private NavigationView navigationView;
 
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         restaurantService = ServiceFactory.getRestaurantService(MainActivity.this);
+        restaurantId = "-KfvAq-HC6SSapHSBzsm";
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +125,17 @@ public class MainActivity extends AppCompatActivity
 
     private void setUserInfo(NavigationView navigationView) {
         // TODO set user info when we have user model
+        TextView restaurantName = (TextView) navigationView.findViewById(R.id.restaurant_name_nav);
+        restaurantName.setText(restaurantService.get(restaurantId).getName());
+        restaurantName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GetRestaurantActivity.class);
+                intent.putExtra(GetRestaurantActivity.RESTAURANT_ID, restaurantId);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            }
+        });
     }
 
     private void initFragment(int id) {
