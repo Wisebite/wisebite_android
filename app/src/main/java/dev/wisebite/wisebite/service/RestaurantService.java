@@ -460,4 +460,11 @@ public class RestaurantService extends Service<Restaurant> {
         }
         return false;
     }
+
+    public void cancelOrder(Order order) {
+        for (String key : order.getOrderItems().keySet()) {
+            orderItemRepository.delete(key);
+        }
+        orderRepository.delete(order.getId());
+    }
 }
