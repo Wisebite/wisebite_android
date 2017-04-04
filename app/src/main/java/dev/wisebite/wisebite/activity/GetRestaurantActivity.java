@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Restaurant;
@@ -48,6 +49,17 @@ public class GetRestaurantActivity extends AppCompatActivity {
 
     private void initializeView() {
         setTitle(restaurant.getName());
+        TextView description, location, phone, website, numberOfTables;
+        description = (TextView) findViewById(R.id.description_refill);
+        location = (TextView) findViewById(R.id.location_refill);
+        phone = (TextView) findViewById(R.id.phone_refill);
+        website = (TextView) findViewById(R.id.website_refill);
+        numberOfTables = (TextView) findViewById(R.id.number_of_tables_refill);
+        description.setText(restaurant.getDescription());
+        location.setText(restaurant.getLocation());
+        phone.setText(String.valueOf(restaurant.getPhone()));
+        website.setText(restaurant.getWebsite());
+        numberOfTables.setText(String.valueOf(restaurant.getNumberOfTables() + " tables"));
     }
 
     private void editRestaurant() {
