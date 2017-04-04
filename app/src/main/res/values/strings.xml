@@ -92,6 +92,9 @@
     <string name="all">All</string>
     <string name="in_groups">In groups</string>
     <string name="collect_all_title">Collect all order items</string>
-    <string name="order_item_title">Non payed items</string>
-    <string name="mock_order_item">All items are payed in this order</string>
+    <string name="order_item_title">Non paid items</string>
+    <string name="mock_order_item">All items are paid in this order</string>
+    <string name="action_cancel_order">Cancel</string>
+    <string name="action_edit_order">Edit</string>
+    <string name="cancel_message">Do you to cancel this order? All related data will be removed.</string>
 </resources>
