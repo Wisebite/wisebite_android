@@ -3,16 +3,24 @@ package dev.wisebite.wisebite.activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.adapter.CollectOrderItemAdapter;
+import dev.wisebite.wisebite.adapter.DetailAdapter;
+import dev.wisebite.wisebite.domain.Dish;
+import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.OpenTime;
+import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
@@ -51,6 +59,8 @@ public class GetRestaurantActivity extends AppCompatActivity {
 
         initializeGeneralInfo();
         initializeOpenTimes();
+        initializeDishes();
+        initializeMenus();
     }
 
     private void initializeGeneralInfo() {
@@ -101,7 +111,36 @@ public class GetRestaurantActivity extends AppCompatActivity {
         return 0;
     }
 
+    private void initializeDishes() {
+        ArrayList<Dish> dishes = restaurantService.getDishesOf(restaurantId);
+        if (dishes != null && !dishes.isEmpty()) {
+            TextView textView = (TextView) findViewById(R.id.mock_dishes);
+            textView.setVisibility(View.GONE);
+        }
+        DetailAdapter detailAdapter = new DetailAdapter(dishes, null);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.dishes_recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(detailAdapter);
+    }
+
+    private void initializeMenus() {
+        ArrayList<Menu> menus = restaurantService.getMenusOf(restaurantId);
+        if (menus != null && !menus.isEmpty()) {
+            TextView textView = (TextView) findViewById(R.id.mock_menus);
+            textView.setVisibility(View.GONE);
+        }
+        DetailAdapter detailAdapter = new DetailAdapter(null, menus);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.menus_recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(detailAdapter);
+    }
+
     private void editRestaurant() {
 
     }
+
 }
