@@ -467,4 +467,12 @@ public class RestaurantService extends Service<Restaurant> {
         }
         orderRepository.delete(order.getId());
     }
+
+    public List<OpenTime> getOpenTimesOf(Restaurant restaurant) {
+        List<OpenTime> result = new ArrayList<>();
+        for (String key : restaurant.getOpenTimes().keySet()) {
+            result.add(openTimeRepository.get(key));
+        }
+        return result;
+    }
 }

@@ -8,6 +8,7 @@ import com.firebase.client.Firebase;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Menu;
@@ -33,20 +34,22 @@ public class Utils {
         secondHour = secondTimePicker.getHour();
         secondMinute = secondTimePicker.getMinute();
 
-        String parsed = "";
-        if (firstHour < 10) parsed += '0';
-        parsed += String.valueOf(firstHour) + ':';
-        if (firstMinute < 10) parsed += '0';
-        parsed += String.valueOf(firstMinute);
+        return datesToString(firstHour, firstMinute, secondHour, secondMinute);
+    }
 
-        parsed += " - ";
+    public static String parseStartEndDate(Date startDate, Date endDate) {
+        int firstHour, firstMinute, secondHour, secondMinute;
 
-        if (secondHour < 10) parsed += '0';
-        parsed += String.valueOf(secondHour) + ':';
-        if (secondMinute < 10) parsed += '0';
-        parsed += String.valueOf(secondMinute);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        firstHour = calendar.get(Calendar.HOUR_OF_DAY);
+        firstMinute = calendar.get(Calendar.MINUTE);
 
-        return parsed;
+        calendar.setTime(endDate);
+        secondHour = calendar.get(Calendar.HOUR_OF_DAY);
+        secondMinute = calendar.get(Calendar.MINUTE);
+
+        return datesToString(firstHour, firstMinute, secondHour, secondMinute);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -71,6 +74,36 @@ public class Utils {
                     .build();
     }
 
+    public static void setTempMenu(Menu menu) {
+        tempMenu = menu;
+    }
+
+    public static Menu getTempMenu() {
+        return tempMenu;
+    }
+
+    public static String toStringWithTwoDecimals(double d) {
+        d = Math.round(d * 100);
+        d = d/100;
+        return String.valueOf(d);
+    }
+
+    private static String datesToString(int firstHour, int firstMinute, int secondHour, int secondMinute) {
+        String parsed = "";
+        if (firstHour < 10) parsed += '0';
+        parsed += String.valueOf(firstHour) + ':';
+        if (firstMinute < 10) parsed += '0';
+        parsed += String.valueOf(firstMinute);
+
+        parsed += " - ";
+
+        if (secondHour < 10) parsed += '0';
+        parsed += String.valueOf(secondHour) + ':';
+        if (secondMinute < 10) parsed += '0';
+        parsed += String.valueOf(secondMinute);
+        return parsed;
+    }
+
     private static int parseViewIdToDayOfWeek(Integer viewId) {
         switch (viewId) {
             case R.id.monday_date_picker:
@@ -92,17 +125,4 @@ public class Utils {
         }
     }
 
-    public static void setTempMenu(Menu menu) {
-        tempMenu = menu;
-    }
-
-    public static Menu getTempMenu() {
-        return tempMenu;
-    }
-
-    public static String toStringWithTwoDecimals(double d) {
-        d = Math.round(d * 100);
-        d = d/100;
-        return String.valueOf(d);
-    }
 }
