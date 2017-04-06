@@ -304,6 +304,14 @@ public class RestaurantService extends Service<Restaurant> {
         orderRepository.update(order);
     }
 
+
+    public void setReady(OrderItem item, boolean b, Order order) {
+        item.setReady(b);
+        orderItemRepository.update(item);
+        order.setLastDate(new Date());
+        orderRepository.update(order);
+    }
+
     public String getDishNameOf(OrderItem orderItem) {
         return dishRepository.get(orderItem.getDishId()).getName();
     }
@@ -481,5 +489,18 @@ public class RestaurantService extends Service<Restaurant> {
             if (getReadyOfOrder(order.getId()) < 100.0) orders.add(order);
         }
         Collections.sort(orders, new OrderStartDateComparator());
-        return orders;    }
+        return orders;
+    }
+
+    public ArrayList<OrderItem> getNonReadyOrderItems(Order order) {
+        ArrayList<OrderItem> result = new ArrayList<>();
+        for (String key : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(key);
+            if (orderItem != null && !orderItem.isReady()) {
+                result.add(orderItem);
+            }
+        }
+        return result;
+    }
+
 }

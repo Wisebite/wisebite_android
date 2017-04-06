@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
         fab.setVisibility(View.GONE);
-        KitchenAdapter kitchenAdapter = new KitchenAdapter(restaurantService.getNonReadyOrders(), restaurantService);
+        KitchenAdapter kitchenAdapter = new KitchenAdapter(restaurantService.getNonReadyOrders(), restaurantService, MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.kitchen_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;

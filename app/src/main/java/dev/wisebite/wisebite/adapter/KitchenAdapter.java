@@ -1,8 +1,8 @@
 package dev.wisebite.wisebite.adapter;
 
-import android.content.Intent;
+import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,6 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.activity.GetOrderActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.repository.OrderItemRepository;
 import dev.wisebite.wisebite.repository.OrderRepository;
@@ -31,12 +30,14 @@ import dev.wisebite.wisebite.utils.Utils;
 public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenHolder> {
 
     private ArrayList<Order> orders;
+    private Context context;
 
     private RestaurantService restaurantService;
 
-    public KitchenAdapter(ArrayList<Order> ordersList, final RestaurantService restaurantService) {
+    public KitchenAdapter(ArrayList<Order> ordersList, final RestaurantService restaurantService, Context context) {
         this.orders = ordersList;
         this.restaurantService = restaurantService;
+        this.context = context;
         notifyDataSetChanged();
         setListener();
     }
@@ -54,6 +55,17 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
         holder.item = current;
         holder.date.setText(Utils.getHour(current.getDate()));
         holder.ready.setText(String.format("%s%%", calculateReady(current)));
+        initializeOrderItems(holder);
+    }
+
+    private void initializeOrderItems(KitchenHolder holder) {
+        KitchenItemAdapter kitchenItemAdapter = new KitchenItemAdapter(restaurantService.getNonReadyOrderItems(holder.item),
+                restaurantService, context, holder.item);
+        RecyclerView recyclerView = (RecyclerView) holder.view.findViewById(R.id.kitchen_order_items_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(kitchenItemAdapter);
     }
 
     private String calculateReady(Order current) {
@@ -79,15 +91,6 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
             this.date = (TextView) itemView.findViewById(R.id.date_order);
             this.ready = (TextView) itemView.findViewById(R.id.ready);
             this.recyclerView = (RecyclerView) itemView.findViewById(R.id.kitchen_order_items_list);
-
-            this.view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), GetOrderActivity.class);
-                    intent.putExtra(GetOrderActivity.INTENT_ORDER, item.getId());
-                    v.getContext().startActivity(intent);
-                }
-            });
         }
     }
 
@@ -97,7 +100,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                orders = restaurantService.getActiveOrders();
+                orders = restaurantService.getNonReadyOrders();
                 notifyDataSetChanged();
             }
 
