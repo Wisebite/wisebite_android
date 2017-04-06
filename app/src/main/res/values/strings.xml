@@ -188,4 +188,10 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="kitchen">Kitchen</string>
+    <string name="date_test">10:59</string>
+    <string name="ready_percent_test">80.00%</string>
+    <string name="point">·</string>
+    <string name="title_finish_item">Finish item</string>
+    <string name="message_finish_item">Have you prepared the selected item?</string>
 </resources>

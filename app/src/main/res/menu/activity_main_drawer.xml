@@ -6,6 +6,10 @@
             android:id="@+id/nav_active_orders"
             android:icon="@drawable/ic_magnify"
             android:title="@string/active_orders" />
+        <item
+            android:id="@+id/nav_kitchen"
+            android:icon="@drawable/ic_food"
+            android:title="@string/kitchen" />
     </group>
 
 </menu>
