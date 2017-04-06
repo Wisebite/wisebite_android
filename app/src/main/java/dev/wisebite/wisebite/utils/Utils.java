@@ -88,6 +88,22 @@ public class Utils {
         return String.valueOf(d);
     }
 
+    public static String getHour(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        String result = "";
+        if (hour < 10) result += '0';
+        result += String.valueOf(hour) + ':';
+        if (minute < 10) result += '0';
+        result += String.valueOf(minute);
+
+        return result;
+    }
+
     private static String datesToString(int firstHour, int firstMinute, int secondHour, int secondMinute) {
         String parsed = "";
         if (firstHour < 10) parsed += '0';

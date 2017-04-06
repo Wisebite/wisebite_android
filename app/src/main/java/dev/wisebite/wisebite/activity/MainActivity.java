@@ -3,6 +3,7 @@ package dev.wisebite.wisebite.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
@@ -160,6 +162,12 @@ public class MainActivity extends AppCompatActivity
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
         fab.setVisibility(View.GONE);
+        KitchenAdapter kitchenAdapter = new KitchenAdapter(restaurantService.getNonReadyOrders(), restaurantService);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.kitchen_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(kitchenAdapter);
     }
 
 }

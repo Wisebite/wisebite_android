@@ -189,4 +189,6 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="kitchen">Kitchen</string>
+    <string name="date_test">10:59</string>
+    <string name="ready_percent_test">80.00%</string>
 </resources>

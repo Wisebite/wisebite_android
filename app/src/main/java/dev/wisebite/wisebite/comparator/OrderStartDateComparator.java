@@ -9,11 +9,11 @@ import dev.wisebite.wisebite.domain.Order;
  *
  * @author albert
  */
-public class OrderComparator implements Comparator<Order> {
+public class OrderStartDateComparator implements Comparator<Order> {
 
     @Override
     public int compare(Order lhs, Order rhs) {
-        return (int) (lhs.getLastDate().getTime() - rhs.getLastDate().getTime());
+        return (int) (lhs.getDate().getTime() - rhs.getDate().getTime());
     }
 
 }
