@@ -22,9 +22,10 @@ import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.Utils;
 
-public class CreateMenuActivity extends AppCompatActivity {
+public class CreateMenuActivity extends BaseActivity {
 
     private ArrayList<Dish> mainDishes, secondaryDishes, otherDishes;
     private DishAdapter mainDishesAdapter, secondaryDishesAdapter, otherDishesAdapter;

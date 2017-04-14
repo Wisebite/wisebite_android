@@ -23,8 +23,9 @@ import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.BaseActivity;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RestaurantService restaurantService;
