@@ -9,6 +9,7 @@ import dev.wisebite.wisebite.repository.OpenTimeRepository;
 import dev.wisebite.wisebite.repository.OrderItemRepository;
 import dev.wisebite.wisebite.repository.OrderRepository;
 import dev.wisebite.wisebite.repository.RestaurantRepository;
+import dev.wisebite.wisebite.repository.UserRepository;
 
 /**
  * Created by albert on 13/03/17.
@@ -27,7 +28,8 @@ public final class ServiceFactory {
                     new ImageRepository(context),
                     new OpenTimeRepository(context),
                     new OrderRepository(context),
-                    new OrderItemRepository(context));
+                    new OrderItemRepository(context),
+                    new UserRepository(context));
         return restaurantService;
     }
 

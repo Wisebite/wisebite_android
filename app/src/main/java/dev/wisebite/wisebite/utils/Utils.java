@@ -141,4 +141,7 @@ public class Utils {
         }
     }
 
+    public static String skipAts(String email) {
+        return email.replaceAll("\\.", "@");
+    }
 }

@@ -19,6 +19,8 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.BaseActivity;
 
 public class LoginActivity extends BaseActivity implements
@@ -29,6 +31,8 @@ public class LoginActivity extends BaseActivity implements
     private SignInButton mSignInButton;
     private ProgressDialog mProgressDialog;
 
+    private RestaurantService restaurantService;
+
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
@@ -36,6 +40,8 @@ public class LoginActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        this.restaurantService = ServiceFactory.getRestaurantService(LoginActivity.this);
 
         // Set the dimensions of the sign-in button.
         mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
@@ -119,6 +125,10 @@ public class LoginActivity extends BaseActivity implements
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+            if (restaurantService.logIn(acct)) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
         }
 
     }
