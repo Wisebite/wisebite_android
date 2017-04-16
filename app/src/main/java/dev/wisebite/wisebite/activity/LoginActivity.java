@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -22,6 +26,7 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.BaseActivity;
+import dev.wisebite.wisebite.utils.Repository;
 
 public class LoginActivity extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -35,17 +40,19 @@ public class LoginActivity extends BaseActivity implements
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
+    private boolean loaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        this.restaurantService = ServiceFactory.getRestaurantService(LoginActivity.this);
+        initializeService();
+
+        this.loaded = false;
 
         // Set the dimensions of the sign-in button.
-        mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        mSignInButton.setSize(SignInButton.SIZE_STANDARD);
+        this.mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(this);
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -59,6 +66,8 @@ public class LoginActivity extends BaseActivity implements
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        startAnimations();
 
     }
 
@@ -124,11 +133,23 @@ public class LoginActivity extends BaseActivity implements
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            if (restaurantService.logIn(acct)) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+            final GoogleSignInAccount acct = result.getSignInAccount();
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        while (!loaded) {
+                            sleep(1000);
+                        }
+                    } catch (InterruptedException ex) {
+                        // Catching exception
+                    } finally {
+                        if (restaurantService.logIn(acct)) {
+                            initApp();
+                        }
+                    }
+                }
+            }.start();
         }
 
     }
@@ -147,6 +168,39 @@ public class LoginActivity extends BaseActivity implements
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();
         }
+    }
+
+    private void startAnimations() {
+        Animation alpha = AnimationUtils.loadAnimation(this, R.anim.alpha);
+        Animation translate = AnimationUtils.loadAnimation(this, R.anim.translate);
+        alpha.reset();
+        translate.reset();
+        ImageView logo = (ImageView) findViewById(R.id.splash);
+        assert logo != null;
+        assert mSignInButton != null;
+        logo.clearAnimation();
+        mSignInButton.clearAnimation();
+
+        logo.startAnimation(translate);
+        this.mSignInButton.startAnimation(alpha);
+    }
+
+    private void initializeService() {
+        this.restaurantService = ServiceFactory.getRestaurantService(LoginActivity.this);
+        this.restaurantService.setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) {
+                if (type.equals(EventType.Full)) {
+                    loaded = true;
+                }
+            }
+        });
+    }
+
+    private void initApp() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        LoginActivity.this.finish();
     }
 
 }

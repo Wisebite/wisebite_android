@@ -5,6 +5,7 @@ import android.util.Pair;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -525,5 +526,16 @@ public class RestaurantService extends Service<Restaurant> {
         }
         Preferences.setCurrentUserEmail(userId);
         return true;
+    }
+
+    public boolean databaseLoaded() {
+        return !repository.all().isEmpty() ||
+                !menuRepository.all().isEmpty() ||
+                !dishRepository.all().isEmpty() ||
+                !imageRepository.all().isEmpty() ||
+                !openTimeRepository.all().isEmpty() ||
+                !orderRepository.all().isEmpty() ||
+                !orderItemRepository.all().isEmpty() ||
+                !userRepository.all().isEmpty();
     }
 }

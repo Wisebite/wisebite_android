@@ -195,4 +195,6 @@
     <string name="title_finish_item">Finish item</string>
     <string name="message_finish_item">Have you prepared the selected item?</string>
     <string name="loading">Loading...</string>
+    <string name="app_title_image">Wisebite</string>
+    <string name="app_logo">Wisebite Logo</string>
 </resources>
