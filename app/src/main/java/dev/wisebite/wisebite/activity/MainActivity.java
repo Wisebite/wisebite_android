@@ -38,6 +38,7 @@ public class MainActivity extends BaseActivity
     private String restaurantId;
 
     private FloatingActionButton fab;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class MainActivity extends BaseActivity
         restaurantService = ServiceFactory.getRestaurantService(MainActivity.this);
         userService = ServiceFactory.getUserService(MainActivity.this);
         orderService = ServiceFactory.getOrderService(MainActivity.this);
-        restaurantId = "-KfvAq-HC6SSapHSBzsm";
+        restaurantId = userService.getFirstRestaurantId(Preferences.getCurrentUserEmail());
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -59,14 +60,19 @@ public class MainActivity extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.getMenu().getItem(1).setChecked(true);
 
-        setUserInfo(navigationView);
+        setUserInfo();
 
-        initFragment(R.layout.content_active_orders);
-        initializeActiveOrders();
+        if (restaurantId != null) {
+            initFragment(R.layout.content_active_orders);
+            initializeActiveOrders();
+        } else {
+            initFragment(R.layout.content_list_restaurants);
+            initializeListRestaurants();
+        }
 
     }
 
@@ -111,12 +117,24 @@ public class MainActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_active_orders) {
+        if (id == R.id.nav_create_restaurant) {
+            Intent intent = new Intent(MainActivity.this, CreateRestaurantInfoActivity.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        } else if (id == R.id.nav_active_orders) {
             initFragment(R.layout.content_active_orders);
             initializeActiveOrders();
         } else if (id == R.id.nav_kitchen) {
             initFragment(R.layout.content_kitchen);
             initializeKitchen();
+        } else if (id == R.id.nav_see_restaurant) {
+            Intent intent = new Intent(MainActivity.this, GetRestaurantActivity.class);
+            intent.putExtra(GetRestaurantActivity.RESTAURANT_ID, restaurantId);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        } else if (id == R.id.nav_list_restaurants) {
+            initFragment(R.layout.content_list_restaurants);
+            initializeListRestaurants();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -124,23 +142,28 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-    private void setUserInfo(NavigationView navigationView) {
-        // TODO set user info when we have user model
-        TextView restaurantName = (TextView) navigationView.findViewById(R.id.restaurant_name_nav);
-        restaurantName.setText(restaurantService.get(restaurantId).getName());
-        restaurantName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, GetRestaurantActivity.class);
-                intent.putExtra(GetRestaurantActivity.RESTAURANT_ID, restaurantId);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-            }
-        });
+    private void setUserInfo() {
+
+        if (restaurantId == null) {
+            navigationView.getMenu().findItem(R.id.nav_create_restaurant).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_active_orders).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_kitchen).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_see_restaurant).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
+        } else {
+            navigationView.getMenu().findItem(R.id.nav_create_restaurant).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_active_orders).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_kitchen).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_see_restaurant).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
+        }
+
         new DownloadImageTask((ImageView) navigationView.findViewById(R.id.user_picture_nav))
                 .execute(userService.getProfilePhoto());
         TextView userName = (TextView) navigationView.findViewById(R.id.user_name_nav);
         userName.setText(userService.getUserName(Preferences.getCurrentUserEmail()));
+        TextView restaurantName = (TextView) navigationView.findViewById(R.id.restaurant_name_nav);
+        restaurantName.setText((restaurantId != null ? restaurantService.get(restaurantId).getName() : ""));
 
     }
 
@@ -180,6 +203,11 @@ public class MainActivity extends BaseActivity
         assert recyclerView != null;
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(kitchenAdapter);
+    }
+
+    private void initializeListRestaurants() {
+        setTitle(getResources().getString(R.string.list_restaurants));
+        fab.setVisibility(View.GONE);
     }
 
 }

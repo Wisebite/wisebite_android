@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Restaurant;
@@ -29,26 +28,13 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
         setContentView(R.layout.activity_create_restaurant_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ServiceFactory.getRestaurantService(CreateRestaurantInfoActivity.this);
 
         initializeForm();
         initializeSubmit();
 
-        TextView main = (TextView) findViewById(R.id.main);
-        assert main != null;
-        main.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main();
-            }
-        });
-
-    }
-
-    private void main() {
-        Intent intent = new Intent(CreateRestaurantInfoActivity.this, MainActivity.class);
-        startActivity(intent);
     }
 
     private void initializeForm() {

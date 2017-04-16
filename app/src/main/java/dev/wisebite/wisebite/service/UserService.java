@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import java.util.Map;
 import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.Restaurant;
@@ -63,8 +64,14 @@ public class UserService extends Service<User> {
                 .getImageFile();
     }
 
-    public String getUserName(String currentUserEmail) {
-        return repository.get(currentUserEmail).getName();
+    public String getUserName(String currentUser) {
+        return repository.get(currentUser).getName();
     }
 
+    public String getFirstRestaurantId(String currentUser) {
+        User user = repository.get(currentUser);
+        Map<String, Object> keys = user.getMyRestaurants();
+        if (keys != null && !keys.keySet().isEmpty()) return (String) keys.keySet().toArray()[0];
+        return null;
+    }
 }
