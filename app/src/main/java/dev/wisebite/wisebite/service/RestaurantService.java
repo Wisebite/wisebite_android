@@ -92,7 +92,8 @@ public class RestaurantService extends Service<Restaurant> {
         }
         restaurant.setMenus(menusMap);
 
-        repository.insert(restaurant);
+        String newId = repository.insert(restaurant).getId();
+        addUserToRestaurant(newId, Preferences.getCurrentUserEmail());
     }
 
     public ArrayList<Dish> getDishes(String restaurantId) {
@@ -123,6 +124,26 @@ public class RestaurantService extends Service<Restaurant> {
             result.add(openTimeRepository.get(key));
         }
         return result;
+    }
+
+    public void addUserToRestaurant(String restaurantId, String userId) {
+        Restaurant restaurant = repository.get(restaurantId);
+        Map<String, Object> users = restaurant.getUsers();
+        if (users == null) {
+            users = new LinkedHashMap<>();
+        }
+        users.put(userId, true);
+        restaurant.setUsers(users);
+        repository.update(restaurant);
+
+        User user = userRepository.get(userId);
+        Map<String, Object> restaurants = user.getMyRestaurants();
+        if (restaurants == null) {
+            restaurants = new LinkedHashMap<>();
+        }
+        restaurants.put(restaurantId, true);
+        user.setMyRestaurants(restaurants);
+        userRepository.update(user);
     }
 
 }
