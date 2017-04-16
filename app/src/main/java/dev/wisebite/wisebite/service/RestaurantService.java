@@ -1,5 +1,6 @@
 package dev.wisebite.wisebite.service;
 
+import android.net.Uri;
 import android.util.Pair;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -515,12 +516,20 @@ public class RestaurantService extends Service<Restaurant> {
     public boolean logIn(GoogleSignInAccount acct) {
         String userId = Utils.skipAts(acct.getEmail());
         if (!userRepository.exists(userId)) {
+            Uri imageUri = acct.getPhotoUrl();
+            String imageId = null;
+            if (imageUri != null) {
+                Image image = Image.builder()
+                        .imageFile(imageUri.toString()).description("Profile photo")
+                        .build();
+                imageId = imageRepository.insert(image).getId();
+            }
             User user = User.builder()
                     .email(userId)
                     .name(acct.getDisplayName())
                     .lastName(acct.getFamilyName())
                     .location(null)
-                    .imageId(null)
+                    .imageId(imageId)
                     .build();
             userRepository.update(user);
         }
@@ -528,14 +537,13 @@ public class RestaurantService extends Service<Restaurant> {
         return true;
     }
 
-    public boolean databaseLoaded() {
-        return !repository.all().isEmpty() ||
-                !menuRepository.all().isEmpty() ||
-                !dishRepository.all().isEmpty() ||
-                !imageRepository.all().isEmpty() ||
-                !openTimeRepository.all().isEmpty() ||
-                !orderRepository.all().isEmpty() ||
-                !orderItemRepository.all().isEmpty() ||
-                !userRepository.all().isEmpty();
+    public String getProfilePhoto() {
+        return imageRepository.get(
+                userRepository.get(Preferences.getCurrentUserEmail()).getImageId())
+                .getImageFile();
+    }
+
+    public String getUserName(String currentUserEmail) {
+        return userRepository.get(currentUserEmail).getName();
     }
 }
