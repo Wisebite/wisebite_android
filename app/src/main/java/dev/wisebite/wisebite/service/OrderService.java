@@ -15,6 +15,9 @@ import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
+import dev.wisebite.wisebite.domain.Restaurant;
+import dev.wisebite.wisebite.domain.User;
+import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.utils.Repository;
 import dev.wisebite.wisebite.utils.Service;
 
@@ -27,15 +30,21 @@ public class OrderService extends Service<Order> {
     private final Repository<OrderItem> orderItemRepository;
     private final Repository<Dish> dishRepository;
     private final Repository<Menu> menuRepository;
+    private final Repository<Restaurant> restaurantRepository;
+    private final Repository<User> userRepository;
 
     public OrderService(Repository<Order> repository,
                         Repository<OrderItem> orderItemRepository,
                         Repository<Dish> dishRepository,
-                        Repository<Menu> menuRepository) {
+                        Repository<Menu> menuRepository,
+                        Repository<Restaurant> restaurantRepository,
+                        Repository<User> userRepository) {
         super(repository);
         this.orderItemRepository = orderItemRepository;
         this.dishRepository = dishRepository;
         this.menuRepository = menuRepository;
+        this.restaurantRepository = restaurantRepository;
+        this.userRepository = userRepository;
     }
 
     public double getPriceOfOrder(String id) {
@@ -146,9 +155,12 @@ public class OrderService extends Service<Order> {
         return (paid/total)*100.0;
     }
 
-    public ArrayList<Order> getActiveOrders() {
+    public ArrayList<Order> getActiveOrders(String restaurantId) {
+        ArrayList<String> orderKeys = getOrdersOf(restaurantId);
+
         ArrayList<Order> orders = new ArrayList<>();
-        for (Order order : repository.all()) {
+        for (String id : orderKeys) {
+            Order order = repository.get(id);
             if (getPaidOfOrder(order.getId()) < 100.0) orders.add(order);
         }
         Collections.sort(orders, new OrderLastDateComparator());
@@ -183,12 +195,22 @@ public class OrderService extends Service<Order> {
                 orderItems.put(insertedId, true);
             }
         }
-        repository.insert(Order.builder()
+        String newId = repository.insert(Order.builder()
                 .date(new Date())
                 .tableNumber(tableNumber)
                 .lastDate(new Date())
                 .orderItems(orderItems)
-                .build());
+                .build()).getId();
+
+        User user = userRepository.get(Preferences.getCurrentUserEmail());
+        Map<String, Object> myOrders = user.getMyOrders();
+        if (myOrders == null) {
+            myOrders = new LinkedHashMap<>();
+        }
+        myOrders.put(newId, true);
+        user.setMyOrders(myOrders);
+        userRepository.update(user);
+
     }
 
     public void setDelivered(OrderItem item, boolean b, Order order) {
@@ -318,9 +340,12 @@ public class OrderService extends Service<Order> {
         repository.delete(order.getId());
     }
 
-    public ArrayList<Order> getNonReadyOrders() {
+    public ArrayList<Order> getNonReadyOrders(String restaurantId) {
+        ArrayList<String> orderKeys = getOrdersOf(restaurantId);
+
         ArrayList<Order> orders = new ArrayList<>();
-        for (Order order : repository.all()) {
+        for (String id : orderKeys) {
+            Order order = repository.get(id);
             if (getReadyOfOrder(order.getId()) < 100.0) orders.add(order);
         }
         Collections.sort(orders, new OrderStartDateComparator());
@@ -344,6 +369,19 @@ public class OrderService extends Service<Order> {
         return  (!menu.getMainDishes().isEmpty() ? 1 : 0) +
                 (!menu.getSecondaryDishes().isEmpty() ? 1 : 0) +
                 (!menu.getOtherDishes().isEmpty() ? 1 : 0);
+    }
+
+    private ArrayList<String> getOrdersOf(String restaurantId) {
+        ArrayList<String> orderKeys = new ArrayList<>();
+        Restaurant restaurant = restaurantRepository.get(restaurantId);
+        for (String userId : restaurant.getUsers().keySet()) {
+            User user = userRepository.get(userId);
+            Map<String, Object> orderIds = user.getMyOrders();
+            if (orderIds != null && !orderIds.isEmpty()) {
+                orderKeys.addAll(orderIds.keySet());
+            }
+        }
+        return orderKeys;
     }
 
 }

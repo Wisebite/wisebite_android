@@ -21,7 +21,9 @@ import dev.wisebite.wisebite.repository.OrderItemRepository;
 import dev.wisebite.wisebite.repository.OrderRepository;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.FirebaseRepository;
+import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.utils.Utils;
 
 /**
@@ -34,11 +36,13 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
     private Context context;
 
     private OrderService orderService;
+    private UserService userService;
 
     public KitchenAdapter(ArrayList<Order> ordersList, Context context) {
         this.orders = ordersList;
         this.context = context;
         this.orderService = ServiceFactory.getOrderService(context);
+        this.userService = ServiceFactory.getUserService(context);
         notifyDataSetChanged();
         setListener();
     }
@@ -101,7 +105,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                orders = orderService.getNonReadyOrders();
+                orders = orderService.getNonReadyOrders(userService.getFirstRestaurantId(Preferences.getCurrentUserEmail()));
                 notifyDataSetChanged();
             }
 
@@ -119,7 +123,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
                 firebase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        orders = orderService.getNonReadyOrders();
+                        orders = orderService.getNonReadyOrders(userService.getFirstRestaurantId(Preferences.getCurrentUserEmail()));
                         notifyDataSetChanged();
                     }
 

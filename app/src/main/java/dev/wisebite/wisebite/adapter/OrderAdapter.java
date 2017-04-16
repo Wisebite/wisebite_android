@@ -22,7 +22,9 @@ import dev.wisebite.wisebite.repository.OrderItemRepository;
 import dev.wisebite.wisebite.repository.OrderRepository;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.FirebaseRepository;
+import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.utils.Utils;
 
 /**
@@ -33,10 +35,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
 
     private ArrayList<Order> orders;
     private OrderService orderService;
+    private UserService userService;
 
     public OrderAdapter(ArrayList<Order> ordersList, Context context) {
         this.orders = ordersList;
         this.orderService = ServiceFactory.getOrderService(context);
+        this.userService = ServiceFactory.getUserService(context);
         notifyDataSetChanged();
         setListener();
     }
@@ -116,7 +120,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                orders = orderService.getActiveOrders();
+                orders = orderService.getActiveOrders(userService.getFirstRestaurantId(Preferences.getCurrentUserEmail()));
                 notifyDataSetChanged();
             }
 
@@ -134,7 +138,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
                 firebase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        orders = orderService.getActiveOrders();
+                        orders = orderService.getActiveOrders(userService.getFirstRestaurantId(Preferences.getCurrentUserEmail()));
                         notifyDataSetChanged();
                     }
 

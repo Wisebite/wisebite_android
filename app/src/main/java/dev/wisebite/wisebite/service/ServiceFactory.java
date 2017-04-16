@@ -70,7 +70,9 @@ public final class ServiceFactory {
                     new OrderRepository(context),
                     new OrderItemRepository(context),
                     new DishRepository(context),
-                    new MenuRepository(context));
+                    new MenuRepository(context),
+                    new RestaurantRepository(context),
+                    new UserRepository(context));
         return orderService;
     }
 

@@ -184,11 +184,12 @@ public class MainActivity extends BaseActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreateOrderActivity.class);
+                intent.putExtra(CreateOrderActivity.RESTAURANT_ID, restaurantId);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
-        OrderAdapter orderAdapter = new OrderAdapter(orderService.getActiveOrders(), MainActivity.this);
+        OrderAdapter orderAdapter = new OrderAdapter(orderService.getActiveOrders(restaurantId), MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.active_order_list);
         assert recyclerView != null;
         recyclerView.setAdapter(orderAdapter);
@@ -197,7 +198,7 @@ public class MainActivity extends BaseActivity
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
         fab.setVisibility(View.GONE);
-        KitchenAdapter kitchenAdapter = new KitchenAdapter(orderService.getNonReadyOrders(), MainActivity.this);
+        KitchenAdapter kitchenAdapter = new KitchenAdapter(orderService.getNonReadyOrders(restaurantId), MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.kitchen_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;

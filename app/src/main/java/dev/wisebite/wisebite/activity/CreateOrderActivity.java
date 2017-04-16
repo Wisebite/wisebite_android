@@ -25,7 +25,7 @@ import dev.wisebite.wisebite.utils.BaseActivity;
 
 public class CreateOrderActivity extends BaseActivity {
 
-    private static final String RESTAURANT_MOCK_ID = "-KfvAq-HC6SSapHSBzsm";
+    public static final String RESTAURANT_ID = "RESTAURANT_ID";
 
     private LayoutInflater inflater;
 
@@ -36,6 +36,7 @@ public class CreateOrderActivity extends BaseActivity {
     private ArrayList<Dish> selectedDishes;
     private ArrayList<Menu> selectedMenusDishes;
     private Integer tableNumber;
+    private String restaurantId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,10 @@ public class CreateOrderActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (getIntent().getSerializableExtra(RESTAURANT_ID) != null) {
+            this.restaurantId = getIntent().getExtras().getString(RESTAURANT_ID);
+        }
 
         inflater = LayoutInflater.from(CreateOrderActivity.this);
 
@@ -100,7 +105,7 @@ public class CreateOrderActivity extends BaseActivity {
     private void initializeDishesItems() {
         selectedDishes = new ArrayList<>();
         totalPriceView = (TextView) findViewById(R.id.total_price);
-        OrderItemDishAdapter orderItemDishAdapter = new OrderItemDishAdapter(restaurantService.getDishes(RESTAURANT_MOCK_ID),
+        OrderItemDishAdapter orderItemDishAdapter = new OrderItemDishAdapter(restaurantService.getDishes(restaurantId),
                 totalPriceView,
                 selectedDishes);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
@@ -113,7 +118,7 @@ public class CreateOrderActivity extends BaseActivity {
     private void initializeMenusItems() {
         selectedMenusDishes = new ArrayList<>();
         totalPriceView = (TextView) findViewById(R.id.total_price);
-        OrderItemMenuAdapter orderItemMenuAdapter = new OrderItemMenuAdapter(restaurantService.getMenus(RESTAURANT_MOCK_ID),
+        OrderItemMenuAdapter orderItemMenuAdapter = new OrderItemMenuAdapter(restaurantService.getMenus(restaurantId),
                 totalPriceView,
                 selectedMenusDishes,
                 CreateOrderActivity.this);
