@@ -51,7 +51,7 @@ public class KitchenItemAdapter extends RecyclerView.Adapter<KitchenItemAdapter.
     public void onBindViewHolder(KitchenItemHolder holder, int position) {
         final OrderItem current = orderItems.get(position);
         holder.item = current;
-        holder.descriptionItem.setText(orderItemService.getName(current));
+        holder.descriptionItem.setText(orderItemService.getDishName(current));
     }
 
     @Override

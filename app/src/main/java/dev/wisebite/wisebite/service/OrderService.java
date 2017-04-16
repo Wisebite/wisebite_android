@@ -161,7 +161,8 @@ public class OrderService extends Service<Order> {
         ArrayList<Order> orders = new ArrayList<>();
         for (String id : orderKeys) {
             Order order = repository.get(id);
-            if (getPaidOfOrder(order.getId()) < 100.0) orders.add(order);
+            if (order == null) addNullActiveOrder(id, orders);
+            else if (getPaidOfOrder(order.getId()) < 100.0) orders.add(order);
         }
         Collections.sort(orders, new OrderLastDateComparator());
         return orders;
@@ -346,7 +347,8 @@ public class OrderService extends Service<Order> {
         ArrayList<Order> orders = new ArrayList<>();
         for (String id : orderKeys) {
             Order order = repository.get(id);
-            if (getReadyOfOrder(order.getId()) < 100.0) orders.add(order);
+            if (order == null) addNullNonReadyOrder(id, orders);
+            else if (getReadyOfOrder(order.getId()) < 100.0) orders.add(order);
         }
         Collections.sort(orders, new OrderStartDateComparator());
         return orders;
@@ -382,6 +384,44 @@ public class OrderService extends Service<Order> {
             }
         }
         return orderKeys;
+    }
+
+    private void addNullNonReadyOrder(final String id, final ArrayList<Order> orders) {
+        new Thread(){
+            @Override
+            public void run() {
+                Order order = repository.get(id);
+                try {
+                    while (order == null) {
+                        sleep(1000);
+                        order = repository.get(id);
+                    }
+                } catch (InterruptedException ex) {
+                    // Catching exception
+                } finally {
+                    if (getReadyOfOrder(id) < 100.0) orders.add(order);
+                }
+            }
+        }.start();
+    }
+
+    private void addNullActiveOrder(final String id, final ArrayList<Order> orders) {
+        new Thread(){
+            @Override
+            public void run() {
+                Order order = repository.get(id);
+                try {
+                    while (order == null) {
+                        sleep(1000);
+                        order = repository.get(id);
+                    }
+                } catch (InterruptedException ex) {
+                    // Catching exception
+                } finally {
+                    if (getPaidOfOrder(id) < 100.0) orders.add(order);
+                }
+            }
+        }.start();
     }
 
 }

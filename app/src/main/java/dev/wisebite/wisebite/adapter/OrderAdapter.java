@@ -25,6 +25,7 @@ import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.FirebaseRepository;
 import dev.wisebite.wisebite.utils.Preferences;
+import dev.wisebite.wisebite.utils.Repository;
 import dev.wisebite.wisebite.utils.Utils;
 
 /**
@@ -115,39 +116,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
     }
 
     private void setListener() {
-        Firebase firebase;
-        firebase = new Firebase(FirebaseRepository.FIREBASE_URI + OrderRepository.OBJECT_REFERENCE);
-        firebase.addValueEventListener(new ValueEventListener() {
+        orderService.setOnChangedListener(new Repository.OnChangedListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                orders = orderService.getActiveOrders(userService.getFirstRestaurantId(Preferences.getCurrentUserEmail()));
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                // do nothing
+            public void onChanged(EventType type) {
+                if (type.equals(EventType.Full)) {
+                    orders = orderService.getActiveOrders(userService.getFirstRestaurantId(Preferences.getCurrentUserEmail()));
+                    notifyDataSetChanged();
+                }
             }
         });
-
-        for (Order order : this.orders) {
-            for (String key : order.getOrderItems().keySet()) {
-                firebase = new Firebase(FirebaseRepository.FIREBASE_URI +
-                                        OrderItemRepository.OBJECT_REFERENCE + '/' +
-                                        key);
-                firebase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        orders = orderService.getActiveOrders(userService.getFirstRestaurantId(Preferences.getCurrentUserEmail()));
-                        notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-                        // do nothing
-                    }
-                });
-            }
-        }
     }
 }

@@ -49,7 +49,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
     public void onBindViewHolder(final OrderItemHolder holder, int position) {
         final OrderItem current = orderItems.get(position);
         holder.item = current;
-        holder.name.setText(orderItemService.getName(current));
+        holder.name.setText(orderItemService.getDishName(current));
         setFlags(holder);
     }
 

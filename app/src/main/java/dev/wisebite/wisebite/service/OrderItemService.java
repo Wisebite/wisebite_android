@@ -25,6 +25,10 @@ public class OrderItemService extends Service<OrderItem> {
         this.menuRepository = menuRepository;
     }
 
+    public String getDishName(OrderItem current) {
+        return dishRepository.get(current.getDishId()).getName();
+    }
+
     public String getName(OrderItem current) {
         if (current.getMenuId() == null) {
             return dishRepository.get(current.getDishId()).getName();
