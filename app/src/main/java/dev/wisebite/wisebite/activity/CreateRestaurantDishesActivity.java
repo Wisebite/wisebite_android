@@ -108,7 +108,7 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
     }
 
     private void initializeRecycleViewDish() {
-        dishAdapter = new DishAdapter(dishes);
+        dishAdapter = new DishAdapter(dishes, false);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_dish);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;

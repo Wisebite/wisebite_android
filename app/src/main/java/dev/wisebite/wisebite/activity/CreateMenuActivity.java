@@ -118,7 +118,7 @@ public class CreateMenuActivity extends BaseActivity {
     }
 
     private void initializeRecycleViewMainDishes() {
-        mainDishesAdapter = new DishAdapter(mainDishes);
+        mainDishesAdapter = new DishAdapter(mainDishes, true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_main_dishes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -127,7 +127,7 @@ public class CreateMenuActivity extends BaseActivity {
     }
 
     private void initializeRecycleViewSecondaryDishes() {
-        secondaryDishesAdapter = new DishAdapter(secondaryDishes);
+        secondaryDishesAdapter = new DishAdapter(secondaryDishes, true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_secondary_dishes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -136,7 +136,7 @@ public class CreateMenuActivity extends BaseActivity {
     }
 
     private void initializeRecycleViewOtherDishes() {
-        otherDishesAdapter = new DishAdapter(otherDishes);
+        otherDishesAdapter = new DishAdapter(otherDishes, true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_other_dishes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -147,6 +147,7 @@ public class CreateMenuActivity extends BaseActivity {
     public void typeMainDishes(View view) {
         floatingActionMenu.close(true);
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.dish_form), null);
+        form.findViewById(R.id.form_layout_price).setVisibility(View.GONE);
         new AlertDialog.Builder(CreateMenuActivity.this)
                 .setTitle(getResources().getString(R.string.title_dish_form))
                 .setView(form)
@@ -155,11 +156,9 @@ public class CreateMenuActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         TextView name = (TextView) form.findViewById(R.id.form_name);
                         TextView description = (TextView) form.findViewById(R.id.form_description);
-                        TextView price = (TextView) form.findViewById(R.id.form_price);
                         mainDishes.add(Dish.builder()
                                 .name(name.getText().toString().trim())
                                 .description(description.getText().toString().trim())
-                                .price(Double.valueOf(price.getText().toString().trim()))
                                 .build());
                         if (mainDishes.size() != 0) {
                             mockMainDishes.setVisibility(View.GONE);
@@ -179,6 +178,7 @@ public class CreateMenuActivity extends BaseActivity {
     public void typeSecondaryDishes(View view) {
         floatingActionMenu.close(true);
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.dish_form), null);
+        form.findViewById(R.id.form_layout_price).setVisibility(View.GONE);
         new AlertDialog.Builder(CreateMenuActivity.this)
                 .setTitle(getResources().getString(R.string.title_dish_form))
                 .setView(form)
@@ -187,11 +187,9 @@ public class CreateMenuActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         TextView name = (TextView) form.findViewById(R.id.form_name);
                         TextView description = (TextView) form.findViewById(R.id.form_description);
-                        TextView price = (TextView) form.findViewById(R.id.form_price);
                         secondaryDishes.add(Dish.builder()
                                 .name(name.getText().toString().trim())
                                 .description(description.getText().toString().trim())
-                                .price(Double.valueOf(price.getText().toString().trim()))
                                 .build());
                         if (secondaryDishes.size() != 0) {
                             mockSecondaryDishes.setVisibility(View.GONE);
@@ -211,6 +209,7 @@ public class CreateMenuActivity extends BaseActivity {
     public void typeOtherDishes(View view) {
         floatingActionMenu.close(true);
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.dish_form), null);
+        form.findViewById(R.id.form_layout_price).setVisibility(View.GONE);
         new AlertDialog.Builder(CreateMenuActivity.this)
                 .setTitle(getResources().getString(R.string.title_dish_form))
                 .setView(form)
@@ -219,11 +218,9 @@ public class CreateMenuActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         TextView name = (TextView) form.findViewById(R.id.form_name);
                         TextView description = (TextView) form.findViewById(R.id.form_description);
-                        TextView price = (TextView) form.findViewById(R.id.form_price);
                         otherDishes.add(Dish.builder()
                                 .name(name.getText().toString().trim())
                                 .description(description.getText().toString().trim())
-                                .price(Double.valueOf(price.getText().toString().trim()))
                                 .build());
                         if (otherDishes.size() != 0) {
                             mockOtherDishes.setVisibility(View.GONE);

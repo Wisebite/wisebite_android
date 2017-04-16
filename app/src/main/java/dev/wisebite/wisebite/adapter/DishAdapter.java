@@ -18,9 +18,11 @@ import dev.wisebite.wisebite.domain.Dish;
 public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
 
     private ArrayList<Dish> dishes;
+    private boolean menu;
 
-    public DishAdapter(ArrayList<Dish> dishes) {
+    public DishAdapter(ArrayList<Dish> dishes, boolean menu) {
         this.dishes = dishes;
+        this.menu = menu;
         notifyDataSetChanged();
     }
 
@@ -36,7 +38,8 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
         Dish current = dishes.get(position);
         holder.name.setText(current.getName());
         holder.description.setText(current.getDescription());
-        holder.price.setText(String.valueOf(current.getPrice() + " €"));
+        if (!menu) holder.price.setText(String.valueOf(current.getPrice() + " €"));
+        else holder.price.setText("");
     }
 
     @Override
@@ -57,6 +60,9 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
             this.name = (TextView) itemView.findViewById(R.id.name);
             this.description = (TextView) itemView.findViewById(R.id.description);
             this.price = (TextView) itemView.findViewById(R.id.price);
+            if (menu) {
+                this.price.setVisibility(View.GONE);
+            }
         }
     }
 }
