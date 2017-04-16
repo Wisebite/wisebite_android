@@ -20,8 +20,9 @@ import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.BaseActivity;
 
-public class CollectOrderActivity extends AppCompatActivity {
+public class CollectOrderActivity extends BaseActivity {
 
     public static final String INTENT_ORDER = "INTENT_ORDER";
 

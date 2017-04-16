@@ -24,9 +24,10 @@ import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.Utils;
 
-public class GetRestaurantActivity extends AppCompatActivity {
+public class GetRestaurantActivity extends BaseActivity {
 
     public static final String RESTAURANT_ID = "RESTAURANT_ID";
 

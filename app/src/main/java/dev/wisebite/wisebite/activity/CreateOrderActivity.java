@@ -21,8 +21,9 @@ import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.BaseActivity;
 
-public class CreateOrderActivity extends AppCompatActivity {
+public class CreateOrderActivity extends BaseActivity {
 
     private static final String RESTAURANT_MOCK_ID = "-KfvAq-HC6SSapHSBzsm";
     private OrderItemDishAdapter orderItemDishAdapter;

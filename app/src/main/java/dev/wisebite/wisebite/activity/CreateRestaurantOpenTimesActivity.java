@@ -21,9 +21,10 @@ import dev.wisebite.wisebite.domain.OpenTime;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.Utils;
 
-public class CreateRestaurantOpenTimesActivity extends AppCompatActivity {
+public class CreateRestaurantOpenTimesActivity extends BaseActivity {
 
     public static final String RESTAURANT = "INTENT_RESTAURANT";
 

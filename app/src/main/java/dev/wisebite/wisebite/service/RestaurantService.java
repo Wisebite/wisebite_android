@@ -1,8 +1,12 @@
 package dev.wisebite.wisebite.service;
 
+import android.net.Uri;
 import android.util.Pair;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -18,8 +22,11 @@ import dev.wisebite.wisebite.domain.OpenTime;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
+import dev.wisebite.wisebite.domain.User;
+import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.utils.Repository;
 import dev.wisebite.wisebite.utils.Service;
+import dev.wisebite.wisebite.utils.Utils;
 
 /**
  * Created by albert on 13/03/17.
@@ -33,6 +40,7 @@ public class RestaurantService extends Service<Restaurant> {
     private final Repository<OpenTime> openTimeRepository;
     private final Repository<Order> orderRepository;
     private final Repository<OrderItem> orderItemRepository;
+    private final Repository<User> userRepository;
 
     public RestaurantService(Repository<Restaurant> repository,
                              Repository<Menu> menuRepository,
@@ -40,7 +48,8 @@ public class RestaurantService extends Service<Restaurant> {
                              Repository<Image> imageRepository,
                              Repository<OpenTime> openTimeRepository,
                              Repository<Order> orderRepository,
-                             Repository<OrderItem> orderItemRepository) {
+                             Repository<OrderItem> orderItemRepository,
+                             Repository<User> userRepository) {
         super(repository);
         this.menuRepository = menuRepository;
         this.dishRepository = dishRepository;
@@ -48,6 +57,7 @@ public class RestaurantService extends Service<Restaurant> {
         this.openTimeRepository = openTimeRepository;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
+        this.userRepository = userRepository;
     }
 
     public void addOpenTimesToRestaurant(Restaurant restaurant, List<OpenTime> openTimeList) {
@@ -503,4 +513,37 @@ public class RestaurantService extends Service<Restaurant> {
         return result;
     }
 
+    public boolean logIn(GoogleSignInAccount acct) {
+        String userId = Utils.skipAts(acct.getEmail());
+        if (!userRepository.exists(userId)) {
+            Uri imageUri = acct.getPhotoUrl();
+            String imageId = null;
+            if (imageUri != null) {
+                Image image = Image.builder()
+                        .imageFile(imageUri.toString()).description("Profile photo")
+                        .build();
+                imageId = imageRepository.insert(image).getId();
+            }
+            User user = User.builder()
+                    .email(userId)
+                    .name(acct.getDisplayName())
+                    .lastName(acct.getFamilyName())
+                    .location(null)
+                    .imageId(imageId)
+                    .build();
+            userRepository.update(user);
+        }
+        Preferences.setCurrentUserEmail(userId);
+        return true;
+    }
+
+    public String getProfilePhoto() {
+        return imageRepository.get(
+                userRepository.get(Preferences.getCurrentUserEmail()).getImageId())
+                .getImageFile();
+    }
+
+    public String getUserName(String currentUserEmail) {
+        return userRepository.get(currentUserEmail).getName();
+    }
 }

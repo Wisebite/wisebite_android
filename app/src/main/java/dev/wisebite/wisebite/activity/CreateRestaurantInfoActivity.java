@@ -20,8 +20,9 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.BaseActivity;
 
-public class CreateRestaurantInfoActivity extends AppCompatActivity {
+public class CreateRestaurantInfoActivity extends BaseActivity {
 
     private EditText inputName, inputLocation, inputPhone,
             inputDescription, inputWebsite, inputNumberOfTables;

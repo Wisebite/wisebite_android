@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimaryDark"
     android:gravity="bottom"
     android:orientation="vertical"
@@ -12,16 +13,27 @@
     android:id="@+id/nav_header_info"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/user_picture_nav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.CardView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:elevation="12dp"
+        android:id="@+id/view2"
+        app:cardCornerRadius="40dp"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9"
         android:layout_gravity="center"
-        android:scaleY="1.5"
-        android:scaleX="1.5"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@mipmap/wisebite_logo"
-        android:contentDescription="@string/user_image_content" />
+        android:layout_marginTop="20sp">
+
+        <ImageView
+            android:layout_height="80dp"
+            android:layout_width="match_parent"
+            android:id="@+id/user_picture_nav"
+            android:src="@mipmap/wisebite_logo"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+    </android.support.v7.widget.CardView>
 
     <TextView
         android:layout_width="match_parent"

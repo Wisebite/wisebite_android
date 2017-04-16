@@ -25,8 +25,9 @@ import dev.wisebite.wisebite.repository.DishRepository;
 import dev.wisebite.wisebite.repository.MenuRepository;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.BaseActivity;
 
-public class GetOrderActivity extends AppCompatActivity {
+public class GetOrderActivity extends BaseActivity {
 
     public static final String INTENT_ORDER = "INTENT_ORDER";
 

@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import dev.wisebite.wisebite.R;
@@ -23,8 +24,11 @@ import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.BaseActivity;
+import dev.wisebite.wisebite.utils.DownloadImageTask;
+import dev.wisebite.wisebite.utils.Preferences;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RestaurantService restaurantService;
@@ -130,6 +134,11 @@ public class MainActivity extends AppCompatActivity
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
+        new DownloadImageTask((ImageView) navigationView.findViewById(R.id.user_picture_nav))
+                .execute(restaurantService.getProfilePhoto());
+        TextView userName = (TextView) navigationView.findViewById(R.id.user_name_nav);
+        userName.setText(restaurantService.getUserName(Preferences.getCurrentUserEmail()));
+
     }
 
     private void initFragment(int id) {
