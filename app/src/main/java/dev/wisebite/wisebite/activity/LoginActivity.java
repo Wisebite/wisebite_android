@@ -25,11 +25,13 @@ import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.Repository;
+import dev.wisebite.wisebite.utils.Utils;
 
 public class LoginActivity extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
+    public static final String ANIMATIONS = "ANIMATIONS";
     private GoogleApiClient mGoogleApiClient;
     private SignInButton mSignInButton;
     private ProgressDialog mProgressDialog;
@@ -38,7 +40,7 @@ public class LoginActivity extends BaseActivity implements
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
-    private Integer loaded;
+    private boolean translation = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,9 @@ public class LoginActivity extends BaseActivity implements
         showProgressDialog();
         initializeService();
 
-        this.loaded = 0;
+        if (getIntent().getSerializableExtra(ANIMATIONS) != null) {
+            this.translation = getIntent().getExtras().getBoolean(ANIMATIONS);
+        }
 
         // Set the dimensions of the sign-in button.
         this.mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
@@ -66,7 +70,9 @@ public class LoginActivity extends BaseActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        startAnimations();
+        if (translation) {
+            startAnimations();
+        }
 
     }
 
@@ -136,7 +142,7 @@ public class LoginActivity extends BaseActivity implements
                 @Override
                 public void run() {
                     try {
-                        while (loaded < ServiceFactory.getServiceCount()) {
+                        while (Utils.getLoaded() < ServiceFactory.getServiceCount()) {
                             sleep(1000);
                         }
                     } catch (InterruptedException ex) {
@@ -222,7 +228,7 @@ public class LoginActivity extends BaseActivity implements
 
     private void increaseLoaded(Repository.OnChangedListener.EventType type) {
         if (type.equals(Repository.OnChangedListener.EventType.Full)) {
-            ++loaded;
+            Utils.increaseLoaded();
         }
     }
 

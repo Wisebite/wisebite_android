@@ -2,6 +2,7 @@ package dev.wisebite.wisebite.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.KitchenAdapter;
@@ -30,7 +39,8 @@ import dev.wisebite.wisebite.utils.DownloadImageTask;
 import dev.wisebite.wisebite.utils.Preferences;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private RestaurantService restaurantService;
     private UserService userService;
@@ -39,6 +49,8 @@ public class MainActivity extends BaseActivity
 
     private FloatingActionButton fab;
     private NavigationView navigationView;
+    private GoogleApiClient mGoogleApiClient;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +63,14 @@ public class MainActivity extends BaseActivity
         userService = ServiceFactory.getUserService(MainActivity.this);
         orderService = ServiceFactory.getOrderService(MainActivity.this);
         restaurantId = userService.getFirstRestaurantId(Preferences.getCurrentUserEmail());
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -104,7 +124,17 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_log_out) {
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(@NonNull Status status) {
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            intent.putExtra(LoginActivity.ANIMATIONS, false);
+                            startActivity(intent);
+                            MainActivity.this.finish();
+                        }
+                    });
             return true;
         }
 
@@ -140,6 +170,13 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
+        // be available.
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 
     private void setUserInfo() {
@@ -210,5 +247,6 @@ public class MainActivity extends BaseActivity
         setTitle(getResources().getString(R.string.list_restaurants));
         fab.setVisibility(View.GONE);
     }
+
 
 }

@@ -194,10 +194,11 @@
     <string name="point">·</string>
     <string name="title_finish_item">Finish item</string>
     <string name="message_finish_item">Have you prepared the selected item?</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="app_title_image">Wisebite</string>
     <string name="app_logo">Wisebite Logo</string>
     <string name="create_restaurant">Create restaurant</string>
     <string name="see_restaurant">See restaurant</string>
     <string name="list_restaurants">List restaurants</string>
+    <string name="action_log_out">Sign out</string>
 </resources>
