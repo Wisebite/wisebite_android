@@ -21,6 +21,7 @@ import dev.wisebite.wisebite.domain.OpenTime;
 public class Utils {
 
     private static Menu tempMenu;
+    private static Integer loaded = 0;
 
     public static String generateId() {
         return new Firebase("https://wisebite-f7a53.firebaseio.com/").push().getKey();
@@ -81,6 +82,10 @@ public class Utils {
     public static Menu getTempMenu() {
         return tempMenu;
     }
+
+    public static Integer getLoaded() { return loaded; }
+
+    public static void increaseLoaded() { ++loaded; }
 
     public static String toStringWithTwoDecimals(double d) {
         d = Math.round(d * 100);
