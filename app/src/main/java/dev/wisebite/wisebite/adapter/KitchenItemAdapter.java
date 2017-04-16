@@ -12,10 +12,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.activity.CollectOrderActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
-import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.OrderItemService;
+import dev.wisebite.wisebite.service.OrderService;
+import dev.wisebite.wisebite.service.ServiceFactory;
 
 /**
  * Created by albert on 20/03/17.
@@ -23,16 +24,19 @@ import dev.wisebite.wisebite.service.RestaurantService;
  */
 public class KitchenItemAdapter extends RecyclerView.Adapter<KitchenItemAdapter.KitchenItemHolder> {
 
-    private final RestaurantService restaurantService;
     private ArrayList<OrderItem> orderItems;
     private final Context context;
     private final Order order;
 
-    public KitchenItemAdapter(ArrayList<OrderItem> orderItems, RestaurantService restaurantService, Context context, Order order) {
+    private OrderService orderService;
+    private OrderItemService orderItemService;
+
+    public KitchenItemAdapter(ArrayList<OrderItem> orderItems, Context context, Order order) {
         this.orderItems = orderItems;
-        this.restaurantService = restaurantService;
         this.context = context;
         this.order = order;
+        this.orderService = ServiceFactory.getOrderService(context);
+        this.orderItemService = ServiceFactory.getOrderItemService(context);
         notifyDataSetChanged();
     }
 
@@ -47,7 +51,7 @@ public class KitchenItemAdapter extends RecyclerView.Adapter<KitchenItemAdapter.
     public void onBindViewHolder(KitchenItemHolder holder, int position) {
         final OrderItem current = orderItems.get(position);
         holder.item = current;
-        holder.descriptionItem.setText(restaurantService.getDishNameOf(current));
+        holder.descriptionItem.setText(orderItemService.getName(current));
     }
 
     @Override
@@ -74,8 +78,8 @@ public class KitchenItemAdapter extends RecyclerView.Adapter<KitchenItemAdapter.
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    restaurantService.setReady(item, true, order);
-                                    orderItems = restaurantService.getNonReadyOrderItems(order);
+                                    orderService.setReady(item, true, order);
+                                    orderItems = orderService.getNonReadyOrderItems(order);
                                     notifyDataSetChanged();
                                 }
                             })

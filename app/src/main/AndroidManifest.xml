@@ -15,6 +15,9 @@
             android:name=".activity.CreateRestaurantInfoActivity"
             android:label="@string/title_activity_create_restaurant"
             android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.MainActivity" />
         </activity>
         <activity
             android:name=".activity.CreateRestaurantOpenTimesActivity"

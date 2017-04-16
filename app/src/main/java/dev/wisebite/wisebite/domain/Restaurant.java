@@ -35,6 +35,7 @@ public class Restaurant implements Entity {
     private Map<String, Object> openTimes = new LinkedHashMap<>();
     private Map<String, Object> menus = new LinkedHashMap<>();
     private Map<String, Object> dishes = new LinkedHashMap<>();
+    private Map<String, Object> users = new LinkedHashMap<>();
 
     @Override
     public String getId() {

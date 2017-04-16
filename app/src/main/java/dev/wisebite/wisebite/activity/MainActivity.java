@@ -3,18 +3,17 @@ package dev.wisebite.wisebite.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,8 +21,10 @@ import android.widget.TextView;
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
+import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.DownloadImageTask;
 import dev.wisebite.wisebite.utils.Preferences;
@@ -32,11 +33,12 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RestaurantService restaurantService;
+    private UserService userService;
+    private OrderService orderService;
     private String restaurantId;
 
-    private NavigationView navigationView;
-
     private FloatingActionButton fab;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,9 @@ public class MainActivity extends BaseActivity
         setSupportActionBar(toolbar);
 
         restaurantService = ServiceFactory.getRestaurantService(MainActivity.this);
-        restaurantId = "-KfvAq-HC6SSapHSBzsm";
+        userService = ServiceFactory.getUserService(MainActivity.this);
+        orderService = ServiceFactory.getOrderService(MainActivity.this);
+        restaurantId = userService.getFirstRestaurantId(Preferences.getCurrentUserEmail());
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -58,12 +62,17 @@ public class MainActivity extends BaseActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.getMenu().getItem(1).setChecked(true);
 
-        setUserInfo(navigationView);
+        setUserInfo();
 
-        initFragment(R.layout.content_active_orders);
-        initializeActiveOrders();
+        if (restaurantId != null) {
+            initFragment(R.layout.content_active_orders);
+            initializeActiveOrders();
+        } else {
+            initFragment(R.layout.content_list_restaurants);
+            initializeListRestaurants();
+        }
 
     }
 
@@ -108,12 +117,24 @@ public class MainActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_active_orders) {
+        if (id == R.id.nav_create_restaurant) {
+            Intent intent = new Intent(MainActivity.this, CreateRestaurantInfoActivity.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        } else if (id == R.id.nav_active_orders) {
             initFragment(R.layout.content_active_orders);
             initializeActiveOrders();
         } else if (id == R.id.nav_kitchen) {
             initFragment(R.layout.content_kitchen);
             initializeKitchen();
+        } else if (id == R.id.nav_see_restaurant) {
+            Intent intent = new Intent(MainActivity.this, GetRestaurantActivity.class);
+            intent.putExtra(GetRestaurantActivity.RESTAURANT_ID, restaurantId);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        } else if (id == R.id.nav_list_restaurants) {
+            initFragment(R.layout.content_list_restaurants);
+            initializeListRestaurants();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -121,23 +142,28 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-    private void setUserInfo(NavigationView navigationView) {
-        // TODO set user info when we have user model
-        TextView restaurantName = (TextView) navigationView.findViewById(R.id.restaurant_name_nav);
-        restaurantName.setText(restaurantService.get(restaurantId).getName());
-        restaurantName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, GetRestaurantActivity.class);
-                intent.putExtra(GetRestaurantActivity.RESTAURANT_ID, restaurantId);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-            }
-        });
+    private void setUserInfo() {
+
+        if (restaurantId == null) {
+            navigationView.getMenu().findItem(R.id.nav_create_restaurant).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_active_orders).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_kitchen).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_see_restaurant).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
+        } else {
+            navigationView.getMenu().findItem(R.id.nav_create_restaurant).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_active_orders).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_kitchen).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_see_restaurant).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
+        }
+
         new DownloadImageTask((ImageView) navigationView.findViewById(R.id.user_picture_nav))
-                .execute(restaurantService.getProfilePhoto());
+                .execute(userService.getProfilePhoto());
         TextView userName = (TextView) navigationView.findViewById(R.id.user_name_nav);
-        userName.setText(restaurantService.getUserName(Preferences.getCurrentUserEmail()));
+        userName.setText(userService.getUserName(Preferences.getCurrentUserEmail()));
+        TextView restaurantName = (TextView) navigationView.findViewById(R.id.restaurant_name_nav);
+        restaurantName.setText((restaurantId != null ? restaurantService.get(restaurantId).getName() : ""));
 
     }
 
@@ -158,11 +184,12 @@ public class MainActivity extends BaseActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreateOrderActivity.class);
+                intent.putExtra(CreateOrderActivity.RESTAURANT_ID, restaurantId);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
-        OrderAdapter orderAdapter = new OrderAdapter(restaurantService.getActiveOrders(), restaurantService);
+        OrderAdapter orderAdapter = new OrderAdapter(orderService.getActiveOrders(restaurantId), MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.active_order_list);
         assert recyclerView != null;
         recyclerView.setAdapter(orderAdapter);
@@ -171,12 +198,17 @@ public class MainActivity extends BaseActivity
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
         fab.setVisibility(View.GONE);
-        KitchenAdapter kitchenAdapter = new KitchenAdapter(restaurantService.getNonReadyOrders(), restaurantService, MainActivity.this);
+        KitchenAdapter kitchenAdapter = new KitchenAdapter(orderService.getNonReadyOrders(restaurantId), MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.kitchen_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(kitchenAdapter);
+    }
+
+    private void initializeListRestaurants() {
+        setTitle(getResources().getString(R.string.list_restaurants));
+        fab.setVisibility(View.GONE);
     }
 
 }

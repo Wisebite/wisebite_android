@@ -3,7 +3,6 @@ package dev.wisebite.wisebite.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +19,7 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.DishAdapter;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
-import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.MenuService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.Utils;
@@ -37,7 +36,7 @@ public class CreateMenuActivity extends BaseActivity {
     private TextView mockOtherDishes;
 
     private Menu menu;
-    private RestaurantService restaurantService;
+    private MenuService menuService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ public class CreateMenuActivity extends BaseActivity {
 
         inflater = LayoutInflater.from(CreateMenuActivity.this);
 
-        restaurantService = ServiceFactory.getRestaurantService(CreateMenuActivity.this);
+        menuService = ServiceFactory.getMenuService(CreateMenuActivity.this);
 
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab);
         mockMainDishes = (TextView) findViewById(R.id.mock_main_dishes);
@@ -242,7 +241,7 @@ public class CreateMenuActivity extends BaseActivity {
     }
 
     private void done() {
-        restaurantService.addDishesToMenu(menu, mainDishes, secondaryDishes, otherDishes);
+        menuService.addDishes(menu, mainDishes, secondaryDishes, otherDishes);
         Utils.setTempMenu(menu);
         finish();
     }

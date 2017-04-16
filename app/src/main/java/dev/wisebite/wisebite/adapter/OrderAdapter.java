@@ -1,5 +1,6 @@
 package dev.wisebite.wisebite.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,14 +17,14 @@ import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.activity.GetOrderActivity;
-import dev.wisebite.wisebite.activity.MainActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.repository.OrderItemRepository;
 import dev.wisebite.wisebite.repository.OrderRepository;
-import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.FirebaseRepository;
-import dev.wisebite.wisebite.utils.Repository;
+import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.utils.Utils;
 
 /**
@@ -33,12 +34,13 @@ import dev.wisebite.wisebite.utils.Utils;
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder> {
 
     private ArrayList<Order> orders;
+    private OrderService orderService;
+    private UserService userService;
 
-    private RestaurantService restaurantService;
-
-    public OrderAdapter(ArrayList<Order> ordersList, final RestaurantService restaurantService) {
+    public OrderAdapter(ArrayList<Order> ordersList, Context context) {
         this.orders = ordersList;
-        this.restaurantService = restaurantService;
+        this.orderService = ServiceFactory.getOrderService(context);
+        this.userService = ServiceFactory.getUserService(context);
         notifyDataSetChanged();
         setListener();
     }
@@ -62,19 +64,19 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
     }
 
     private String calculatePrice(Order current) {
-        return Utils.toStringWithTwoDecimals(restaurantService.getPriceOfOrder(current.getId()));
+        return Utils.toStringWithTwoDecimals(orderService.getPriceOfOrder(current.getId()));
     }
 
     private String calculateReady(Order current) {
-        return Utils.toStringWithTwoDecimals(restaurantService.getReadyOfOrder(current.getId()));
+        return Utils.toStringWithTwoDecimals(orderService.getReadyOfOrder(current.getId()));
     }
 
     private String calculateDelivered(Order current) {
-        return Utils.toStringWithTwoDecimals(restaurantService.getDeliveredOfOrder(current.getId()));
+        return Utils.toStringWithTwoDecimals(orderService.getDeliveredOfOrder(current.getId()));
     }
 
     private String calculatePaid(Order current) {
-        return Utils.toStringWithTwoDecimals(restaurantService.getPaidOfOrder(current.getId()));
+        return Utils.toStringWithTwoDecimals(orderService.getPaidOfOrder(current.getId()));
     }
 
     @Override
@@ -118,7 +120,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                orders = restaurantService.getActiveOrders();
+                orders = orderService.getActiveOrders(userService.getFirstRestaurantId(Preferences.getCurrentUserEmail()));
                 notifyDataSetChanged();
             }
 
@@ -136,7 +138,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
                 firebase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        orders = restaurantService.getActiveOrders();
+                        orders = orderService.getActiveOrders(userService.getFirstRestaurantId(Preferences.getCurrentUserEmail()));
                         notifyDataSetChanged();
                     }
 

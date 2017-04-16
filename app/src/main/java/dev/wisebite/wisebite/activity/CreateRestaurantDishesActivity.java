@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -158,7 +157,7 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void done(View view) {
-        restaurantService.addDishesAndMenusToRestaurant(restaurant, dishes, menus);
+        restaurantService.addDishesAndMenus(restaurant, dishes, menus);
         Intent intent = new Intent(CreateRestaurantDishesActivity.this, MainActivity.class);
         startActivity(intent);
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);

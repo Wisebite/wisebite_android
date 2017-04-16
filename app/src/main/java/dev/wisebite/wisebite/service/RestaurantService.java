@@ -60,7 +60,7 @@ public class RestaurantService extends Service<Restaurant> {
         this.userRepository = userRepository;
     }
 
-    public void addOpenTimesToRestaurant(Restaurant restaurant, List<OpenTime> openTimeList) {
+    public void addOpenTimes(Restaurant restaurant, List<OpenTime> openTimeList) {
         Map<String, Object> openTimeMap = new LinkedHashMap<>();
         for (OpenTime time : openTimeList) {
             String insertedId = openTimeRepository.insert(time).getId();
@@ -69,7 +69,7 @@ public class RestaurantService extends Service<Restaurant> {
         restaurant.setOpenTimes(openTimeMap);
     }
 
-    public void removeOpenTimesOf(String restaurantId) {
+    public void removeOpenTimes(String restaurantId) {
         Restaurant restaurant = repository.get(restaurantId);
         if (restaurant == null || restaurant.getOpenTimes() == null || restaurant.getOpenTimes().isEmpty()) return;
         for (String id : restaurant.getOpenTimes().keySet()) {
@@ -77,7 +77,7 @@ public class RestaurantService extends Service<Restaurant> {
         }
     }
 
-    public void addDishesAndMenusToRestaurant(Restaurant restaurant, ArrayList<Dish> dishes, ArrayList<Menu> menus) {
+    public void addDishesAndMenus(Restaurant restaurant, ArrayList<Dish> dishes, ArrayList<Menu> menus) {
         Map<String, Object> dishesMap = new LinkedHashMap<>();
         for (Dish dish : dishes) {
             String insertedId = dishRepository.insert(dish).getId();
@@ -92,150 +92,11 @@ public class RestaurantService extends Service<Restaurant> {
         }
         restaurant.setMenus(menusMap);
 
-        repository.insert(restaurant);
+        String newId = repository.insert(restaurant).getId();
+        addUserToRestaurant(newId, Preferences.getCurrentUserEmail());
     }
 
-    public void addDishesToMenu(Menu menu, ArrayList<Dish> mainDishes, ArrayList<Dish> secondaryDishes, ArrayList<Dish> otherDishes) {
-        Map<String, Object> mainDishesMap = new LinkedHashMap<>();
-        for (Dish dish : mainDishes) {
-            String insertedId = dishRepository.insert(dish).getId();
-            mainDishesMap.put(insertedId, true);
-        }
-        menu.setMainDishes(mainDishesMap);
-
-        Map<String, Object> secondaryDishesMap = new LinkedHashMap<>();
-        for (Dish dish : secondaryDishes) {
-            String insertedId = dishRepository.insert(dish).getId();
-            secondaryDishesMap.put(insertedId, true);
-        }
-        menu.setSecondaryDishes(secondaryDishesMap);
-
-        Map<String, Object> otherDishesMap = new LinkedHashMap<>();
-        for (Dish dish : otherDishes) {
-            String insertedId = dishRepository.insert(dish).getId();
-            otherDishesMap.put(insertedId, true);
-        }
-        menu.setOtherDishes(otherDishesMap);
-    }
-
-    public double getPriceOfOrder(String id) {
-        Order order = orderRepository.get(id);
-        if (order == null) return 0.0;
-
-        Map<String, List<String>> menuMap = new LinkedHashMap<>();
-
-        double total = 0.0;
-        for (String orderItemId : order.getOrderItems().keySet()) {
-            OrderItem orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem != null) {
-                if (orderItem.getMenuId() == null) {
-                    total += dishRepository.get(orderItem.getDishId()).getPrice();
-                } else {
-                    List<String> dishes = menuMap.get(orderItem.getMenuId());
-                    if (dishes == null) {
-                        dishes = new ArrayList<>();
-                    }
-                    dishes.add(orderItem.getDishId());
-                    menuMap.put(orderItem.getMenuId(), dishes);
-                }
-            }
-        }
-        Menu menu;
-        for (String key : menuMap.keySet()) {
-            menu = menuRepository.get(key);
-            Integer numberOptions = getNumberOptions(menu);
-            double totalMenus = (double) (menuMap.get(key).size() / numberOptions);
-            total += totalMenus*menu.getPrice();
-        }
-
-        return total;
-    }
-
-    public double getReadyOfOrder(String id) {
-        Order order = orderRepository.get(id);
-        if (order == null) return 100.0;
-
-        double total = order.getOrderItems().size();
-        double ready = 0.0;
-
-        for (String orderItemId : order.getOrderItems().keySet()) {
-            OrderItem orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem == null) return 100.0;
-            if (orderItem.isReady()) ++ready;
-        }
-
-        return (ready/total)*100.0;
-    }
-
-    public double getDeliveredOfOrder(String id) {
-        Order order = orderRepository.get(id);
-        if (order == null) return 100.0;
-
-        double total = order.getOrderItems().size();
-        double delivered = 0.0;
-
-        for (String orderItemId : order.getOrderItems().keySet()) {
-            OrderItem orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem == null) return 100.0;
-            if (orderItem.isDelivered()) ++delivered;
-        }
-
-        return (delivered/total)*100.0;
-    }
-
-    public double getPaidOfOrder(String id) {
-        Order order = orderRepository.get(id);
-        if (order == null) return 100.0;
-
-        Map<String, List<Pair<String, Boolean>>> menuMap = new LinkedHashMap<>();
-        double total = getPriceOfOrder(id);
-        double paid = 0.0;
-
-        for (String orderItemId : order.getOrderItems().keySet()) {
-            OrderItem orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem != null) {
-                if (orderItem.getMenuId() == null) {
-                    if (orderItem.isPaid()) {
-                        paid += dishRepository.get(orderItem.getDishId()).getPrice();
-                    }
-                } else {
-                    List<Pair<String, Boolean>> dishes = menuMap.get(orderItem.getMenuId());
-                    if (dishes == null) {
-                        dishes = new ArrayList<>();
-                    }
-                    dishes.add(new Pair<>(orderItem.getDishId(), orderItem.isPaid()));
-                    menuMap.put(orderItem.getMenuId(), dishes);
-                }
-            }
-        }
-        Menu menu;
-        for (String key : menuMap.keySet()) {
-            menu = menuRepository.get(key);
-
-            Integer numberPaid = 0;
-            for (Pair<String, Boolean> pair : menuMap.get(key)) {
-                if (pair.second) ++numberPaid;
-            }
-            if (numberPaid != 0) {
-                double totalPaid = (double) (numberPaid / menuMap.get(key).size());
-                double totalMenus = (double) (menuMap.get(key).size() / getNumberOptions(menu));
-                paid += totalPaid*totalMenus*menu.getPrice();
-            }
-        }
-
-        return (paid/total)*100.0;
-    }
-
-    public ArrayList<Order> getActiveOrders() {
-        ArrayList<Order> orders = new ArrayList<>();
-        for (Order order : orderRepository.all()) {
-            if (getPaidOfOrder(order.getId()) < 100.0) orders.add(order);
-        }
-        Collections.sort(orders, new OrderLastDateComparator());
-        return orders;
-    }
-
-    public ArrayList<Dish> getDishesOf(String restaurantId) {
+    public ArrayList<Dish> getDishes(String restaurantId) {
         ArrayList<Dish> dishes = new ArrayList<>();
         Restaurant restaurant = repository.get(restaurantId);
         if (restaurant != null) {
@@ -246,7 +107,7 @@ public class RestaurantService extends Service<Restaurant> {
         return dishes;
     }
 
-    public ArrayList<Menu> getMenusOf(String restaurantId) {
+    public ArrayList<Menu> getMenus(String restaurantId) {
         ArrayList<Menu> menus = new ArrayList<>();
         Restaurant restaurant = repository.get(restaurantId);
         if (restaurant != null) {
@@ -257,235 +118,7 @@ public class RestaurantService extends Service<Restaurant> {
         return menus;
     }
 
-    public void addOrder(ArrayList<Dish> selectedDishes, Integer tableNumber, ArrayList<Menu> selectedMenus) {
-        Map<String, Object> orderItems = new LinkedHashMap<>();
-        for (Dish dish : selectedDishes) {
-            String insertedId = orderItemRepository.insert(OrderItem.builder()
-                    .dishId(dish.getId())
-                    .ready(false)
-                    .delivered(false)
-                    .paid(false)
-                    .build()).getId();
-            orderItems.put(insertedId, true);
-        }
-        for (Menu menu : selectedMenus) {
-            ArrayList<String> dishesId = new ArrayList<>();
-            for (String key : menu.getMainDishes().keySet()) dishesId.add(key);
-            for (String key : menu.getSecondaryDishes().keySet()) dishesId.add(key);
-            for (String key : menu.getOtherDishes().keySet()) dishesId.add(key);
-            for (String dishId : dishesId) {
-                Dish dish = dishRepository.get(dishId);
-                String insertedId = orderItemRepository.insert(OrderItem.builder()
-                        .dishId(dish.getId())
-                        .menuId(menu.getId())
-                        .ready(false)
-                        .delivered(false)
-                        .paid(false)
-                        .build()).getId();
-                orderItems.put(insertedId, true);
-            }
-        }
-        orderRepository.insert(Order.builder()
-                .date(new Date())
-                .tableNumber(tableNumber)
-                .lastDate(new Date())
-                .orderItems(orderItems)
-                .build());
-    }
-
-    public ArrayList<Dish> parseDishMapToDishModel(Map<String, Object> dishesMap) {
-        ArrayList<Dish> dishes = new ArrayList<>();
-        if (dishesMap != null) {
-            for (String dishKey : dishesMap.keySet()) {
-                dishes.add(dishRepository.get(dishKey));
-            }
-        }
-        return dishes;
-    }
-
-    public Order getOrder(String orderId) {
-        return orderRepository.get(orderId);
-    }
-
-    public void setDelivered(OrderItem item, boolean b, Order order) {
-        item.setDelivered(b);
-        orderItemRepository.update(item);
-        order.setLastDate(new Date());
-        orderRepository.update(order);
-    }
-
-
-    public void setReady(OrderItem item, boolean b, Order order) {
-        item.setReady(b);
-        orderItemRepository.update(item);
-        order.setLastDate(new Date());
-        orderRepository.update(order);
-    }
-
-    public String getDishNameOf(OrderItem orderItem) {
-        return dishRepository.get(orderItem.getDishId()).getName();
-    }
-
-    public ArrayList<OrderItem> getOnlyDishItemsOf(Order order) {
-        ArrayList<OrderItem> orderItems = new ArrayList<>();
-        OrderItem orderItem;
-        for (String orderItemId : order.getOrderItems().keySet()) {
-            orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem != null) {
-                if (orderItem.getMenuId() == null) {
-                    orderItems.add(orderItem);
-                }
-            }
-        }
-        return orderItems;
-    }
-
-    public OrderItem getOrderItem(String id) {
-        return orderItemRepository.get(id);
-    }
-
-    public ArrayList<OrderItem> getOnlyMenuItemsOf(Order order) {
-        ArrayList<OrderItem> orderItems = new ArrayList<>();
-        OrderItem orderItem;
-        for (String orderItemId : order.getOrderItems().keySet()) {
-            orderItem = orderItemRepository.get(orderItemId);
-            if (orderItem != null) {
-                if (orderItem.getMenuId() != null) {
-                    orderItems.add(orderItem);
-                }
-            }
-        }
-        return orderItems;
-    }
-
-    public void collectAll(Order order) {
-        OrderItem orderItem;
-        for (String key : order.getOrderItems().keySet()) {
-            orderItem = orderItemRepository.get(key);
-            orderItem.setPaid(true);
-            orderItemRepository.update(orderItem);
-        }
-        order.setLastDate(new Date());
-        orderRepository.update(order);
-    }
-
-    public ArrayList<OrderItem> getItemsToCollect(Order order) {
-        ArrayList<OrderItem> orderItems = new ArrayList<>();
-
-        Map<String, List<OrderItem>> menuIds = new LinkedHashMap<>();
-        OrderItem orderItem;
-        for (String key : order.getOrderItems().keySet()) {
-            orderItem = orderItemRepository.get(key);
-            if (!orderItem.isPaid()) {
-                if (orderItem.getMenuId() == null) {
-                    orderItems.add(orderItem);
-                } else {
-                    List<OrderItem> count = menuIds.get(orderItem.getMenuId());
-                    if (count == null) {
-                        count = new ArrayList<>();
-                    }
-                    count.add(orderItem);
-                    menuIds.put(orderItem.getMenuId(), count);
-                }
-            }
-        }
-        for (String key : menuIds.keySet()) {
-            List<OrderItem> count = menuIds.get(key);
-            Menu menu = menuRepository.get(key);
-            Integer numberOptions = getNumberOptions(menu);
-            for (int i = 0; i < count.size()/numberOptions; ++i) {
-                orderItems.add(count.get(i));
-            }
-        }
-
-        return orderItems;
-    }
-
-    public String getName(OrderItem current) {
-        if (current.getMenuId() == null) {
-            return dishRepository.get(current.getDishId()).getName();
-        } else {
-            return menuRepository.get(current.getMenuId()).getName();
-        }
-    }
-
-    public String getDescription(OrderItem current) {
-        if (current.getMenuId() == null) {
-            return dishRepository.get(current.getDishId()).getDescription();
-        } else {
-            return menuRepository.get(current.getMenuId()).getDescription();
-        }
-    }
-
-    public double getPrice(OrderItem current) {
-        if (current.getMenuId() == null) {
-            return dishRepository.get(current.getDishId()).getPrice();
-        } else {
-            return menuRepository.get(current.getMenuId()).getPrice();
-        }
-    }
-
-    public void collectSomeItems(ArrayList<OrderItem> selectedItems, Order order) {
-        List<String> menus = new ArrayList<>();
-        for (OrderItem item : selectedItems) {
-            if (item.getMenuId() == null) {
-                item.setPaid(true);
-                orderItemRepository.update(item);
-            } else {
-                menus.add(item.getMenuId());
-            }
-        }
-        for (String id : menus) {
-            Integer numberOptions = getNumberOptions(menuRepository.get(id));
-            List<OrderItem> orderItems = new ArrayList<>();
-            for (String key : order.getOrderItems().keySet()) {
-                if (!orderItemRepository.get(key).isPaid()) {
-                    orderItems.add(orderItemRepository.get(key));
-                }
-            }
-            for (OrderItem item : orderItems) {
-                if (item.getMenuId() != null && item.getMenuId().equals(id)) {
-                    item.setPaid(true);
-                    orderItemRepository.update(item);
-                    if (--numberOptions == 0) break;
-                }
-            }
-        }
-    }
-
-    private Integer getNumberOptions(Menu menu) {
-        return  (!menu.getMainDishes().isEmpty() ? 1 : 0) +
-                (!menu.getSecondaryDishes().isEmpty() ? 1 : 0) +
-                (!menu.getOtherDishes().isEmpty() ? 1 : 0);
-    }
-
-    public double getPriceOfOrderItems(ArrayList<OrderItem> selectedItems) {
-        double total = 0.0;
-        for (OrderItem orderItem : selectedItems) {
-            if (orderItem.getMenuId() == null) {
-                total += dishRepository.get(orderItem.getDishId()).getPrice();
-            } else {
-                total += menuRepository.get(orderItem.getMenuId()).getPrice();
-            }
-        }
-        return total;
-    }
-
-    public boolean isPartially(Order order) {
-        for (String key : order.getOrderItems().keySet()) {
-            if (orderItemRepository.get(key).isPaid()) return true;
-        }
-        return false;
-    }
-
-    public void cancelOrder(Order order) {
-        for (String key : order.getOrderItems().keySet()) {
-            orderItemRepository.delete(key);
-        }
-        orderRepository.delete(order.getId());
-    }
-
-    public List<OpenTime> getOpenTimesOf(Restaurant restaurant) {
+    public List<OpenTime> getOpenTimes(Restaurant restaurant) {
         List<OpenTime> result = new ArrayList<>();
         for (String key : restaurant.getOpenTimes().keySet()) {
             result.add(openTimeRepository.get(key));
@@ -493,57 +126,24 @@ public class RestaurantService extends Service<Restaurant> {
         return result;
     }
 
-    public ArrayList<Order> getNonReadyOrders() {
-        ArrayList<Order> orders = new ArrayList<>();
-        for (Order order : orderRepository.all()) {
-            if (getReadyOfOrder(order.getId()) < 100.0) orders.add(order);
+    public void addUserToRestaurant(String restaurantId, String userId) {
+        Restaurant restaurant = repository.get(restaurantId);
+        Map<String, Object> users = restaurant.getUsers();
+        if (users == null) {
+            users = new LinkedHashMap<>();
         }
-        Collections.sort(orders, new OrderStartDateComparator());
-        return orders;
-    }
+        users.put(userId, true);
+        restaurant.setUsers(users);
+        repository.update(restaurant);
 
-    public ArrayList<OrderItem> getNonReadyOrderItems(Order order) {
-        ArrayList<OrderItem> result = new ArrayList<>();
-        for (String key : order.getOrderItems().keySet()) {
-            OrderItem orderItem = orderItemRepository.get(key);
-            if (orderItem != null && !orderItem.isReady()) {
-                result.add(orderItem);
-            }
+        User user = userRepository.get(userId);
+        Map<String, Object> restaurants = user.getMyRestaurants();
+        if (restaurants == null) {
+            restaurants = new LinkedHashMap<>();
         }
-        return result;
+        restaurants.put(restaurantId, true);
+        user.setMyRestaurants(restaurants);
+        userRepository.update(user);
     }
 
-    public boolean logIn(GoogleSignInAccount acct) {
-        String userId = Utils.skipAts(acct.getEmail());
-        if (!userRepository.exists(userId)) {
-            Uri imageUri = acct.getPhotoUrl();
-            String imageId = null;
-            if (imageUri != null) {
-                Image image = Image.builder()
-                        .imageFile(imageUri.toString()).description("Profile photo")
-                        .build();
-                imageId = imageRepository.insert(image).getId();
-            }
-            User user = User.builder()
-                    .email(userId)
-                    .name(acct.getDisplayName())
-                    .lastName(acct.getFamilyName())
-                    .location(null)
-                    .imageId(imageId)
-                    .build();
-            userRepository.update(user);
-        }
-        Preferences.setCurrentUserEmail(userId);
-        return true;
-    }
-
-    public String getProfilePhoto() {
-        return imageRepository.get(
-                userRepository.get(Preferences.getCurrentUserEmail()).getImageId())
-                .getImageFile();
-    }
-
-    public String getUserName(String currentUserEmail) {
-        return userRepository.get(currentUserEmail).getName();
-    }
 }

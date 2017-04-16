@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +17,8 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.CollectOrderItemAdapter;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
-import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.OrderItemService;
+import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.BaseActivity;
 
@@ -27,7 +27,8 @@ public class CollectOrderActivity extends BaseActivity {
     public static final String INTENT_ORDER = "INTENT_ORDER";
 
     private Order order;
-    private RestaurantService restaurantService;
+    private OrderService orderService;
+    private OrderItemService orderItemService;
     private ArrayList<OrderItem> selectedItems;
 
     @Override
@@ -38,10 +39,11 @@ public class CollectOrderActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        this.restaurantService = ServiceFactory.getRestaurantService(CollectOrderActivity.this);
+        this.orderService = ServiceFactory.getOrderService(CollectOrderActivity.this);
+        this.orderItemService = ServiceFactory.getOrderItemService(CollectOrderActivity.this);
 
         if (getIntent().getSerializableExtra(INTENT_ORDER) != null) {
-            this.order = restaurantService.getOrder(getIntent().getExtras().getString(INTENT_ORDER));
+            this.order = orderService.get(getIntent().getExtras().getString(INTENT_ORDER));
         }
 
         setTitle("Collect order of table " + String.valueOf(order.getTableNumber()));
@@ -56,7 +58,7 @@ public class CollectOrderActivity extends BaseActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                restaurantService.collectSomeItems(selectedItems, order);
+                                orderService.collectSomeItems(selectedItems, order);
                                 onBackPressed();
                             }
                         })
@@ -87,7 +89,7 @@ public class CollectOrderActivity extends BaseActivity {
     }
 
     private void showFirstDialog() {
-        if (!restaurantService.isPartially(order)) {
+        if (!orderService.isPartially(order)) {
             new AlertDialog.Builder(CollectOrderActivity.this)
                     .setTitle(getResources().getString(R.string.title_collect_order_form))
                     .setMessage(getResources().getString(R.string.message_collect_order_form))
@@ -100,7 +102,7 @@ public class CollectOrderActivity extends BaseActivity {
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            restaurantService.collectAll(order);
+                                            orderService.collectAll(order);
                                             onBackPressed();
                                         }
                                     })
@@ -125,22 +127,22 @@ public class CollectOrderActivity extends BaseActivity {
     }
 
     private String getCollectAllMessage() {
-        return "Do you have already collected " + restaurantService.getPriceOfOrder(order.getId()) + "€?";
+        return "Do you have already collected " + orderService.getPriceOfOrder(order.getId()) + "€?";
     }
 
     private String getCollectInGroupsMessage() {
-        return "Do you have already collected " + restaurantService.getPriceOfOrderItems(selectedItems) + "€?";
+        return "Do you have already collected " + orderItemService.getPriceOfOrderItems(selectedItems) + "€?";
     }
 
     private void initializeOrderItems() {
         this.selectedItems = new ArrayList<>();
-        ArrayList<OrderItem> orderItems = restaurantService.getItemsToCollect(order);
+        ArrayList<OrderItem> orderItems = orderService.getItemsToCollect(order);
         if (orderItems != null && !orderItems.isEmpty()) {
             TextView textView = (TextView) findViewById(R.id.mock_order_items);
             textView.setVisibility(View.GONE);
         }
         CollectOrderItemAdapter collectOrderItemAdapter = new CollectOrderItemAdapter(orderItems,
-                restaurantService, this.order, this.selectedItems, getApplicationContext());
+                this.selectedItems, getApplicationContext());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
