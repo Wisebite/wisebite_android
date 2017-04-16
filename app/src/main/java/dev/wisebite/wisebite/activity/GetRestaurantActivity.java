@@ -2,11 +2,9 @@ package dev.wisebite.wisebite.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,12 +13,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.adapter.CollectOrderItemAdapter;
 import dev.wisebite.wisebite.adapter.DetailAdapter;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.OpenTime;
-import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
@@ -80,7 +76,7 @@ public class GetRestaurantActivity extends BaseActivity {
     }
 
     private void initializeOpenTimes() {
-        for (OpenTime openTime : restaurantService.getOpenTimesOf(restaurant)) {
+        for (OpenTime openTime : restaurantService.getOpenTimes(restaurant)) {
             initializeOpenTimeTextView(openTime);
         }
     }
@@ -113,7 +109,7 @@ public class GetRestaurantActivity extends BaseActivity {
     }
 
     private void initializeDishes() {
-        ArrayList<Dish> dishes = restaurantService.getDishesOf(restaurantId);
+        ArrayList<Dish> dishes = restaurantService.getDishes(restaurantId);
         if (dishes != null && !dishes.isEmpty()) {
             TextView textView = (TextView) findViewById(R.id.mock_dishes);
             textView.setVisibility(View.GONE);
@@ -127,7 +123,7 @@ public class GetRestaurantActivity extends BaseActivity {
     }
 
     private void initializeMenus() {
-        ArrayList<Menu> menus = restaurantService.getMenusOf(restaurantId);
+        ArrayList<Menu> menus = restaurantService.getMenus(restaurantId);
         if (menus != null && !menus.isEmpty()) {
             TextView textView = (TextView) findViewById(R.id.mock_menus);
             textView.setVisibility(View.GONE);

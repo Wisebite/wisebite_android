@@ -8,21 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
-import dev.wisebite.wisebite.repository.DishRepository;
-import dev.wisebite.wisebite.repository.OrderItemRepository;
-import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.OrderItemService;
+import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
-import dev.wisebite.wisebite.utils.FirebaseRepository;
 
 /**
  * Created by albert on 20/03/17.
@@ -30,16 +23,18 @@ import dev.wisebite.wisebite.utils.FirebaseRepository;
  */
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.OrderItemHolder> {
 
-    private RestaurantService restaurantService;
     private ArrayList<OrderItem> orderItems;
     private final Order order;
-    private final String typeSearch;
 
-    public OrderItemAdapter(ArrayList<OrderItem> orderItems, RestaurantService restaurantService, Order order, String typeSearch) {
+    private OrderService orderService;
+    private OrderItemService orderItemService;
+
+    public OrderItemAdapter(ArrayList<OrderItem> orderItems, Context context, Order order) {
         this.orderItems = orderItems;
-        this.restaurantService = restaurantService;
         this.order = order;
-        this.typeSearch = typeSearch;
+
+        this.orderService = ServiceFactory.getOrderService(context);
+        this.orderItemService = ServiceFactory.getOrderItemService(context);
         notifyDataSetChanged();
     }
 
@@ -54,7 +49,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
     public void onBindViewHolder(final OrderItemHolder holder, int position) {
         final OrderItem current = orderItems.get(position);
         holder.item = current;
-        holder.name.setText(restaurantService.getDishNameOf(current));
+        holder.name.setText(orderItemService.getName(current));
         setFlags(holder);
     }
 
@@ -84,7 +79,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
             this.mark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    restaurantService.setDelivered(item, true, order);
+                    orderService.setDelivered(item, true, order);
                     notifyDataSetChanged();
                 }
             });

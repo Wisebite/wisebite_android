@@ -17,7 +17,62 @@ import dev.wisebite.wisebite.repository.UserRepository;
  */
 public final class ServiceFactory {
 
+    private static DishService dishService;
+    private static ImageService imageService;
+    private static MenuService menuService;
+    private static OpenTimeService openTimeService;
+    private static OrderItemService orderItemService;
+    private static OrderService orderService;
     private static RestaurantService restaurantService;
+    private static UserService userService;
+
+    public static DishService getDishService(Context context){
+        if (dishService == null)
+            dishService = new DishService(
+                    new DishRepository(context));
+        return dishService;
+    }
+
+    public static ImageService getImageService(Context context){
+        if (imageService == null)
+            imageService = new ImageService(
+                    new ImageRepository(context));
+        return imageService;
+    }
+
+    public static MenuService getMenuService(Context context){
+        if (menuService == null)
+            menuService = new MenuService(
+                    new MenuRepository(context),
+                    new DishRepository(context));
+        return menuService;
+    }
+
+    public static OpenTimeService getOpenTimeService(Context context){
+        if (openTimeService == null)
+            openTimeService = new OpenTimeService(
+                    new OpenTimeRepository(context));
+        return openTimeService;
+    }
+
+    public static OrderItemService getOrderItemService(Context context){
+        if (orderItemService == null)
+            orderItemService = new OrderItemService(
+                    new OrderItemRepository(context),
+                    new DishRepository(context),
+                    new MenuRepository(context));
+        return orderItemService;
+    }
+
+    public static OrderService getOrderService(Context context){
+        if (orderService == null)
+            orderService = new OrderService(
+                    new OrderRepository(context),
+                    new OrderItemRepository(context),
+                    new DishRepository(context),
+                    new MenuRepository(context));
+        return orderService;
+    }
 
     public static RestaurantService getRestaurantService(Context context){
         if (restaurantService == null)
@@ -33,4 +88,17 @@ public final class ServiceFactory {
         return restaurantService;
     }
 
+    public static UserService getUserService(Context context){
+        if (userService == null)
+            userService = new UserService(
+                    new UserRepository(context),
+                    new ImageRepository(context),
+                    new RestaurantRepository(context),
+                    new OrderRepository(context));
+        return userService;
+    }
+
+    public static Integer getServiceCount() {
+        return 8;
+    }
 }

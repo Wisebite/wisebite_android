@@ -20,7 +20,7 @@ import java.util.Map;
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
-import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.DishService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.Utils;
 
@@ -39,7 +39,7 @@ public class OrderItemMenuAdapter extends RecyclerView.Adapter<OrderItemMenuAdap
 
     private LayoutInflater inflater;
 
-    private RestaurantService restaurantService;
+    private DishService dishService;
 
     public OrderItemMenuAdapter(ArrayList<Menu> menus, TextView totalPriceView, ArrayList<Menu> selectedMenus, Context context) {
         this.menus = menus;
@@ -47,7 +47,7 @@ public class OrderItemMenuAdapter extends RecyclerView.Adapter<OrderItemMenuAdap
         this.selectedMenus = selectedMenus;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
-        this.restaurantService = ServiceFactory.getRestaurantService(context);
+        this.dishService = ServiceFactory.getDishService(context);
         notifyDataSetChanged();
     }
 
@@ -141,9 +141,9 @@ public class OrderItemMenuAdapter extends RecyclerView.Adapter<OrderItemMenuAdap
         mainDishSelected = new ArrayList<>();
         secondaryDishSelected = new ArrayList<>();
         otherDishSelected = new ArrayList<>();
-        mainForm = new MenuDishFormAdapter(restaurantService.parseDishMapToDishModel(current.getMainDishes()), mainDishSelected);
-        secondaryForm = new MenuDishFormAdapter(restaurantService.parseDishMapToDishModel(current.getSecondaryDishes()), secondaryDishSelected);
-        otherForm = new MenuDishFormAdapter(restaurantService.parseDishMapToDishModel(current.getOtherDishes()), otherDishSelected);
+        mainForm = new MenuDishFormAdapter(dishService.parseDishMapToDishModel(current.getMainDishes()), mainDishSelected);
+        secondaryForm = new MenuDishFormAdapter(dishService.parseDishMapToDishModel(current.getSecondaryDishes()), secondaryDishSelected);
+        otherForm = new MenuDishFormAdapter(dishService.parseDishMapToDishModel(current.getOtherDishes()), otherDishSelected);
 
         RecyclerView recyclerViewMainDishes = (RecyclerView) menuDishesForm.findViewById(R.id.recycler_view_main_dishes);
         LinearLayoutManager linearLayoutManagerMain = new LinearLayoutManager(context);

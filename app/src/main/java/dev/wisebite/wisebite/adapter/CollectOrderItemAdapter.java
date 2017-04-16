@@ -1,7 +1,6 @@
 package dev.wisebite.wisebite.adapter;
 
 import android.content.Context;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,20 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
-import dev.wisebite.wisebite.repository.DishRepository;
-import dev.wisebite.wisebite.repository.OrderItemRepository;
-import dev.wisebite.wisebite.service.RestaurantService;
-import dev.wisebite.wisebite.utils.FirebaseRepository;
+import dev.wisebite.wisebite.service.OrderItemService;
+import dev.wisebite.wisebite.service.ServiceFactory;
 
 /**
  * Created by albert on 20/03/17.
@@ -30,17 +21,15 @@ import dev.wisebite.wisebite.utils.FirebaseRepository;
  */
 public class CollectOrderItemAdapter extends RecyclerView.Adapter<CollectOrderItemAdapter.CollectOrderItemHolder> {
 
-    private RestaurantService restaurantService;
+    private OrderItemService orderItemService;
     private ArrayList<OrderItem> orderItems, selectedItems;
-    private final Order order;
     private final Context context;
 
-    public CollectOrderItemAdapter(ArrayList<OrderItem> orderItems, RestaurantService restaurantService, Order order, ArrayList<OrderItem> selectedOrderItems, Context context) {
+    public CollectOrderItemAdapter(ArrayList<OrderItem> orderItems, ArrayList<OrderItem> selectedOrderItems, Context context) {
         this.orderItems = orderItems;
-        this.restaurantService = restaurantService;
-        this.order = order;
         this.selectedItems = selectedOrderItems;
         this.context = context;
+        this.orderItemService = ServiceFactory.getOrderItemService(context);
         notifyDataSetChanged();
     }
 
@@ -55,9 +44,9 @@ public class CollectOrderItemAdapter extends RecyclerView.Adapter<CollectOrderIt
     public void onBindViewHolder(final CollectOrderItemHolder holder, int position) {
         final OrderItem current = orderItems.get(position);
         holder.item = current;
-        holder.name.setText(restaurantService.getName(current));
-        holder.description.setText(restaurantService.getDescription(current));
-        holder.price.setText(String.valueOf(restaurantService.getPrice(current) + " €"));
+        holder.name.setText(orderItemService.getName(current));
+        holder.description.setText(orderItemService.getDescription(current));
+        holder.price.setText(String.valueOf(orderItemService.getPrice(current) + " €"));
     }
 
     @Override

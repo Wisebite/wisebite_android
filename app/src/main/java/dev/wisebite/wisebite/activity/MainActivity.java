@@ -3,18 +3,17 @@ package dev.wisebite.wisebite.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,8 +21,10 @@ import android.widget.TextView;
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
+import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.DownloadImageTask;
 import dev.wisebite.wisebite.utils.Preferences;
@@ -32,9 +33,9 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RestaurantService restaurantService;
+    private UserService userService;
+    private OrderService orderService;
     private String restaurantId;
-
-    private NavigationView navigationView;
 
     private FloatingActionButton fab;
 
@@ -46,6 +47,8 @@ public class MainActivity extends BaseActivity
         setSupportActionBar(toolbar);
 
         restaurantService = ServiceFactory.getRestaurantService(MainActivity.this);
+        userService = ServiceFactory.getUserService(MainActivity.this);
+        orderService = ServiceFactory.getOrderService(MainActivity.this);
         restaurantId = "-KfvAq-HC6SSapHSBzsm";
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -56,7 +59,7 @@ public class MainActivity extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
@@ -135,9 +138,9 @@ public class MainActivity extends BaseActivity
             }
         });
         new DownloadImageTask((ImageView) navigationView.findViewById(R.id.user_picture_nav))
-                .execute(restaurantService.getProfilePhoto());
+                .execute(userService.getProfilePhoto());
         TextView userName = (TextView) navigationView.findViewById(R.id.user_name_nav);
-        userName.setText(restaurantService.getUserName(Preferences.getCurrentUserEmail()));
+        userName.setText(userService.getUserName(Preferences.getCurrentUserEmail()));
 
     }
 
@@ -162,7 +165,7 @@ public class MainActivity extends BaseActivity
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
-        OrderAdapter orderAdapter = new OrderAdapter(restaurantService.getActiveOrders(), restaurantService);
+        OrderAdapter orderAdapter = new OrderAdapter(orderService.getActiveOrders(), MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.active_order_list);
         assert recyclerView != null;
         recyclerView.setAdapter(orderAdapter);
@@ -171,7 +174,7 @@ public class MainActivity extends BaseActivity
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
         fab.setVisibility(View.GONE);
-        KitchenAdapter kitchenAdapter = new KitchenAdapter(restaurantService.getNonReadyOrders(), restaurantService, MainActivity.this);
+        KitchenAdapter kitchenAdapter = new KitchenAdapter(orderService.getNonReadyOrders(), MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.kitchen_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;

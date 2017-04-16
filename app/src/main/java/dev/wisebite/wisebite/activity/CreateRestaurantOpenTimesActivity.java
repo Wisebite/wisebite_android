@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,8 +54,8 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                restaurantService.removeOpenTimesOf(restaurant.getId());
-                restaurantService.addOpenTimesToRestaurant(restaurant, openTimes);
+                restaurantService.removeOpenTimes(restaurant.getId());
+                restaurantService.addOpenTimes(restaurant, openTimes);
                 Intent intent = new Intent(CreateRestaurantOpenTimesActivity.this, CreateRestaurantDishesActivity.class);
                 intent.putExtra(CreateRestaurantDishesActivity.RESTAURANT, restaurant);
                 startActivity(intent);

@@ -2,15 +2,13 @@ package dev.wisebite.wisebite.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -23,8 +21,8 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.Repository;
 
@@ -36,11 +34,11 @@ public class LoginActivity extends BaseActivity implements
     private SignInButton mSignInButton;
     private ProgressDialog mProgressDialog;
 
-    private RestaurantService restaurantService;
+    private UserService userService;
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
-    private boolean loaded;
+    private Integer loaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +47,7 @@ public class LoginActivity extends BaseActivity implements
 
         initializeService();
 
-        this.loaded = false;
+        this.loaded = 0;
 
         // Set the dimensions of the sign-in button.
         this.mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
@@ -138,13 +136,13 @@ public class LoginActivity extends BaseActivity implements
                 @Override
                 public void run() {
                     try {
-                        while (!loaded) {
+                        while (loaded < ServiceFactory.getServiceCount()) {
                             sleep(1000);
                         }
                     } catch (InterruptedException ex) {
                         // Catching exception
                     } finally {
-                        if (restaurantService.logIn(acct)) {
+                        if (userService.logIn(acct)) {
                             initApp();
                         }
                     }
@@ -186,21 +184,46 @@ public class LoginActivity extends BaseActivity implements
     }
 
     private void initializeService() {
-        this.restaurantService = ServiceFactory.getRestaurantService(LoginActivity.this);
-        this.restaurantService.setOnChangedListener(new Repository.OnChangedListener() {
+        this.userService = ServiceFactory.getUserService(LoginActivity.this);
+        this.userService.setOnChangedListener(new Repository.OnChangedListener() {
             @Override
-            public void onChanged(EventType type) {
-                if (type.equals(EventType.Full)) {
-                    loaded = true;
-                }
-            }
+            public void onChanged(EventType type) { increaseLoaded(type); }});
+
+        ServiceFactory.getDishService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) { increaseLoaded(type); }
         });
+        ServiceFactory.getImageService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) { increaseLoaded(type); }});
+        ServiceFactory.getMenuService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) { increaseLoaded(type); }});
+        ServiceFactory.getOpenTimeService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) { increaseLoaded(type); }});
+        ServiceFactory.getOrderItemService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) { increaseLoaded(type); }});
+        ServiceFactory.getOrderService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) { increaseLoaded(type); }});
+        ServiceFactory.getRestaurantService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) { increaseLoaded(type); }});
+
     }
 
     private void initApp() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         LoginActivity.this.finish();
+    }
+
+    private void increaseLoaded(Repository.OnChangedListener.EventType type) {
+        if (type.equals(Repository.OnChangedListener.EventType.Full)) {
+            ++loaded;
+        }
     }
 
 }

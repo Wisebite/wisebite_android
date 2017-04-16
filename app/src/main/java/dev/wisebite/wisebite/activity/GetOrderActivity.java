@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,9 +19,7 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.OrderItemAdapter;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
-import dev.wisebite.wisebite.repository.DishRepository;
-import dev.wisebite.wisebite.repository.MenuRepository;
-import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.BaseActivity;
 
@@ -31,7 +27,7 @@ public class GetOrderActivity extends BaseActivity {
 
     public static final String INTENT_ORDER = "INTENT_ORDER";
 
-    private RestaurantService restaurantService;
+    private OrderService orderService;
     private Order order;
 
     @Override
@@ -42,10 +38,10 @@ public class GetOrderActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        restaurantService = ServiceFactory.getRestaurantService(GetOrderActivity.this);
+        orderService = ServiceFactory.getOrderService(GetOrderActivity.this);
 
         if (getIntent().getSerializableExtra(INTENT_ORDER) != null) {
-            this.order = restaurantService.getOrder(getIntent().getExtras().getString(INTENT_ORDER));
+            this.order = orderService.get(getIntent().getExtras().getString(INTENT_ORDER));
         }
 
         setTitle("Order at Table " + (order != null ? String.valueOf(order.getTableNumber()) : "" ));
@@ -94,7 +90,7 @@ public class GetOrderActivity extends BaseActivity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            restaurantService.cancelOrder(order);
+                            orderService.cancelOrder(order);
                             onBackPressed();
                         }
                     })
@@ -115,13 +111,13 @@ public class GetOrderActivity extends BaseActivity {
     }
 
     private void initializeDishes() {
-        ArrayList<OrderItem> orderItems = restaurantService.getOnlyDishItemsOf(order);
+        ArrayList<OrderItem> orderItems = orderService.getOnlyDishItemsOf(order);
         if (orderItems != null && !orderItems.isEmpty()) {
             TextView textView = (TextView) findViewById(R.id.mock_dishes);
             textView.setVisibility(View.GONE);
         }
         OrderItemAdapter orderItemAdapter = new OrderItemAdapter(orderItems,
-                restaurantService, this.order, DishRepository.OBJECT_REFERENCE);
+                GetOrderActivity.this, this.order);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -130,13 +126,13 @@ public class GetOrderActivity extends BaseActivity {
     }
 
     private void initializeMenus() {
-        ArrayList<OrderItem> orderItems = restaurantService.getOnlyMenuItemsOf(order);
+        ArrayList<OrderItem> orderItems = orderService.getOnlyMenuItemsOf(order);
         if (orderItems != null && !orderItems.isEmpty()) {
             TextView textView = (TextView) findViewById(R.id.mock_menus);
             textView.setVisibility(View.GONE);
         }
         OrderItemAdapter orderItemAdapter = new OrderItemAdapter(orderItems,
-                restaurantService, this.order, MenuRepository.OBJECT_REFERENCE);
+                GetOrderActivity.this, this.order);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_menu);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;

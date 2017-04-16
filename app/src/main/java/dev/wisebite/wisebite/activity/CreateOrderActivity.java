@@ -3,7 +3,6 @@ package dev.wisebite.wisebite.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +18,7 @@ import dev.wisebite.wisebite.adapter.OrderItemDishAdapter;
 import dev.wisebite.wisebite.adapter.OrderItemMenuAdapter;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
+import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.BaseActivity;
@@ -26,12 +26,12 @@ import dev.wisebite.wisebite.utils.BaseActivity;
 public class CreateOrderActivity extends BaseActivity {
 
     private static final String RESTAURANT_MOCK_ID = "-KfvAq-HC6SSapHSBzsm";
-    private OrderItemDishAdapter orderItemDishAdapter;
-    private OrderItemMenuAdapter orderItemMenuAdapter;
 
     private LayoutInflater inflater;
 
     private RestaurantService restaurantService;
+    private OrderService orderService;
+
     private TextView totalPriceView;
     private ArrayList<Dish> selectedDishes;
     private ArrayList<Menu> selectedMenusDishes;
@@ -48,13 +48,14 @@ public class CreateOrderActivity extends BaseActivity {
         inflater = LayoutInflater.from(CreateOrderActivity.this);
 
         restaurantService = ServiceFactory.getRestaurantService(CreateOrderActivity.this);
+        orderService = ServiceFactory.getOrderService(CreateOrderActivity.this);
 
         TextView done = (TextView) findViewById(R.id.done);
         assert done != null;
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                done(v);
+                done();
             }
         });
 
@@ -99,9 +100,9 @@ public class CreateOrderActivity extends BaseActivity {
     private void initializeDishesItems() {
         selectedDishes = new ArrayList<>();
         totalPriceView = (TextView) findViewById(R.id.total_price);
-        orderItemDishAdapter = new OrderItemDishAdapter(restaurantService.getDishesOf(RESTAURANT_MOCK_ID),
-                                                        totalPriceView,
-                                                        selectedDishes);
+        OrderItemDishAdapter orderItemDishAdapter = new OrderItemDishAdapter(restaurantService.getDishes(RESTAURANT_MOCK_ID),
+                totalPriceView,
+                selectedDishes);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -112,10 +113,10 @@ public class CreateOrderActivity extends BaseActivity {
     private void initializeMenusItems() {
         selectedMenusDishes = new ArrayList<>();
         totalPriceView = (TextView) findViewById(R.id.total_price);
-        orderItemMenuAdapter = new OrderItemMenuAdapter(restaurantService.getMenusOf(RESTAURANT_MOCK_ID),
-                                                        totalPriceView,
-                                                        selectedMenusDishes,
-                                                        CreateOrderActivity.this);
+        OrderItemMenuAdapter orderItemMenuAdapter = new OrderItemMenuAdapter(restaurantService.getMenus(RESTAURANT_MOCK_ID),
+                totalPriceView,
+                selectedMenusDishes,
+                CreateOrderActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_menu);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -123,8 +124,8 @@ public class CreateOrderActivity extends BaseActivity {
         recyclerView.setAdapter(orderItemMenuAdapter);
     }
 
-    private void done(View v) {
-        restaurantService.addOrder(selectedDishes, tableNumber, selectedMenusDishes);
+    private void done() {
+        orderService.addOrder(selectedDishes, tableNumber, selectedMenusDishes);
         finish();
     }
 

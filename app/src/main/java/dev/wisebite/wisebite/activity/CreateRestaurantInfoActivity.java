@@ -2,23 +2,17 @@ package dev.wisebite.wisebite.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.Serializable;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Restaurant;
-import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.BaseActivity;
 
@@ -46,13 +40,13 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
         main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                main(v);
+                main();
             }
         });
 
     }
 
-    private void main(View v) {
+    private void main() {
         Intent intent = new Intent(CreateRestaurantInfoActivity.this, MainActivity.class);
         startActivity(intent);
     }

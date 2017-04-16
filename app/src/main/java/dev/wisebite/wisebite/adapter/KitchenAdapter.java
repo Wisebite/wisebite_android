@@ -19,7 +19,8 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.repository.OrderItemRepository;
 import dev.wisebite.wisebite.repository.OrderRepository;
-import dev.wisebite.wisebite.service.RestaurantService;
+import dev.wisebite.wisebite.service.OrderService;
+import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.FirebaseRepository;
 import dev.wisebite.wisebite.utils.Utils;
 
@@ -32,12 +33,12 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
     private ArrayList<Order> orders;
     private Context context;
 
-    private RestaurantService restaurantService;
+    private OrderService orderService;
 
-    public KitchenAdapter(ArrayList<Order> ordersList, final RestaurantService restaurantService, Context context) {
+    public KitchenAdapter(ArrayList<Order> ordersList, Context context) {
         this.orders = ordersList;
-        this.restaurantService = restaurantService;
         this.context = context;
+        this.orderService = ServiceFactory.getOrderService(context);
         notifyDataSetChanged();
         setListener();
     }
@@ -59,8 +60,8 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
     }
 
     private void initializeOrderItems(KitchenHolder holder) {
-        KitchenItemAdapter kitchenItemAdapter = new KitchenItemAdapter(restaurantService.getNonReadyOrderItems(holder.item),
-                restaurantService, context, holder.item);
+        KitchenItemAdapter kitchenItemAdapter = new KitchenItemAdapter(orderService.getNonReadyOrderItems(holder.item),
+                context, holder.item);
         RecyclerView recyclerView = (RecyclerView) holder.view.findViewById(R.id.kitchen_order_items_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         assert recyclerView != null;
@@ -69,7 +70,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
     }
 
     private String calculateReady(Order current) {
-        return Utils.toStringWithTwoDecimals(restaurantService.getReadyOfOrder(current.getId()));
+        return Utils.toStringWithTwoDecimals(orderService.getReadyOfOrder(current.getId()));
     }
 
     @Override
@@ -100,7 +101,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                orders = restaurantService.getNonReadyOrders();
+                orders = orderService.getNonReadyOrders();
                 notifyDataSetChanged();
             }
 
@@ -118,7 +119,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.KitchenH
                 firebase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        orders = restaurantService.getNonReadyOrders();
+                        orders = orderService.getNonReadyOrders();
                         notifyDataSetChanged();
                     }
 
