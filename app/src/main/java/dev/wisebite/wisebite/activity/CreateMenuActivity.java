@@ -84,7 +84,7 @@ public class CreateMenuActivity extends BaseActivity {
 
     private void showMenuInfoForm() {
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.dish_form), null);
-        new AlertDialog.Builder(CreateMenuActivity.this)
+        AlertDialog alertDialog = new AlertDialog.Builder(CreateMenuActivity.this)
                 .setTitle(getResources().getString(R.string.title_menu_form))
                 .setView(form)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -114,7 +114,15 @@ public class CreateMenuActivity extends BaseActivity {
                         onBackPressed();
                     }
                 })
-                .show();
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        onBackPressed();
+                    }
+                })
+                .create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
     }
 
     private void initializeRecycleViewMainDishes() {
