@@ -1,12 +1,10 @@
 package dev.wisebite.wisebite.utils;
 
-import android.annotation.TargetApi;
 import android.os.Build;
 import android.widget.TimePicker;
 
 import com.firebase.client.Firebase;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -27,13 +25,20 @@ public class Utils {
         return new Firebase("https://wisebite-f7a53.firebaseio.com/").push().getKey();
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     public static String parseStartEndDate(TimePicker firstTimePicker, TimePicker secondTimePicker) {
         int firstHour, firstMinute, secondHour, secondMinute;
-        firstHour = firstTimePicker.getHour();
-        firstMinute = firstTimePicker.getMinute();
-        secondHour = secondTimePicker.getHour();
-        secondMinute = secondTimePicker.getMinute();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            firstHour = firstTimePicker.getHour();
+            firstMinute = firstTimePicker.getMinute();
+            secondHour = secondTimePicker.getHour();
+            secondMinute = secondTimePicker.getMinute();
+        } else {
+            firstHour = firstTimePicker.getCurrentHour();
+            firstMinute = firstTimePicker.getCurrentMinute();
+            secondHour = secondTimePicker.getCurrentHour();
+            secondMinute = secondTimePicker.getCurrentMinute();
+        }
 
         return datesToString(firstHour, firstMinute, secondHour, secondMinute);
     }
@@ -53,21 +58,31 @@ public class Utils {
         return datesToString(firstHour, firstMinute, secondHour, secondMinute);
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     public static OpenTime createOpenTimeByTimePicker(TimePicker firstTimePicker, TimePicker secondTimePicker, Integer viewId) {
         int dayOfTheWeek = parseViewIdToDayOfWeek(viewId);
 
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTimeInMillis(0);
         startCalendar.set(Calendar.DAY_OF_WEEK, dayOfTheWeek);
-        startCalendar.set(Calendar.HOUR_OF_DAY, firstTimePicker.getHour());
-        startCalendar.set(Calendar.MINUTE, firstTimePicker.getMinute());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            startCalendar.set(Calendar.HOUR_OF_DAY, firstTimePicker.getHour());
+            startCalendar.set(Calendar.MINUTE, firstTimePicker.getMinute());
+        } else {
+            startCalendar.set(Calendar.HOUR_OF_DAY, firstTimePicker.getCurrentHour());
+            startCalendar.set(Calendar.MINUTE, firstTimePicker.getCurrentMinute());
+        }
+
 
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTimeInMillis(0);
         endCalendar.set(Calendar.DAY_OF_WEEK, dayOfTheWeek);
-        endCalendar.set(Calendar.HOUR_OF_DAY, secondTimePicker.getHour());
-        endCalendar.set(Calendar.MINUTE, secondTimePicker.getMinute());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            endCalendar.set(Calendar.HOUR_OF_DAY, secondTimePicker.getHour());
+            endCalendar.set(Calendar.MINUTE, secondTimePicker.getMinute());
+        } else {
+            endCalendar.set(Calendar.HOUR_OF_DAY, secondTimePicker.getCurrentHour());
+            endCalendar.set(Calendar.MINUTE, secondTimePicker.getCurrentMinute());
+        }
 
         return OpenTime.builder()
                     .startDate(startCalendar.getTime())
