@@ -35,6 +35,8 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
         initializeForm();
         initializeSubmit();
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
     }
 
     private void initializeForm() {
