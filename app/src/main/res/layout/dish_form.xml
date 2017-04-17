@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:inputType="numberDecimal"
-                android:hint="@string/form_hint_price" />
+                android:hint="@string/form_hint_price_euro" />
 
         </android.support.design.widget.TextInputLayout>
 

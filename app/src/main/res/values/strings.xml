@@ -40,6 +40,7 @@
     <string name="form_hint_name">Name</string>
     <string name="form_description">Description</string>
     <string name="form_hint_price">Price</string>
+    <string name="form_hint_price_euro">Price (€)</string>
     <string name="mock_dishes">No dishes yet.</string>
     <string name="mock_menus">No menus yet.</string>
     <string name="done">Done</string>
