@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -98,6 +100,36 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(CreateRestaurantDishesActivity.this)
+                .setTitle(getResources().getString(R.string.back))
+                .setMessage(getResources().getString(R.string.back_message))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CreateRestaurantDishesActivity.this.finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initializeRecycleViewMenu() {
         menuAdapter = new MenuAdapter(menus);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_menu);
@@ -155,11 +187,15 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void done(View view) {
-        restaurantService.addDishesAndMenus(restaurant, dishes, menus);
-        Intent intent = new Intent(CreateRestaurantDishesActivity.this, MainActivity.class);
-        startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        if (dishes.isEmpty() && menus.isEmpty()) {
+            Snackbar.make(view, getResources().getString(R.string.empty_dishes_menus), Snackbar.LENGTH_LONG)
+                    .show();
+        } else {
+            restaurantService.addDishesAndMenus(restaurant, dishes, menus);
+            Intent intent = new Intent(CreateRestaurantDishesActivity.this, MainActivity.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        }
     }
 }

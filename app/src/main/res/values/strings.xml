@@ -202,4 +202,8 @@
     <string name="see_restaurant">See restaurant</string>
     <string name="list_restaurants">List restaurants</string>
     <string name="action_log_out">Sign out</string>
+    <string name="back">Back</string>
+    <string name="back_message">Are you sure that you want go back? You\'ll discard all data.</string>
+    <string name="empty_open_times">Your restaurant never opens. Are your sure about that?</string>
+    <string name="empty_dishes_menus">Your clients want to eat, create some dishes or menus!</string>
 </resources>

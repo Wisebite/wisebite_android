@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -54,14 +56,49 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                restaurantService.removeOpenTimes(restaurant.getId());
-                restaurantService.addOpenTimes(restaurant, openTimes);
-                Intent intent = new Intent(CreateRestaurantOpenTimesActivity.this, CreateRestaurantDishesActivity.class);
-                intent.putExtra(CreateRestaurantDishesActivity.RESTAURANT, restaurant);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                if (openTimes.isEmpty()) {
+                    Snackbar.make(view, getResources().getString(R.string.empty_open_times), Snackbar.LENGTH_LONG)
+                            .show();
+                } else {
+                    restaurantService.removeOpenTimes(restaurant.getId());
+                    restaurantService.addOpenTimes(restaurant, openTimes);
+                    Intent intent = new Intent(CreateRestaurantOpenTimesActivity.this, CreateRestaurantDishesActivity.class);
+                    intent.putExtra(CreateRestaurantDishesActivity.RESTAURANT, restaurant);
+                    startActivity(intent);
+                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(CreateRestaurantOpenTimesActivity.this)
+                .setTitle(getResources().getString(R.string.back))
+                .setMessage(getResources().getString(R.string.back_message))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CreateRestaurantOpenTimesActivity.this.finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void showTimePicker(final View view) {
