@@ -35,11 +35,13 @@ import dev.wisebite.wisebite.utils.Utils;
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder> {
 
     private ArrayList<Order> orders;
+    private Context context;
     private OrderService orderService;
     private UserService userService;
 
     public OrderAdapter(ArrayList<Order> ordersList, Context context) {
         this.orders = ordersList;
+        this.context = context;
         this.orderService = ServiceFactory.getOrderService(context);
         this.userService = ServiceFactory.getUserService(context);
         notifyDataSetChanged();
@@ -62,6 +64,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
         holder.ready.setText(String.valueOf("Ready: " + calculateReady(current) + "%"));
         holder.delivered.setText(String.valueOf("Delivered: " + calculateDelivered(current) + "%"));
         holder.paid.setText(String.valueOf("Paid: " + calculatePaid(current) + "%"));
+        if (calculateReady(current).equals(calculateDelivered(current))) {
+            holder.view.setBackgroundColor(context.getResources().getColor(R.color.white));
+        } else {
+            holder.view.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+        }
     }
 
     private String calculatePrice(Order current) {
