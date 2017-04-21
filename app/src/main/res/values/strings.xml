@@ -212,4 +212,5 @@
     <string name="hint_my_restaurant">My restaurant</string>
     <string name="hint_order_count">Order count</string>
     <string name="no_defined">No defined. Edit it!</string>
+    <string name="title_activity_edit_user">EditUserActivity</string>
 </resources>

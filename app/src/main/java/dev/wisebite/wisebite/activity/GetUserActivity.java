@@ -1,5 +1,6 @@
 package dev.wisebite.wisebite.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,7 @@ import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.DownloadImageTask;
+import dev.wisebite.wisebite.utils.Preferences;
 
 public class GetUserActivity extends BaseActivity {
 
@@ -40,13 +42,21 @@ public class GetUserActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(GetUserActivity.this, EditUserActivity.class);
+                intent.putExtra(EditUserActivity.USER_ID, user.getId());
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
         initializeView();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initializeView();
     }
 
     private void initializeView() {
