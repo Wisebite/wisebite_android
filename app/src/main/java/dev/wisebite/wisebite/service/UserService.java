@@ -58,9 +58,9 @@ public class UserService extends Service<User> {
         return true;
     }
 
-    public String getProfilePhoto() {
+    public String getProfilePhoto(String id) {
         return imageRepository.get(
-                repository.get(Preferences.getCurrentUserEmail()).getImageId())
+                repository.get(id).getImageId())
                 .getImageFile();
     }
 
@@ -72,6 +72,13 @@ public class UserService extends Service<User> {
         User user = repository.get(currentUser);
         Map<String, Object> keys = user.getMyRestaurants();
         if (keys != null && !keys.keySet().isEmpty()) return (String) keys.keySet().toArray()[0];
+        return null;
+    }
+
+    public Integer getOrderCount(String currentUser) {
+        User user = repository.get(currentUser);
+        Map<String, Object> keys = user.getMyOrders();
+        if (keys != null && !keys.keySet().isEmpty()) return keys.keySet().size();
         return null;
     }
 }
