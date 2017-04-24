@@ -52,7 +52,7 @@ public class EditUserActivity extends BaseActivity {
         if (getIntent().getSerializableExtra(USER_ID) != null) {
             this.user = userService.get(getIntent().getExtras().getString(USER_ID));
         }
-        setTitle("Editing " + user.getName());
+        setTitle("Editing...");
 
         storageService = new FirebaseStorageServiceImpl(EditUserActivity.this);
         processDialog = new ProgressDialog(EditUserActivity.this);

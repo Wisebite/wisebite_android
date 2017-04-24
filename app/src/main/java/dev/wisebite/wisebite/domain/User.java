@@ -22,6 +22,7 @@ import lombok.experimental.Builder;
 @Builder
 public class User implements Entity {
 
+    private String id;
     private String email;
     private String name;
     private String lastName;
@@ -33,11 +34,11 @@ public class User implements Entity {
 
     @Override
     public String getId() {
-        return email;
+        return id;
     }
 
     @Override
     public void setId(String id) {
-        this.email = id;
+        this.id = id;
     }
 }

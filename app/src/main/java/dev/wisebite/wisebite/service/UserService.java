@@ -46,12 +46,13 @@ public class UserService extends Service<User> {
                 imageId = imageRepository.insert(image).getId();
             }
             User user = User.builder()
-                    .email(userId)
-                    .name(acct.getDisplayName())
+                    .email(acct.getEmail())
+                    .name(acct.getGivenName())
                     .lastName(acct.getFamilyName())
                     .location(null)
                     .imageId(imageId)
                     .build();
+            user.setId(userId);
             repository.update(user);
         }
         Preferences.setCurrentUserEmail(userId);
