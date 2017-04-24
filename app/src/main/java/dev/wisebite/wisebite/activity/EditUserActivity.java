@@ -2,7 +2,6 @@ package dev.wisebite.wisebite.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,10 +16,13 @@ import android.widget.TextView;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.User;
+import dev.wisebite.wisebite.firebase.FirebaseStorageService;
+import dev.wisebite.wisebite.firebase.FirebaseStorageServiceImpl;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.DownloadImageTask;
+import dev.wisebite.wisebite.utils.SecurityUtils;
 import dev.wisebite.wisebite.utils.Utils;
 
 public class EditUserActivity extends BaseActivity {
@@ -30,8 +32,12 @@ public class EditUserActivity extends BaseActivity {
 
     private UserService userService;
     private User user;
+    private FirebaseStorageService storageService;
 
     private EditText nameView, lastNameView, locationView;
+    private ImageView imageView;
+
+    private String uploadURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,8 @@ public class EditUserActivity extends BaseActivity {
         }
         setTitle("Editing " + user.getName());
 
+        storageService = new FirebaseStorageServiceImpl();
+
         initializeView();
 
         TextView done = (TextView) findViewById(R.id.done);
@@ -59,6 +67,7 @@ public class EditUserActivity extends BaseActivity {
         });
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        SecurityUtils.verifyStoragePermissions(EditUserActivity.this);
     }
 
     @Override
@@ -91,13 +100,14 @@ public class EditUserActivity extends BaseActivity {
 
             Log.d("Loaded picture", picturePath);
 
-            ImageView imageView = (ImageView) findViewById(R.id.user_picture_nav);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            uploadURL = storageService.upload(picturePath);
+
+            new DownloadImageTask(imageView).execute(uploadURL);
         }
     }
 
     private void initializeView() {
-        ImageView imageView = (ImageView) findViewById(R.id.user_picture_nav);
+        imageView = (ImageView) findViewById(R.id.user_picture_nav);
         new DownloadImageTask(imageView)
                 .execute(userService.getProfilePhoto(user.getId()));
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +134,8 @@ public class EditUserActivity extends BaseActivity {
         if (userService.editUser(user.getId(),
                 nameView.getText().toString(),
                 lastNameView.getText().toString(),
-                locationView.getText().toString())) {
+                locationView.getText().toString(),
+                uploadURL)) {
             onBackPressed();
         }
     }
