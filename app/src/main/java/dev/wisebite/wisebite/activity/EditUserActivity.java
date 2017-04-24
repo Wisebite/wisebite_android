@@ -1,12 +1,12 @@
 package dev.wisebite.wisebite.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,7 +37,8 @@ public class EditUserActivity extends BaseActivity {
     private EditText nameView, lastNameView, locationView;
     private ImageView imageView;
 
-    private String uploadURL;
+    private Uri uploadURL;
+    public ProgressDialog processDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,9 @@ public class EditUserActivity extends BaseActivity {
         }
         setTitle("Editing " + user.getName());
 
-        storageService = new FirebaseStorageServiceImpl();
+        storageService = new FirebaseStorageServiceImpl(EditUserActivity.this);
+        processDialog = new ProgressDialog(EditUserActivity.this);
+        processDialog.setMessage("Saving....");
 
         initializeView();
 
@@ -86,23 +89,13 @@ public class EditUserActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            assert cursor != null;
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            Log.d("Loaded picture", picturePath);
-
-            uploadURL = storageService.upload(picturePath);
-
-            new DownloadImageTask(imageView).execute(uploadURL);
+            uploadURL = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uploadURL);
+                imageView.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -116,7 +109,8 @@ public class EditUserActivity extends BaseActivity {
                 Intent i = new Intent(
                         Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                i.setType("image/*");
+                startActivityForResult(Intent.createChooser(i, "Select Image"), RESULT_LOAD_IMAGE);
             }
         });
 
@@ -131,13 +125,10 @@ public class EditUserActivity extends BaseActivity {
     }
 
     private void done() {
-        if (userService.editUser(user.getId(),
-                nameView.getText().toString(),
-                lastNameView.getText().toString(),
-                locationView.getText().toString(),
-                uploadURL)) {
-            onBackPressed();
-        }
+        processDialog.show();
+        storageService.upload(uploadURL, EditUserActivity.this);
+        userService.editUser(user.getId(), nameView.getText().toString(),
+                lastNameView.getText().toString(), locationView.getText().toString());
     }
 
 }

@@ -91,17 +91,23 @@ public class UserService extends Service<User> {
         return null;
     }
 
-    public boolean editUser(String id, String name, String lastName, String location, String uploadURL) {
+    public boolean editUser(String id, String name, String lastName, String location) {
         User user = repository.get(id);
         user.setName(name);
         user.setLastName(lastName);
         user.setLocation(location);
+
+        repository.update(user);
+        return true;
+    }
+
+    public void editImage(String id, String uploadURL) {
+        User user = repository.get(id);
 
         Image image = Image.builder().imageFile(uploadURL).build();
         String imageId = imageRepository.insert(image).getId();
         user.setImageId(imageId);
 
         repository.update(user);
-        return true;
     }
 }
