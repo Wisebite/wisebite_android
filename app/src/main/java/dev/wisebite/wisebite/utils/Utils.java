@@ -164,4 +164,9 @@ public class Utils {
     public static String skipAts(String email) {
         return email.replaceAll("\\.", "@");
     }
+
+    public static boolean isEmpty(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
 }

@@ -17,6 +17,7 @@ import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.DownloadImageTask;
 import dev.wisebite.wisebite.utils.Preferences;
+import dev.wisebite.wisebite.utils.Utils;
 
 public class GetUserActivity extends BaseActivity {
 
@@ -79,10 +80,10 @@ public class GetUserActivity extends BaseActivity {
         TextView lastNameView = (TextView) findViewById(R.id.last_name_refill);
         TextView emailView = (TextView) findViewById(R.id.email_refill);
         TextView locationView = (TextView) findViewById(R.id.location_refill);
-        if (!isEmpty(user.getName())) nameView.setText(user.getName());
-        if (!isEmpty(user.getLastName())) lastNameView.setText(user.getLastName());
-        if (!isEmpty(user.getEmail())) emailView.setText(user.getEmail());
-        if (!isEmpty(user.getLocation())) locationView.setText(user.getLocation());
+        if (!Utils.isEmpty(user.getName())) nameView.setText(user.getName());
+        if (!Utils.isEmpty(user.getLastName())) lastNameView.setText(user.getLastName());
+        if (!Utils.isEmpty(user.getEmail())) emailView.setText(user.getEmail());
+        if (!Utils.isEmpty(user.getLocation())) locationView.setText(user.getLocation());
 
         String myRestaurant = userService.getFirstRestaurantName(user.getId());
         if (myRestaurant == null) {
@@ -99,10 +100,6 @@ public class GetUserActivity extends BaseActivity {
             TextView orderCountView = (TextView) findViewById(R.id.order_count_refill);
             orderCountView.setText(String.valueOf(orderCount));
         }
-    }
-
-    private boolean isEmpty(String str) {
-        return str == null || str.trim().isEmpty();
     }
 
 }

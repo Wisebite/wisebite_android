@@ -5,7 +5,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import dev.wisebite.wisebite.R;
@@ -13,6 +17,8 @@ import dev.wisebite.wisebite.domain.User;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
+import dev.wisebite.wisebite.utils.DownloadImageTask;
+import dev.wisebite.wisebite.utils.Utils;
 
 public class EditUserActivity extends BaseActivity {
 
@@ -46,9 +52,30 @@ public class EditUserActivity extends BaseActivity {
             }
         });
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeView() {
+        new DownloadImageTask((ImageView) findViewById(R.id.user_picture_nav))
+                .execute(userService.getProfilePhoto(user.getId()));
+        EditText nameView = (EditText) findViewById(R.id.input_name);
+        EditText lastNameView = (EditText) findViewById(R.id.input_last_name);
+        EditText locationView = (EditText) findViewById(R.id.input_location);
+
+        if (!Utils.isEmpty(user.getName())) nameView.setText(user.getName());
+        if (!Utils.isEmpty(user.getLastName())) lastNameView.setText(user.getLastName());
+        if (!Utils.isEmpty(user.getLocation())) locationView.setText(user.getLocation());
 
     }
 
