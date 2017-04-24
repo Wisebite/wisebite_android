@@ -75,6 +75,15 @@ public class UserService extends Service<User> {
         return null;
     }
 
+    public String getFirstRestaurantName(String currentUser) {
+        String restaurantId = null;
+        User user = repository.get(currentUser);
+        Map<String, Object> keys = user.getMyRestaurants();
+        if (keys != null && !keys.keySet().isEmpty()) restaurantId = (String) keys.keySet().toArray()[0];
+        if (restaurantId != null) return restaurantRepository.get(restaurantId).getName();
+        return null;
+    }
+
     public Integer getOrderCount(String currentUser) {
         User user = repository.get(currentUser);
         Map<String, Object> keys = user.getMyOrders();
