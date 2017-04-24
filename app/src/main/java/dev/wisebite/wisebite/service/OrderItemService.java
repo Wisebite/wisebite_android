@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.OrderItem;
-import dev.wisebite.wisebite.utils.Repository;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Service;
 
 /**

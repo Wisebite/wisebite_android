@@ -2,6 +2,8 @@ package dev.wisebite.wisebite.utils;
 
 import java.util.List;
 
+import dev.wisebite.wisebite.firebase.Repository;
+
 /**
  * Created by albert on 13/03/17.
  * @author albert

@@ -1,20 +1,10 @@
 package dev.wisebite.wisebite.service;
 
-import android.net.Uri;
-import android.util.Pair;
-
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-
 import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import dev.wisebite.wisebite.comparator.OrderLastDateComparator;
-import dev.wisebite.wisebite.comparator.OrderStartDateComparator;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Menu;
@@ -24,9 +14,8 @@ import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.domain.User;
 import dev.wisebite.wisebite.utils.Preferences;
-import dev.wisebite.wisebite.utils.Repository;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Service;
-import dev.wisebite.wisebite.utils.Utils;
 
 /**
  * Created by albert on 13/03/17.

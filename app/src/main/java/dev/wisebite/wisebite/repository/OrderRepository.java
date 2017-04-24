@@ -2,14 +2,15 @@ package dev.wisebite.wisebite.repository;
 
 import android.content.Context;
 
-import com.firebase.client.DataSnapshot;
+
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import dev.wisebite.wisebite.domain.Order;
-import dev.wisebite.wisebite.utils.FirebaseRepository;
+import dev.wisebite.wisebite.firebase.FirebaseRepository;
 
 /**
  * Created by albert on 13/03/17.

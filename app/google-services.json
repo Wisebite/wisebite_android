@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "438687158433-e9g8fgaipurk2deopmt123dsbth1cj95.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.wisebite.wisebite",
+            "certificate_hash": "8c54829332a824f2066900bd788c98bc42fd6e4c"
+          }
+        },
+        {
           "client_id": "438687158433-4uti7h54cvir8gefjj789lfbfmr2n54a.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438687158433-4uti7h54cvir8gefjj789lfbfmr2n54a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

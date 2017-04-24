@@ -10,7 +10,7 @@ import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.domain.User;
 import dev.wisebite.wisebite.utils.Preferences;
-import dev.wisebite.wisebite.utils.Repository;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Service;
 import dev.wisebite.wisebite.utils.Utils;
 
@@ -89,5 +89,14 @@ public class UserService extends Service<User> {
         Map<String, Object> keys = user.getMyOrders();
         if (keys != null && !keys.keySet().isEmpty()) return keys.keySet().size();
         return null;
+    }
+
+    public boolean editUser(String id, String name, String lastName, String location) {
+        User user = repository.get(id);
+        user.setName(name);
+        user.setLastName(lastName);
+        user.setLocation(location);
+        repository.update(user);
+        return true;
     }
 }

@@ -1,7 +1,7 @@
 package dev.wisebite.wisebite.service;
 
 import dev.wisebite.wisebite.domain.OpenTime;
-import dev.wisebite.wisebite.utils.Repository;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Service;
 
 /**

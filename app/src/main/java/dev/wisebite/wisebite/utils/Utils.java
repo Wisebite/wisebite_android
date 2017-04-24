@@ -3,8 +3,6 @@ package dev.wisebite.wisebite.utils;
 import android.os.Build;
 import android.widget.TimePicker;
 
-import com.firebase.client.Firebase;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,10 +18,6 @@ public class Utils {
 
     private static Menu tempMenu;
     private static Integer loaded = 0;
-
-    public static String generateId() {
-        return new Firebase("https://wisebite-f7a53.firebaseio.com/").push().getKey();
-    }
 
     public static String parseStartEndDate(TimePicker firstTimePicker, TimePicker secondTimePicker) {
         int firstHour, firstMinute, secondHour, secondMinute;

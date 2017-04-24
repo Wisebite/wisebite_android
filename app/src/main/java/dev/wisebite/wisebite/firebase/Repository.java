@@ -1,9 +1,11 @@
-package dev.wisebite.wisebite.utils;
+package dev.wisebite.wisebite.firebase;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.List;
+
+import dev.wisebite.wisebite.utils.Entity;
 
 /**
  * Created by albert on 13/03/17.
