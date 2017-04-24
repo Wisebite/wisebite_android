@@ -196,11 +196,19 @@ public class MainActivity extends BaseActivity
         }
 
         new DownloadImageTask((ImageView) navigationView.findViewById(R.id.user_picture_nav))
-                .execute(userService.getProfilePhoto());
+                .execute(userService.getProfilePhoto(Preferences.getCurrentUserEmail()));
         TextView userName = (TextView) navigationView.findViewById(R.id.user_name_nav);
         userName.setText(userService.getUserName(Preferences.getCurrentUserEmail()));
         TextView restaurantName = (TextView) navigationView.findViewById(R.id.restaurant_name_nav);
         restaurantName.setText((restaurantId != null ? restaurantService.get(restaurantId).getName() : ""));
+        navigationView.findViewById(R.id.nav_header_info).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GetUserActivity.class);
+                intent.putExtra(GetUserActivity.USER_ID, Preferences.getCurrentUserEmail());
+                startActivity(intent);
+            }
+        });
 
     }
 

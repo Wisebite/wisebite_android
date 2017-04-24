@@ -206,4 +206,10 @@
     <string name="back_message">Are you sure that you want go back? You\'ll discard all data.</string>
     <string name="empty_open_times">Your restaurant never opens. Are your sure about that?</string>
     <string name="empty_dishes_menus">Your clients want to eat, create some dishes or menus!</string>
+    <string name="title_activity_get_user">GetUserActivity</string>
+    <string name="hint_last_name">Last name</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_my_restaurant">My restaurant</string>
+    <string name="hint_order_count">Order count</string>
+    <string name="no_defined">No defined. Edit it!</string>
 </resources>
