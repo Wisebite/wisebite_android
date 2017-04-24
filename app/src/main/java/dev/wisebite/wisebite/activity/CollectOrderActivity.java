@@ -52,7 +52,7 @@ public class CollectOrderActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AlertDialog.Builder(CollectOrderActivity.this)
+                AlertDialog alertDialog = new AlertDialog.Builder(CollectOrderActivity.this)
                         .setTitle(getResources().getString(R.string.collect_all_title))
                         .setMessage(getCollectInGroupsMessage())
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -68,7 +68,9 @@ public class CollectOrderActivity extends BaseActivity {
                                 // do nothing
                             }
                         })
-                        .show();
+                        .create();
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
             }
         });
 
@@ -90,13 +92,13 @@ public class CollectOrderActivity extends BaseActivity {
 
     private void showFirstDialog() {
         if (!orderService.isPartially(order)) {
-            new AlertDialog.Builder(CollectOrderActivity.this)
+            AlertDialog alertDialog = new AlertDialog.Builder(CollectOrderActivity.this)
                     .setTitle(getResources().getString(R.string.title_collect_order_form))
                     .setMessage(getResources().getString(R.string.message_collect_order_form))
                     .setPositiveButton(R.string.all, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            new AlertDialog.Builder(CollectOrderActivity.this)
+                            AlertDialog insideDialog = new AlertDialog.Builder(CollectOrderActivity.this)
                                     .setTitle(getResources().getString(R.string.collect_all_title))
                                     .setMessage(getCollectAllMessage())
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -112,7 +114,15 @@ public class CollectOrderActivity extends BaseActivity {
                                             onBackPressed();
                                         }
                                     })
-                                    .show();
+                                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                        @Override
+                                        public void onCancel(DialogInterface dialog) {
+                                            onBackPressed();
+                                        }
+                                    })
+                                    .create();
+                            insideDialog.setCanceledOnTouchOutside(false);
+                            insideDialog.show();
                         }
                     })
                     .setNegativeButton(R.string.in_groups, new DialogInterface.OnClickListener() {
@@ -120,8 +130,23 @@ public class CollectOrderActivity extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // do nothing
                         }
-                    })
-                    .show();
+                    }).create();
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,
+                    getResources().getString(android.R.string.cancel),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            onBackPressed();
+                        }
+                    });
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    onBackPressed();
+                }
+            });
+            alertDialog.show();
         }
 
     }

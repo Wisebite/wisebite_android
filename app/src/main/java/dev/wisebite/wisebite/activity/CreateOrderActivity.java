@@ -79,7 +79,7 @@ public class CreateOrderActivity extends BaseActivity {
 
     private void showTableNumberForm() {
         final LinearLayout tableNumberForm = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.table_number_form), null);
-        new AlertDialog.Builder(CreateOrderActivity.this)
+        AlertDialog alertDialog = new AlertDialog.Builder(CreateOrderActivity.this)
                 .setTitle(getResources().getString(R.string.title_table_number_form))
                 .setView(tableNumberForm)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -98,7 +98,15 @@ public class CreateOrderActivity extends BaseActivity {
                         onBackPressed();
                     }
                 })
-                .show();
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        onBackPressed();
+                    }
+                })
+                .create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
 
     }
 

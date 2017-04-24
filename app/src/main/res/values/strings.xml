@@ -40,6 +40,7 @@
     <string name="form_hint_name">Name</string>
     <string name="form_description">Description</string>
     <string name="form_hint_price">Price</string>
+    <string name="form_hint_price_euro">Price (€)</string>
     <string name="mock_dishes">No dishes yet.</string>
     <string name="mock_menus">No menus yet.</string>
     <string name="done">Done</string>
@@ -201,4 +202,8 @@
     <string name="see_restaurant">See restaurant</string>
     <string name="list_restaurants">List restaurants</string>
     <string name="action_log_out">Sign out</string>
+    <string name="back">Back</string>
+    <string name="back_message">Are you sure that you want go back? You\'ll discard all data.</string>
+    <string name="empty_open_times">Your restaurant never opens. Are your sure about that?</string>
+    <string name="empty_dishes_menus">Your clients want to eat, create some dishes or menus!</string>
 </resources>
