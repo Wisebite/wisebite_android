@@ -90,7 +90,6 @@
                             android:id="@+id/name_refill"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/no_defined"
                             android:textSize="18sp"/>
 
                     </RelativeLayout>
@@ -209,7 +208,6 @@
                         <TextView
                             android:id="@+id/location_refill"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:text="@string/no_defined"
                             android:textSize="18sp"/>
 

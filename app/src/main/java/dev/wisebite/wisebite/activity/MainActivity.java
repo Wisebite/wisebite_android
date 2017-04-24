@@ -97,6 +97,12 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setUserInfo();
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -207,6 +213,7 @@ public class MainActivity extends BaseActivity
                 Intent intent = new Intent(MainActivity.this, GetUserActivity.class);
                 intent.putExtra(GetUserActivity.USER_ID, Preferences.getCurrentUserEmail());
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 

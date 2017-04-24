@@ -10,7 +10,7 @@ import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.domain.User;
 import dev.wisebite.wisebite.utils.Preferences;
-import dev.wisebite.wisebite.utils.Repository;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Service;
 import dev.wisebite.wisebite.utils.Utils;
 
@@ -46,12 +46,13 @@ public class UserService extends Service<User> {
                 imageId = imageRepository.insert(image).getId();
             }
             User user = User.builder()
-                    .email(userId)
-                    .name(acct.getDisplayName())
+                    .email(acct.getEmail())
+                    .name(acct.getGivenName())
                     .lastName(acct.getFamilyName())
                     .location(null)
                     .imageId(imageId)
                     .build();
+            user.setId(userId);
             repository.update(user);
         }
         Preferences.setCurrentUserEmail(userId);
@@ -75,10 +76,40 @@ public class UserService extends Service<User> {
         return null;
     }
 
+    public String getFirstRestaurantName(String currentUser) {
+        String restaurantId = null;
+        User user = repository.get(currentUser);
+        Map<String, Object> keys = user.getMyRestaurants();
+        if (keys != null && !keys.keySet().isEmpty()) restaurantId = (String) keys.keySet().toArray()[0];
+        if (restaurantId != null) return restaurantRepository.get(restaurantId).getName();
+        return null;
+    }
+
     public Integer getOrderCount(String currentUser) {
         User user = repository.get(currentUser);
         Map<String, Object> keys = user.getMyOrders();
         if (keys != null && !keys.keySet().isEmpty()) return keys.keySet().size();
         return null;
     }
+
+    public boolean editUser(String id, String name, String lastName, String location) {
+        User user = repository.get(id);
+        user.setName(name);
+        user.setLastName(lastName);
+        user.setLocation(location);
+
+        repository.update(user);
+        return true;
+    }
+
+    public void editImage(String id, String uploadURL) {
+        User user = repository.get(id);
+
+        Image image = Image.builder().imageFile(uploadURL).build();
+        String imageId = imageRepository.insert(image).getId();
+        user.setImageId(imageId);
+
+        repository.update(user);
+    }
+  
 }

@@ -8,23 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.Order;
-import dev.wisebite.wisebite.repository.OrderItemRepository;
-import dev.wisebite.wisebite.repository.OrderRepository;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
-import dev.wisebite.wisebite.utils.FirebaseRepository;
 import dev.wisebite.wisebite.utils.Preferences;
-import dev.wisebite.wisebite.utils.Repository;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Utils;
 
 /**

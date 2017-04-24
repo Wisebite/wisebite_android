@@ -24,7 +24,7 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
-import dev.wisebite.wisebite.utils.Repository;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Utils;
 
 public class LoginActivity extends BaseActivity implements

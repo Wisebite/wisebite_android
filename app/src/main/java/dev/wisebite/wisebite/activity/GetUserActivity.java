@@ -1,9 +1,11 @@
 package dev.wisebite.wisebite.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +16,8 @@ import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.DownloadImageTask;
+import dev.wisebite.wisebite.utils.Preferences;
+import dev.wisebite.wisebite.utils.Utils;
 
 public class GetUserActivity extends BaseActivity {
 
@@ -40,13 +44,32 @@ public class GetUserActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(GetUserActivity.this, EditUserActivity.class);
+                intent.putExtra(EditUserActivity.USER_ID, user.getId());
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
         initializeView();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initializeView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeView() {
@@ -57,12 +80,13 @@ public class GetUserActivity extends BaseActivity {
         TextView lastNameView = (TextView) findViewById(R.id.last_name_refill);
         TextView emailView = (TextView) findViewById(R.id.email_refill);
         TextView locationView = (TextView) findViewById(R.id.location_refill);
-        if (!isEmpty(user.getName())) nameView.setText(user.getName());
-        if (!isEmpty(user.getLastName())) lastNameView.setText(user.getLastName());
-        if (!isEmpty(user.getEmail())) emailView.setText(user.getEmail());
-        if (!isEmpty(user.getLocation())) locationView.setText(user.getLocation());
+        if (!Utils.isEmpty(user.getName())) nameView.setText(user.getName());
+        if (!Utils.isEmpty(user.getLastName())) lastNameView.setText(user.getLastName());
+        if (!Utils.isEmpty(user.getEmail())) emailView.setText(user.getEmail());
+        if (!Utils.isEmpty(user.getLocation())) locationView.setText(user.getLocation());
 
         String myRestaurant = userService.getFirstRestaurantId(user.getId());
+
         if (myRestaurant == null) {
             findViewById(R.id.my_restaurant_layout).setVisibility(View.GONE);
         } else {
@@ -77,10 +101,6 @@ public class GetUserActivity extends BaseActivity {
             TextView orderCountView = (TextView) findViewById(R.id.order_count_refill);
             orderCountView.setText(String.valueOf(orderCount));
         }
-    }
-
-    private boolean isEmpty(String str) {
-        return str == null || str.trim().isEmpty();
     }
 
 }

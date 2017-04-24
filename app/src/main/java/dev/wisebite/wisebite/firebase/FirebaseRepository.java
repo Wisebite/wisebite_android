@@ -1,17 +1,20 @@
-package dev.wisebite.wisebite.utils;
+package dev.wisebite.wisebite.firebase;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import dev.wisebite.wisebite.utils.Entity;
 
 /**
  * Created by albert on 13/03/17.
@@ -24,20 +27,19 @@ public abstract class FirebaseRepository<T extends Entity> extends Repository<T>
     public static final String FIREBASE_URI = "https://wisebite-f7a53.firebaseio.com/";
     private static final String TAG = FirebaseRepository.class.getSimpleName();
     private final HashMap<String, T> map;
-    protected Firebase firebase;
+    protected FirebaseDatabase firebase;
+    protected DatabaseReference database;
 
     /**
      * Constructor class
      * @param context Repository's context
      */
     public FirebaseRepository(Context context) {
-        Firebase.setAndroidContext(context);
-        firebase = new Firebase(FIREBASE_URI).child(getObjectReference());
+        firebase = FirebaseDatabase.getInstance(FIREBASE_URI);
+        database = firebase.getReference().child(getObjectReference());
         map = new LinkedHashMap<>();
 
-        firebase.orderByKey().addChildEventListener(this);
-
-        firebase.addValueEventListener(new ValueEventListener() {
+        database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -46,7 +48,7 @@ public abstract class FirebaseRepository<T extends Entity> extends Repository<T>
                 notifyChange(OnChangedListener.EventType.Full);
             }
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
 
             }
         });
@@ -59,7 +61,7 @@ public abstract class FirebaseRepository<T extends Entity> extends Repository<T>
      */
     @Override
     public T insert(T item) {
-        Firebase ref = firebase.push();
+        DatabaseReference ref = database.push();
         ref.setValue(item);
         item.setId(ref.getKey());
         map.put(ref.getKey(), item);
@@ -74,7 +76,7 @@ public abstract class FirebaseRepository<T extends Entity> extends Repository<T>
      */
     private T insertWithId(T t, String key) {
         t.setId(key);
-        firebase.child(key).setValue(t);
+        database.child(key).setValue(t);
         map.put(key, t);
         return t;
     }
@@ -84,7 +86,7 @@ public abstract class FirebaseRepository<T extends Entity> extends Repository<T>
      * @param id Object key that you want to delete.
      */
     public void delete(String id) {
-        firebase.child(id).removeValue();
+        database.child(id).removeValue();
         map.remove(id);
     }
 
@@ -135,7 +137,7 @@ public abstract class FirebaseRepository<T extends Entity> extends Repository<T>
      * @param firebaseError error
      */
     @Override
-    public void onCancelled(FirebaseError firebaseError) {
+    public void onCancelled(DatabaseError firebaseError) {
         Log.e(TAG, firebaseError.getMessage(), firebaseError.toException());
     }
 

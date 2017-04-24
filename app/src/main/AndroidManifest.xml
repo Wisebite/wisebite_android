@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="dev.wisebite.wisebite">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -104,6 +107,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.wisebite.wisebite.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.EditUserActivity"
+            android:label="@string/title_activity_edit_user"
+            android:parentActivityName=".activity.GetUserActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.GetUserActivity" />
         </activity>
     </application>
 
