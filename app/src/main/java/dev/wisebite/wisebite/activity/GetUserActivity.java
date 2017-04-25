@@ -85,7 +85,7 @@ public class GetUserActivity extends BaseActivity {
         if (!Utils.isEmpty(user.getEmail())) emailView.setText(user.getEmail());
         if (!Utils.isEmpty(user.getLocation())) locationView.setText(user.getLocation());
 
-        String myRestaurant = userService.getFirstRestaurantId(user.getId());
+        String myRestaurant = userService.getFirstRestaurantName(user.getId());
 
         if (myRestaurant == null) {
             findViewById(R.id.my_restaurant_layout).setVisibility(View.GONE);
