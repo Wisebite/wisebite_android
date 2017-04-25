@@ -60,9 +60,9 @@ public class UserService extends Service<User> {
     }
 
     public String getProfilePhoto(String id) {
-        return imageRepository.get(
-                repository.get(id).getImageId())
-                .getImageFile();
+        Image image = imageRepository.get(repository.get(id).getImageId());
+        if (image != null) return image.getImageFile();
+        return null;
     }
 
     public String getUserName(String currentUser) {

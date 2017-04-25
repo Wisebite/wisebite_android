@@ -37,7 +37,7 @@ public class EditUserActivity extends BaseActivity {
     private EditText nameView, lastNameView, locationView;
     private ImageView imageView;
 
-    private Uri uploadURL;
+    private Uri uploadURL = null;
     public ProgressDialog processDialog;
 
     @Override
@@ -52,7 +52,6 @@ public class EditUserActivity extends BaseActivity {
         if (getIntent().getSerializableExtra(USER_ID) != null) {
             this.user = userService.get(getIntent().getExtras().getString(USER_ID));
         }
-        setTitle("Editing...");
 
         storageService = new FirebaseStorageServiceImpl(EditUserActivity.this);
         processDialog = new ProgressDialog(EditUserActivity.this);
@@ -101,8 +100,11 @@ public class EditUserActivity extends BaseActivity {
 
     private void initializeView() {
         imageView = (ImageView) findViewById(R.id.user_picture_nav);
-        new DownloadImageTask(imageView)
-                .execute(userService.getProfilePhoto(user.getId()));
+        String url = userService.getProfilePhoto(user.getId());
+        if (url != null) {
+            new DownloadImageTask(imageView)
+                    .execute(url);
+        }
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,9 +128,13 @@ public class EditUserActivity extends BaseActivity {
 
     private void done() {
         processDialog.show();
-        storageService.upload(uploadURL, EditUserActivity.this);
         userService.editUser(user.getId(), nameView.getText().toString(),
                 lastNameView.getText().toString(), locationView.getText().toString());
+        if (uploadURL != null) storageService.upload(uploadURL, EditUserActivity.this);
+        else {
+            processDialog.hide();
+            onBackPressed();
+        }
     }
 
 }

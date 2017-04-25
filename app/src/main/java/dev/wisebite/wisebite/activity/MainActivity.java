@@ -201,8 +201,11 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
         }
 
-        new DownloadImageTask((ImageView) navigationView.findViewById(R.id.user_picture_nav))
-                .execute(userService.getProfilePhoto(Preferences.getCurrentUserEmail()));
+        String url = userService.getProfilePhoto(Preferences.getCurrentUserEmail());
+        if (url != null) {
+            new DownloadImageTask((ImageView) navigationView.findViewById(R.id.user_picture_nav))
+                    .execute(url);
+        }
         TextView userName = (TextView) navigationView.findViewById(R.id.user_name_nav);
         userName.setText(userService.getUserName(Preferences.getCurrentUserEmail()));
         TextView restaurantName = (TextView) navigationView.findViewById(R.id.restaurant_name_nav);

@@ -73,8 +73,11 @@ public class GetUserActivity extends BaseActivity {
     }
 
     private void initializeView() {
-        new DownloadImageTask((ImageView) findViewById(R.id.user_picture_nav))
-                .execute(userService.getProfilePhoto(user.getId()));
+        String url = userService.getProfilePhoto(user.getId());
+        if (url != null) {
+            new DownloadImageTask((ImageView) findViewById(R.id.user_picture_nav))
+                    .execute(url);
+        }
 
         TextView nameView = (TextView) findViewById(R.id.name_refill);
         TextView lastNameView = (TextView) findViewById(R.id.last_name_refill);
