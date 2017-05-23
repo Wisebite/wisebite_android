@@ -50,6 +50,7 @@ dependencies {
 
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.github.clans:fab:1.6.4'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     provided 'org.projectlombok:lombok:1.12.6'
 }

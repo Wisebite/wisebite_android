@@ -26,6 +26,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
-import dev.wisebite.wisebite.utils.DownloadImageTask;
+import dev.wisebite.wisebite.utils.Entity;
 import dev.wisebite.wisebite.utils.Preferences;
 
 public class MainActivity extends BaseActivity
@@ -108,6 +109,7 @@ public class MainActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
         setUserInfo();
+        checkListsSize();
     }
 
     @Override
@@ -211,8 +213,8 @@ public class MainActivity extends BaseActivity
 
         String url = userService.getProfilePhoto(Preferences.getCurrentUserEmail());
         if (url != null) {
-            new DownloadImageTask((ImageView) navigationView.findViewById(R.id.user_picture_nav))
-                    .execute(url);
+            Picasso.with(MainActivity.this).load(url)
+                    .into((ImageView) navigationView.findViewById(R.id.user_picture_nav));
         }
         TextView userName = (TextView) navigationView.findViewById(R.id.user_name_nav);
         userName.setText(userService.getUserName(Preferences.getCurrentUserEmail()));
@@ -228,6 +230,20 @@ public class MainActivity extends BaseActivity
             }
         });
 
+    }
+
+    private void checkListsSize() {
+        if (findViewById(R.id.mock_active_orders) != null)
+            checkList(R.id.mock_active_orders, orderService.getActiveOrders(restaurantId).size());
+        if (findViewById(R.id.mock_kitchen) != null)
+            checkList(R.id.mock_kitchen, orderService.getNonReadyOrders(restaurantId).size());
+        if (findViewById(R.id.restaurant_mock) != null)
+            checkList(R.id.restaurant_mock, restaurantService.getAll().size());
+    }
+
+    private void checkList(int resourceId, int size) {
+        if (size != 0) findViewById(resourceId).setVisibility(View.GONE);
+        else findViewById(resourceId).setVisibility(View.VISIBLE);
     }
 
     private void initFragment(int id) {
@@ -253,9 +269,7 @@ public class MainActivity extends BaseActivity
             }
         });
         ArrayList<Order> ordersList = orderService.getActiveOrders(restaurantId);
-        if (!ordersList.isEmpty()) {
-            findViewById(R.id.mock_active_orders).setVisibility(View.GONE);
-        } else findViewById(R.id.mock_active_orders).setVisibility(View.VISIBLE);
+        checkList(R.id.mock_active_orders, ordersList.size());
         OrderAdapter orderAdapter = new OrderAdapter(ordersList, MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.active_order_list);
         assert recyclerView != null;
@@ -266,9 +280,7 @@ public class MainActivity extends BaseActivity
         setTitle(getResources().getString(R.string.kitchen));
         fab.setVisibility(View.GONE);
         ArrayList<Order> ordersList = orderService.getNonReadyOrders(restaurantId);
-        if (!ordersList.isEmpty()) {
-            findViewById(R.id.mock_kitchen).setVisibility(View.GONE);
-        } else findViewById(R.id.mock_kitchen).setVisibility(View.VISIBLE);
+        checkList(R.id.mock_kitchen, ordersList.size());
         KitchenAdapter kitchenAdapter = new KitchenAdapter(ordersList, MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.kitchen_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -281,9 +293,7 @@ public class MainActivity extends BaseActivity
         setTitle(getResources().getString(R.string.list_restaurants));
         fab.setVisibility(View.GONE);
         List<Restaurant> restaurantsList = restaurantService.getAll();
-        if (!restaurantsList.isEmpty()) {
-            findViewById(R.id.restaurant_mock).setVisibility(View.GONE);
-        } else findViewById(R.id.restaurant_mock).setVisibility(View.VISIBLE);
+        checkList(R.id.restaurant_mock, restaurantsList.size());
         RestaurantAdapter restaurantAdapter = new RestaurantAdapter(restaurantsList, MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.restaurant_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
