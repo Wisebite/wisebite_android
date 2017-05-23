@@ -135,4 +135,15 @@ public class RestaurantService extends Service<Restaurant> {
         userRepository.update(user);
     }
 
+    public Integer getDaysOpen(Restaurant current) {
+        return current.getOpenTimes().size();
+    }
+
+    public Integer getDishesCount(Restaurant current) {
+        return current.getDishes().size();
+    }
+
+    public Integer getMenusCount(Restaurant current) {
+        return current.getMenus().size();
+    }
 }

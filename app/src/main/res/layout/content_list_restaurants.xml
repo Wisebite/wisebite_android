@@ -8,4 +8,9 @@
     android:id="@+id/restaurant_list_layout"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/restaurant_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </RelativeLayout>

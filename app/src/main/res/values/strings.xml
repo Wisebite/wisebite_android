@@ -214,4 +214,7 @@
     <string name="no_defined">No defined. Edit it!</string>
     <string name="title_activity_edit_user">EditUserActivity</string>
     <string name="editing">Editing…</string>
+    <string name="menus_count_test">10 different days</string>
+    <string name="dishes_count_test">30 different dishes</string>
+    <string name="open_days_test">6 open days</string>
 </resources>

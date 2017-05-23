@@ -30,6 +30,7 @@ import com.google.android.gms.common.api.Status;
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
+import dev.wisebite.wisebite.adapter.RestaurantAdapter;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
@@ -89,9 +90,11 @@ public class MainActivity extends BaseActivity
         if (restaurantId != null) {
             initFragment(R.layout.content_active_orders);
             initializeActiveOrders();
+            navigationView.getMenu().getItem(1).setChecked(true);
         } else {
             initFragment(R.layout.content_list_restaurants);
             initializeListRestaurants();
+            navigationView.getMenu().getItem(4).setChecked(true);
         }
 
     }
@@ -264,6 +267,12 @@ public class MainActivity extends BaseActivity
     private void initializeListRestaurants() {
         setTitle(getResources().getString(R.string.list_restaurants));
         fab.setVisibility(View.GONE);
+        RestaurantAdapter restaurantAdapter = new RestaurantAdapter(restaurantService.getAll(), MainActivity.this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.restaurant_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(restaurantAdapter);
     }
 
 
