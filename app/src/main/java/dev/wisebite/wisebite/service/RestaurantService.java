@@ -146,4 +146,12 @@ public class RestaurantService extends Service<Restaurant> {
     public Integer getMenusCount(Restaurant current) {
         return current.getMenus().size();
     }
+
+    public boolean isPartOfTheStuff(String restaurantId, String user) {
+        Restaurant restaurant = repository.get(restaurantId);
+        for (String userKey : restaurant.getUsers().keySet()) {
+            if (userKey.equals(user)) return true;
+        }
+        return false;
+    }
 }
