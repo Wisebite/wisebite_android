@@ -3,20 +3,19 @@ package dev.wisebite.wisebite.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.User;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
-import dev.wisebite.wisebite.utils.DownloadImageTask;
-import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.utils.Utils;
 
 public class GetUserActivity extends BaseActivity {
@@ -75,8 +74,8 @@ public class GetUserActivity extends BaseActivity {
     private void initializeView() {
         String url = userService.getProfilePhoto(user.getId());
         if (url != null) {
-            new DownloadImageTask((ImageView) findViewById(R.id.user_picture_nav))
-                    .execute(url);
+            Picasso.with(GetUserActivity.this).load(url)
+                    .into((ImageView) findViewById(R.id.user_picture_nav));
         }
 
         TextView nameView = (TextView) findViewById(R.id.name_refill);

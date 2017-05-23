@@ -26,16 +26,23 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
+import dev.wisebite.wisebite.adapter.RestaurantAdapter;
+import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
-import dev.wisebite.wisebite.utils.DownloadImageTask;
+import dev.wisebite.wisebite.utils.Entity;
 import dev.wisebite.wisebite.utils.Preferences;
 
 public class MainActivity extends BaseActivity
@@ -89,9 +96,11 @@ public class MainActivity extends BaseActivity
         if (restaurantId != null) {
             initFragment(R.layout.content_active_orders);
             initializeActiveOrders();
+            navigationView.getMenu().getItem(1).setChecked(true);
         } else {
             initFragment(R.layout.content_list_restaurants);
             initializeListRestaurants();
+            navigationView.getMenu().getItem(4).setChecked(true);
         }
 
     }
@@ -100,6 +109,7 @@ public class MainActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
         setUserInfo();
+        checkListsSize();
     }
 
     @Override
@@ -203,8 +213,8 @@ public class MainActivity extends BaseActivity
 
         String url = userService.getProfilePhoto(Preferences.getCurrentUserEmail());
         if (url != null) {
-            new DownloadImageTask((ImageView) navigationView.findViewById(R.id.user_picture_nav))
-                    .execute(url);
+            Picasso.with(MainActivity.this).load(url)
+                    .into((ImageView) navigationView.findViewById(R.id.user_picture_nav));
         }
         TextView userName = (TextView) navigationView.findViewById(R.id.user_name_nav);
         userName.setText(userService.getUserName(Preferences.getCurrentUserEmail()));
@@ -220,6 +230,20 @@ public class MainActivity extends BaseActivity
             }
         });
 
+    }
+
+    private void checkListsSize() {
+        if (findViewById(R.id.mock_active_orders) != null)
+            checkList(R.id.mock_active_orders, orderService.getActiveOrders(restaurantId).size());
+        if (findViewById(R.id.mock_kitchen) != null)
+            checkList(R.id.mock_kitchen, orderService.getNonReadyOrders(restaurantId).size());
+        if (findViewById(R.id.restaurant_mock) != null)
+            checkList(R.id.restaurant_mock, restaurantService.getAll().size());
+    }
+
+    private void checkList(int resourceId, int size) {
+        if (size != 0) findViewById(resourceId).setVisibility(View.GONE);
+        else findViewById(resourceId).setVisibility(View.VISIBLE);
     }
 
     private void initFragment(int id) {
@@ -244,7 +268,9 @@ public class MainActivity extends BaseActivity
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
-        OrderAdapter orderAdapter = new OrderAdapter(orderService.getActiveOrders(restaurantId), MainActivity.this);
+        ArrayList<Order> ordersList = orderService.getActiveOrders(restaurantId);
+        checkList(R.id.mock_active_orders, ordersList.size());
+        OrderAdapter orderAdapter = new OrderAdapter(ordersList, MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.active_order_list);
         assert recyclerView != null;
         recyclerView.setAdapter(orderAdapter);
@@ -253,7 +279,9 @@ public class MainActivity extends BaseActivity
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
         fab.setVisibility(View.GONE);
-        KitchenAdapter kitchenAdapter = new KitchenAdapter(orderService.getNonReadyOrders(restaurantId), MainActivity.this);
+        ArrayList<Order> ordersList = orderService.getNonReadyOrders(restaurantId);
+        checkList(R.id.mock_kitchen, ordersList.size());
+        KitchenAdapter kitchenAdapter = new KitchenAdapter(ordersList, MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.kitchen_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -264,6 +292,14 @@ public class MainActivity extends BaseActivity
     private void initializeListRestaurants() {
         setTitle(getResources().getString(R.string.list_restaurants));
         fab.setVisibility(View.GONE);
+        List<Restaurant> restaurantsList = restaurantService.getAll();
+        checkList(R.id.restaurant_mock, restaurantsList.size());
+        RestaurantAdapter restaurantAdapter = new RestaurantAdapter(restaurantsList, MainActivity.this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.restaurant_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(restaurantAdapter);
     }
 
 

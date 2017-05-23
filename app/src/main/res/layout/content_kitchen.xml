@@ -7,6 +7,14 @@
     android:id="@+id/kitchen_layout"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <TextView
+        android:id="@+id/mock_kitchen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/mock_kitchen"
+        android:gravity="center"
+        android:textSize="20sp"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/kitchen_list"
         android:layout_width="wrap_content"

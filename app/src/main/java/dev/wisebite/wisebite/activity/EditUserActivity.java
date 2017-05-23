@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.domain.User;
 import dev.wisebite.wisebite.firebase.FirebaseStorageService;
@@ -21,7 +23,6 @@ import dev.wisebite.wisebite.firebase.FirebaseStorageServiceImpl;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
-import dev.wisebite.wisebite.utils.DownloadImageTask;
 import dev.wisebite.wisebite.utils.SecurityUtils;
 import dev.wisebite.wisebite.utils.Utils;
 
@@ -102,8 +103,7 @@ public class EditUserActivity extends BaseActivity {
         imageView = (ImageView) findViewById(R.id.user_picture_nav);
         String url = userService.getProfilePhoto(user.getId());
         if (url != null) {
-            new DownloadImageTask(imageView)
-                    .execute(url);
+            Picasso.with(EditUserActivity.this).load(url).into(imageView);
         }
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

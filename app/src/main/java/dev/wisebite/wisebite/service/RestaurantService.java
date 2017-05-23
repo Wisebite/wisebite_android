@@ -135,4 +135,23 @@ public class RestaurantService extends Service<Restaurant> {
         userRepository.update(user);
     }
 
+    public Integer getDaysOpen(Restaurant current) {
+        return current.getOpenTimes().size();
+    }
+
+    public Integer getDishesCount(Restaurant current) {
+        return current.getDishes().size();
+    }
+
+    public Integer getMenusCount(Restaurant current) {
+        return current.getMenus().size();
+    }
+
+    public boolean isPartOfTheStuff(String restaurantId, String user) {
+        Restaurant restaurant = repository.get(restaurantId);
+        for (String userKey : restaurant.getUsers().keySet()) {
+            if (userKey.equals(user)) return true;
+        }
+        return false;
+    }
 }

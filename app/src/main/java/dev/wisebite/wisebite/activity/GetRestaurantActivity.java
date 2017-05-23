@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.utils.BaseActivity;
+import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.utils.Utils;
 
 public class GetRestaurantActivity extends BaseActivity {
@@ -30,6 +32,8 @@ public class GetRestaurantActivity extends BaseActivity {
     private RestaurantService restaurantService;
     private Restaurant restaurant;
     private String restaurantId;
+
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,7 @@ public class GetRestaurantActivity extends BaseActivity {
         restaurantService = ServiceFactory.getRestaurantService(GetRestaurantActivity.this);
         restaurant = restaurantService.get(restaurantId);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +62,17 @@ public class GetRestaurantActivity extends BaseActivity {
         initializeOpenTimes();
         initializeDishes();
         initializeMenus();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeGeneralInfo() {
@@ -73,6 +88,10 @@ public class GetRestaurantActivity extends BaseActivity {
         phone.setText(String.valueOf(restaurant.getPhone()));
         website.setText(restaurant.getWebsite());
         numberOfTables.setText(String.valueOf(restaurant.getNumberOfTables() + " tables"));
+
+        if (!restaurantService.isPartOfTheStuff(restaurantId, Preferences.getCurrentUserEmail())) {
+            fab.setVisibility(View.GONE);
+        }
     }
 
     private void initializeOpenTimes() {
