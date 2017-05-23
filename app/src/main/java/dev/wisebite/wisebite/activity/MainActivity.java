@@ -27,10 +27,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
 import dev.wisebite.wisebite.adapter.RestaurantAdapter;
+import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
@@ -247,7 +252,11 @@ public class MainActivity extends BaseActivity
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
-        OrderAdapter orderAdapter = new OrderAdapter(orderService.getActiveOrders(restaurantId), MainActivity.this);
+        ArrayList<Order> ordersList = orderService.getActiveOrders(restaurantId);
+        if (!ordersList.isEmpty()) {
+            findViewById(R.id.mock_active_orders).setVisibility(View.GONE);
+        } else findViewById(R.id.mock_active_orders).setVisibility(View.VISIBLE);
+        OrderAdapter orderAdapter = new OrderAdapter(ordersList, MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.active_order_list);
         assert recyclerView != null;
         recyclerView.setAdapter(orderAdapter);
@@ -256,7 +265,11 @@ public class MainActivity extends BaseActivity
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
         fab.setVisibility(View.GONE);
-        KitchenAdapter kitchenAdapter = new KitchenAdapter(orderService.getNonReadyOrders(restaurantId), MainActivity.this);
+        ArrayList<Order> ordersList = orderService.getNonReadyOrders(restaurantId);
+        if (!ordersList.isEmpty()) {
+            findViewById(R.id.mock_kitchen).setVisibility(View.GONE);
+        } else findViewById(R.id.mock_kitchen).setVisibility(View.VISIBLE);
+        KitchenAdapter kitchenAdapter = new KitchenAdapter(ordersList, MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.kitchen_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -267,7 +280,11 @@ public class MainActivity extends BaseActivity
     private void initializeListRestaurants() {
         setTitle(getResources().getString(R.string.list_restaurants));
         fab.setVisibility(View.GONE);
-        RestaurantAdapter restaurantAdapter = new RestaurantAdapter(restaurantService.getAll(), MainActivity.this);
+        List<Restaurant> restaurantsList = restaurantService.getAll();
+        if (!restaurantsList.isEmpty()) {
+            findViewById(R.id.restaurant_mock).setVisibility(View.GONE);
+        } else findViewById(R.id.restaurant_mock).setVisibility(View.VISIBLE);
+        RestaurantAdapter restaurantAdapter = new RestaurantAdapter(restaurantsList, MainActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.restaurant_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;

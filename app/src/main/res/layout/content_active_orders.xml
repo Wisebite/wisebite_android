@@ -8,6 +8,14 @@
     android:id="@+id/order_list_layout"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <TextView
+        android:id="@+id/mock_active_orders"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/mock_order"
+        android:gravity="center"
+        android:textSize="20sp"/>
+
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/active_order_list"
         android:layout_width="wrap_content"

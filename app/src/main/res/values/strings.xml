@@ -217,4 +217,7 @@
     <string name="menus_count_test">10 different days</string>
     <string name="dishes_count_test">30 different dishes</string>
     <string name="open_days_test">6 open days</string>
+    <string name="mock_order">No active orders yet.</string>
+    <string name="mock_kitchen">Nothing to cook.</string>
+    <string name="mock_restaurant">No restaurants yet.</string>
 </resources>
