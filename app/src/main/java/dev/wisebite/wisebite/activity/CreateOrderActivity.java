@@ -86,10 +86,13 @@ public class CreateOrderActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         TextView tableNumberView = (TextView) tableNumberForm.findViewById(R.id.form_number);
-                        tableNumber = Integer.valueOf(tableNumberView.getText().toString());
-
-                        TextView titleTableNumber = (TextView) findViewById(R.id.table_number_title);
-                        titleTableNumber.setText(String.valueOf("at table " + tableNumber));
+                        if (!tableNumberView.getText().toString().trim().isEmpty()) {
+                            tableNumber = Integer.valueOf(tableNumberView.getText().toString());
+                            TextView titleTableNumber = (TextView) findViewById(R.id.table_number_title);
+                            titleTableNumber.setText(String.valueOf("at table " + tableNumber));
+                        } else {
+                            onBackPressed();
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
