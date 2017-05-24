@@ -220,4 +220,5 @@
     <string name="mock_order">No active orders yet.</string>
     <string name="mock_kitchen">Nothing to cook.</string>
     <string name="mock_restaurant">No restaurants yet.</string>
+    <string name="analytics">Analytics</string>
 </resources>

@@ -22,6 +22,10 @@
             android:id="@+id/nav_list_restaurants"
             android:icon="@drawable/ic_menu_share"
             android:title="@string/list_restaurants" />
+        <item
+            android:id="@+id/nav_analytics"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="@string/analytics" />
     </group>
 
 </menu>

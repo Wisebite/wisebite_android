@@ -42,7 +42,6 @@ import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
-import dev.wisebite.wisebite.utils.Entity;
 import dev.wisebite.wisebite.utils.Preferences;
 
 public class MainActivity extends BaseActivity
@@ -181,6 +180,9 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_list_restaurants) {
             initFragment(R.layout.content_list_restaurants);
             initializeListRestaurants();
+        } else if (id == R.id.nav_analytics) {
+            initFragment(R.layout.content_analytics);
+            initializeAnalytics();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -302,5 +304,9 @@ public class MainActivity extends BaseActivity
         recyclerView.setAdapter(restaurantAdapter);
     }
 
+    private void initializeAnalytics() {
+        setTitle(getResources().getString(R.string.analytics));
+        fab.setVisibility(View.GONE);
+    }
 
 }
