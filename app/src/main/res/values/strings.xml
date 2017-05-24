@@ -221,4 +221,7 @@
     <string name="mock_kitchen">Nothing to cook.</string>
     <string name="mock_restaurant">No restaurants yet.</string>
     <string name="analytics">Analytics</string>
+    <string name="per_day">Day</string>
+    <string name="per_month">Month</string>
+    <string name="per_week">Week</string>
 </resources>

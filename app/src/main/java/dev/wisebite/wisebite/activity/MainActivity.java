@@ -11,6 +11,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,11 +38,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.adapter.FragmentAdapter;
 import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
 import dev.wisebite.wisebite.adapter.RestaurantAdapter;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.Restaurant;
+import dev.wisebite.wisebite.fragment.AnalyticsDayFragment;
+import dev.wisebite.wisebite.fragment.AnalyticsMonthFragment;
+import dev.wisebite.wisebite.fragment.AnalyticsWeekFragment;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
@@ -317,6 +322,14 @@ public class MainActivity extends BaseActivity
         TabLayout tabs = new TabLayout(MainActivity.this);
         tabs.setTabTextColors(Color.parseColor("#FFFFFF"), Color.parseColor("#FFFFFF"));
         appBar.addView(tabs);
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+        adapter.addFragment(new AnalyticsDayFragment(), getString(R.string.per_day));
+        adapter.addFragment(new AnalyticsWeekFragment(), getString(R.string.per_week));
+        adapter.addFragment(new AnalyticsMonthFragment(), getString(R.string.per_month));
+        viewPager.setAdapter(adapter);
+        tabs.setupWithViewPager(viewPager);
     }
 
 }
