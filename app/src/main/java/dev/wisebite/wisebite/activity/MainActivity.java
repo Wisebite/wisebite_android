@@ -1,10 +1,15 @@
 package dev.wisebite.wisebite.activity;
 
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -307,6 +312,11 @@ public class MainActivity extends BaseActivity
     private void initializeAnalytics() {
         setTitle(getResources().getString(R.string.analytics));
         fab.setVisibility(View.GONE);
+
+        AppBarLayout appBar = (AppBarLayout) findViewById(R.id.appbar);
+        TabLayout tabs = new TabLayout(MainActivity.this);
+        tabs.setTabTextColors(Color.parseColor("#FFFFFF"), Color.parseColor("#FFFFFF"));
+        appBar.addView(tabs);
     }
 
 }
