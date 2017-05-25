@@ -19,5 +19,8 @@
     <color name="divider">#BDBDBD</color>
     <color name="green">#4aba1d</color>
     <color name="red">#da2929</color>
+    <color name="day_color">#ededed</color>
+    <color name="week_color">#e7e7e7</color>
+    <color name="month_color">#d9d9d9</color>
 
 </resources>

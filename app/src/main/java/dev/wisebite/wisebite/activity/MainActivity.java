@@ -218,12 +218,14 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_kitchen).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_see_restaurant).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_analytics).setVisible(false);
         } else {
             navigationView.getMenu().findItem(R.id.nav_create_restaurant).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_active_orders).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_kitchen).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_see_restaurant).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_analytics).setVisible(true);
         }
 
         String url = userService.getProfilePhoto(Preferences.getCurrentUserEmail());
@@ -337,9 +339,9 @@ public class MainActivity extends BaseActivity
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(new AnalyticsDayFragment(), getString(R.string.per_day));
-        adapter.addFragment(new AnalyticsWeekFragment(), getString(R.string.per_week));
-        adapter.addFragment(new AnalyticsMonthFragment(), getString(R.string.per_month));
+        adapter.addFragment(new AnalyticsDayFragment(MainActivity.this, restaurantId), getString(R.string.per_day));
+        adapter.addFragment(new AnalyticsWeekFragment(MainActivity.this, restaurantId), getString(R.string.per_week));
+        adapter.addFragment(new AnalyticsMonthFragment(MainActivity.this, restaurantId), getString(R.string.per_month));
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
     }
