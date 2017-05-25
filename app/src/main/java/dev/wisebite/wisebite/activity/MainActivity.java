@@ -66,6 +66,8 @@ public class MainActivity extends BaseActivity
     private FloatingActionButton fab;
     private NavigationView navigationView;
     private GoogleApiClient mGoogleApiClient;
+    private TabLayout tabs;
+    private AppBarLayout appBar;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -89,6 +91,7 @@ public class MainActivity extends BaseActivity
                 .build();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        appBar = (AppBarLayout) findViewById(R.id.appbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -258,6 +261,12 @@ public class MainActivity extends BaseActivity
         else findViewById(resourceId).setVisibility(View.VISIBLE);
     }
 
+    private void removeTabs() {
+        if (tabs != null) {
+            appBar.removeView(tabs);
+        }
+    }
+
     private void initFragment(int id) {
         LayoutInflater inflater = getLayoutInflater();
         View v;
@@ -270,6 +279,7 @@ public class MainActivity extends BaseActivity
 
     private void initializeActiveOrders() {
         setTitle(getResources().getString(R.string.active_orders));
+        removeTabs();
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,6 +300,7 @@ public class MainActivity extends BaseActivity
 
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
+        removeTabs();
         fab.setVisibility(View.GONE);
         ArrayList<Order> ordersList = orderService.getNonReadyOrders(restaurantId);
         checkList(R.id.mock_kitchen, ordersList.size());
@@ -303,6 +314,7 @@ public class MainActivity extends BaseActivity
 
     private void initializeListRestaurants() {
         setTitle(getResources().getString(R.string.list_restaurants));
+        removeTabs();
         fab.setVisibility(View.GONE);
         List<Restaurant> restaurantsList = restaurantService.getAll();
         checkList(R.id.restaurant_mock, restaurantsList.size());
@@ -316,10 +328,10 @@ public class MainActivity extends BaseActivity
 
     private void initializeAnalytics() {
         setTitle(getResources().getString(R.string.analytics));
+        removeTabs();
         fab.setVisibility(View.GONE);
 
-        AppBarLayout appBar = (AppBarLayout) findViewById(R.id.appbar);
-        TabLayout tabs = new TabLayout(MainActivity.this);
+        tabs = new TabLayout(MainActivity.this);
         tabs.setTabTextColors(Color.parseColor("#FFFFFF"), Color.parseColor("#FFFFFF"));
         appBar.addView(tabs);
 
