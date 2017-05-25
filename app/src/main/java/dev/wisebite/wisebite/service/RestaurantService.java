@@ -200,20 +200,6 @@ public class RestaurantService extends Service<Restaurant> {
         return false;
     }
 
-    public Integer getOrdersCount(String restaurantId, int kind) {
-        Integer count = 0;
-
-        List<String> ordersList = getOrders(restaurantId);
-        if (ordersList.isEmpty()) return 0;
-
-        Order order;
-        for (String orderKey : ordersList) {
-            order = orderRepository.get(orderKey);
-            if (checkTime(order, kind)) ++count;
-        }
-        return count;
-    }
-
     private Integer getNumberOptions(Menu menu) {
         return  (!menu.getMainDishes().isEmpty() ? 1 : 0) +
                 (!menu.getSecondaryDishes().isEmpty() ? 1 : 0) +
@@ -253,6 +239,20 @@ public class RestaurantService extends Service<Restaurant> {
         return total;
     }
 
+    public Integer getOrdersCount(String restaurantId, int kind) {
+        Integer count = 0;
+
+        List<String> ordersList = getOrders(restaurantId);
+        if (ordersList.isEmpty()) return 0;
+
+        Order order;
+        for (String orderKey : ordersList) {
+            order = orderRepository.get(orderKey);
+            if (checkTime(order, kind)) ++count;
+        }
+        return count;
+    }
+
     public Double getAveragePrice(String restaurantId, int kind) {
         double total = 0.0;
         double count = 0.0;
@@ -288,6 +288,39 @@ public class RestaurantService extends Service<Restaurant> {
     }
 
     public String getBestTimeRange(String restaurantId, int kind) {
-        return "";
+        Integer[] hours = new Integer[24];
+        for (int i = 0; i < hours.length; i++) hours[i] = 0;
+
+        List<String> ordersList = getOrders(restaurantId);
+        if (ordersList.isEmpty()) return "---";
+
+        Calendar calendar = Calendar.getInstance();
+        Order order;
+        for (String orderKey : ordersList) {
+            order = orderRepository.get(orderKey);
+            if (checkTime(order, kind)) {
+                calendar.setTime(order.getDate());
+                ++hours[calendar.get(Calendar.HOUR_OF_DAY)];
+            }
+        }
+
+        int max = 0;
+        int index = -1;
+        for (int i = 0; i < hours.length; i++) {
+            if (hours[i] > max) {
+                max = hours[i];
+                index = i;
+            }
+        }
+
+        if (index == -1) return "---";
+
+        String result = "";
+        if (index < 10) result += '0';
+        result += String.valueOf(index) + "h - ";
+        ++index;
+        if (index < 10) result += '0';
+        result += String.valueOf(index) + "h";
+        return result;
     }
 }
