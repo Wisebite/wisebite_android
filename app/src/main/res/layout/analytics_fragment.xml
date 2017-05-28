@@ -10,7 +10,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/general_info_layout"
@@ -43,12 +43,13 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="0.3">
+                        android:layout_weight="0.4">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/number_of_orders"
+                            android:textSize="16sp"
                             android:textColor="@color/black"/>
 
                     </RelativeLayout>
@@ -63,6 +64,7 @@
                             android:id="@+id/number_of_orders_refill"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="@string/number_of_orders"/>
 
                     </RelativeLayout>
@@ -81,12 +83,13 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="0.3">
+                        android:layout_weight="0.4">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/average_price"
+                            android:textSize="16sp"
                             android:textColor="@color/black"/>
 
                     </RelativeLayout>
@@ -101,7 +104,48 @@
                             android:id="@+id/average_price_refill"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="@string/average_price"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- Second 2.0 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:baselineAligned="false">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.4">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/total_earned"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.5">
+
+                        <TextView
+                            android:id="@+id/total_earned_refill"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="@string/total_earned"/>
 
                     </RelativeLayout>
 
@@ -119,12 +163,13 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="0.3">
+                        android:layout_weight="0.4">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/best_dish"
+                            android:textSize="16sp"
                             android:textColor="@color/black"/>
 
                     </RelativeLayout>
@@ -139,6 +184,7 @@
                             android:id="@+id/best_dish_refill"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="@string/best_dish"/>
 
                     </RelativeLayout>
@@ -157,11 +203,12 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="0.3">
+                        android:layout_weight="0.4">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="@string/worst_dish"
                             android:textColor="@color/black"/>
 
@@ -177,6 +224,7 @@
                             android:id="@+id/worst_dish_refill"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="@string/worst_dish"/>
 
                     </RelativeLayout>
@@ -195,12 +243,13 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="0.3">
+                        android:layout_weight="0.4">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/best_menu"
+                            android:textSize="16sp"
                             android:textColor="@color/black"/>
 
                     </RelativeLayout>
@@ -215,6 +264,7 @@
                             android:id="@+id/best_menu_refill"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="@string/best_menu"/>
 
                     </RelativeLayout>
@@ -233,12 +283,13 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="0.3">
+                        android:layout_weight="0.4">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/worst_menu"
+                            android:textSize="16sp"
                             android:textColor="@color/black"/>
 
                     </RelativeLayout>
@@ -253,6 +304,7 @@
                             android:id="@+id/worst_menu_refill"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="@string/worst_menu"/>
 
                     </RelativeLayout>
@@ -271,12 +323,13 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="0.3">
+                        android:layout_weight="0.4">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/best_time_range"
+                            android:textSize="16sp"
                             android:textColor="@color/black"/>
 
                     </RelativeLayout>
@@ -291,6 +344,7 @@
                             android:id="@+id/best_time_range_refill"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="@string/best_time_range"/>
 
                     </RelativeLayout>

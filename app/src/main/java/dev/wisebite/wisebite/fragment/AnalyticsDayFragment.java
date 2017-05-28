@@ -50,6 +50,7 @@ public class AnalyticsDayFragment extends Fragment {
     private void initializeValues(View view) {
         TextView numberOfOrders = (TextView) view.findViewById(R.id.number_of_orders_refill);
         TextView averagePrice = (TextView) view.findViewById(R.id.average_price_refill);
+        TextView totalEarned = (TextView) view.findViewById(R.id.total_earned_refill);
         TextView bestDish = (TextView) view.findViewById(R.id.best_dish_refill);
         TextView worstDish = (TextView) view.findViewById(R.id.worst_dish_refill);
         TextView bestMenu = (TextView) view.findViewById(R.id.best_menu_refill);
@@ -58,6 +59,7 @@ public class AnalyticsDayFragment extends Fragment {
 
         numberOfOrders.setText(String.valueOf(restaurantService.getOrdersCount(restaurantId, Calendar.DATE)));
         averagePrice.setText(String.format("%s €", Utils.toStringWithTwoDecimals(restaurantService.getAveragePrice(restaurantId, Calendar.DATE))));
+        totalEarned.setText(String.format("%s €", Utils.toStringWithTwoDecimals(restaurantService.getTotalEarned(restaurantId, Calendar.DATE))));
         bestDish.setText(restaurantService.getBestDish(restaurantId, Calendar.DATE));
         worstDish.setText(restaurantService.getWorstDish(restaurantId, Calendar.DATE));
         bestMenu.setText(restaurantService.getBestMenu(restaurantId, Calendar.DATE));

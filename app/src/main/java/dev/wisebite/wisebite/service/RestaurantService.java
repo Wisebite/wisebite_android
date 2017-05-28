@@ -327,6 +327,20 @@ public class RestaurantService extends Service<Restaurant> {
         return total/count;
     }
 
+    public Double getTotalEarned(String restaurantId, int kind) {
+        double total = 0.0;
+
+        List<String> ordersList = getOrders(restaurantId);
+        if (ordersList.isEmpty()) return 0.0;
+
+        Order order;
+        for (String orderKey : ordersList) {
+            order = orderRepository.get(orderKey);
+            if (checkTime(order, kind)) total += getPriceOfOrder(orderKey);
+        }
+        return total;
+    }
+
     public String getBestDish(String restaurantId, int kind) {
         Map<String, Integer> map = getDishesCountMap(restaurantId, kind);
 
@@ -431,4 +445,5 @@ public class RestaurantService extends Service<Restaurant> {
         result += String.valueOf(index) + "h";
         return result;
     }
+
 }

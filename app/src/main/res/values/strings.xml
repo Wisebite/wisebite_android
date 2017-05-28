@@ -231,4 +231,5 @@
     <string name="best_menu">Best menu</string>
     <string name="worst_menu">Worst menu</string>
     <string name="best_time_range">Best time range</string>
+    <string name="total_earned">Total earned</string>
 </resources>
