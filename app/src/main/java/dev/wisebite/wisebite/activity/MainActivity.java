@@ -1,11 +1,17 @@
 package dev.wisebite.wisebite.activity;
 
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,17 +38,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.adapter.FragmentAdapter;
 import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
 import dev.wisebite.wisebite.adapter.RestaurantAdapter;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.Restaurant;
+import dev.wisebite.wisebite.fragment.AnalyticsDayFragment;
+import dev.wisebite.wisebite.fragment.AnalyticsMonthFragment;
+import dev.wisebite.wisebite.fragment.AnalyticsWeekFragment;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
-import dev.wisebite.wisebite.utils.Entity;
 import dev.wisebite.wisebite.utils.Preferences;
 
 public class MainActivity extends BaseActivity
@@ -57,6 +66,8 @@ public class MainActivity extends BaseActivity
     private FloatingActionButton fab;
     private NavigationView navigationView;
     private GoogleApiClient mGoogleApiClient;
+    private TabLayout tabs;
+    private AppBarLayout appBar;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -80,6 +91,7 @@ public class MainActivity extends BaseActivity
                 .build();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        appBar = (AppBarLayout) findViewById(R.id.appbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -181,6 +193,9 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_list_restaurants) {
             initFragment(R.layout.content_list_restaurants);
             initializeListRestaurants();
+        } else if (id == R.id.nav_analytics) {
+            initFragment(R.layout.content_analytics);
+            initializeAnalytics();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -203,12 +218,14 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_kitchen).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_see_restaurant).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_analytics).setVisible(false);
         } else {
             navigationView.getMenu().findItem(R.id.nav_create_restaurant).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_active_orders).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_kitchen).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_see_restaurant).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_analytics).setVisible(true);
         }
 
         String url = userService.getProfilePhoto(Preferences.getCurrentUserEmail());
@@ -246,6 +263,12 @@ public class MainActivity extends BaseActivity
         else findViewById(resourceId).setVisibility(View.VISIBLE);
     }
 
+    private void removeTabs() {
+        if (tabs != null) {
+            appBar.removeView(tabs);
+        }
+    }
+
     private void initFragment(int id) {
         LayoutInflater inflater = getLayoutInflater();
         View v;
@@ -258,6 +281,7 @@ public class MainActivity extends BaseActivity
 
     private void initializeActiveOrders() {
         setTitle(getResources().getString(R.string.active_orders));
+        removeTabs();
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,6 +302,7 @@ public class MainActivity extends BaseActivity
 
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
+        removeTabs();
         fab.setVisibility(View.GONE);
         ArrayList<Order> ordersList = orderService.getNonReadyOrders(restaurantId);
         checkList(R.id.mock_kitchen, ordersList.size());
@@ -291,6 +316,7 @@ public class MainActivity extends BaseActivity
 
     private void initializeListRestaurants() {
         setTitle(getResources().getString(R.string.list_restaurants));
+        removeTabs();
         fab.setVisibility(View.GONE);
         List<Restaurant> restaurantsList = restaurantService.getAll();
         checkList(R.id.restaurant_mock, restaurantsList.size());
@@ -302,5 +328,22 @@ public class MainActivity extends BaseActivity
         recyclerView.setAdapter(restaurantAdapter);
     }
 
+    private void initializeAnalytics() {
+        setTitle(getResources().getString(R.string.analytics));
+        removeTabs();
+        fab.setVisibility(View.GONE);
+
+        tabs = new TabLayout(MainActivity.this);
+        tabs.setTabTextColors(Color.parseColor("#FFFFFF"), Color.parseColor("#FFFFFF"));
+        appBar.addView(tabs);
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+        adapter.addFragment(new AnalyticsDayFragment(MainActivity.this, restaurantId), getString(R.string.per_day));
+        adapter.addFragment(new AnalyticsWeekFragment(MainActivity.this, restaurantId), getString(R.string.per_week));
+        adapter.addFragment(new AnalyticsMonthFragment(MainActivity.this, restaurantId), getString(R.string.per_month));
+        viewPager.setAdapter(adapter);
+        tabs.setupWithViewPager(viewPager);
+    }
 
 }
