@@ -84,6 +84,8 @@ public class AnalyticsWeekFragment extends Fragment {
     private void initializePieCharts(final View view) {
         PieChartData data = restaurantService.getAllDishesCount(restaurantId, Calendar.WEEK_OF_YEAR);
 
+        if (!data.isEmpty()) view.findViewById(R.id.mock_first_pie).setVisibility(View.GONE);
+
         float[] yData = data.getYData();
         final String[] xData = data.getXData();
 
@@ -105,6 +107,7 @@ public class AnalyticsWeekFragment extends Fragment {
 
         Legend legend = pieChart.getLegend();
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        legend.setWordWrapEnabled(true);
 
         ArrayList<Integer> colors = new ArrayList<>();
         for (int c : ColorTemplate.VORDIPLOM_COLORS) colors.add(c);

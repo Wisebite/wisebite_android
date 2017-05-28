@@ -20,4 +20,8 @@ public class PieChartData {
         this.yData = new float[size];
         this.xData = new String[size];
     }
+
+    public boolean isEmpty() {
+        return yData.length == 0;
+    }
 }

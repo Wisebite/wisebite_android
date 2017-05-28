@@ -371,6 +371,25 @@
                     android:gravity="center_horizontal"
                     android:textStyle="bold"/>
 
+                <TextView
+                    android:id="@+id/second_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10sp"
+                    android:text="@string/sold_dishes"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp"
+                    android:gravity="center_horizontal"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/mock_first_pie"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="30sp"
+                    android:text="@string/no_data_show"
+                    android:gravity="center_horizontal"/>
+
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/best_dishes_pie_chart"
                     android:layout_width="match_parent"
