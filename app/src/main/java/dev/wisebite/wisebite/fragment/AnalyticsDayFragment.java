@@ -143,12 +143,10 @@ public class AnalyticsDayFragment extends Fragment {
         PieChartData menusData = restaurantService.getAllMenusCount(restaurantId, Calendar.DATE);
         if (!menusData.isEmpty()) {
             view.findViewById(R.id.mock_second_pie).setVisibility(View.GONE);
-            createPieChart(view, menusData);
+            createPieChart(view, menusData, R.id.best_menus_pie_chart);
         } else {
             view.findViewById(R.id.best_menus_pie_chart).setVisibility(View.GONE);
         }
-
-
     }
 
 }
