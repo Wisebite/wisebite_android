@@ -2,7 +2,9 @@ package dev.wisebite.wisebite.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -239,6 +241,60 @@ public class RestaurantService extends Service<Restaurant> {
         return total;
     }
 
+    private Map<String, Integer> getDishesCountMap(String restaurantId, int kind) {
+        List<String> ordersList = getOrders(restaurantId);
+        if (ordersList.isEmpty()) return new HashMap<>();
+
+        Map<String, Integer> map = new HashMap<>();
+        for (Dish dish : getDishes(restaurantId)) {
+            map.put(dish.getId(), 0);
+        }
+
+        Order order;
+        for (String orderKey : ordersList) {
+            order = orderRepository.get(orderKey);
+            if (order.getOrderItems() == null || !checkTime(order, kind)) continue;
+
+            OrderItem orderItem;
+            for (String orderItemKey : order.getOrderItems().keySet()) {
+                orderItem = orderItemRepository.get(orderItemKey);
+                if (orderItem.getMenuId() == null) {
+                    Integer count = map.get(orderItem.getDishId()) + 1;
+                    map.put(orderItem.getDishId(), count);
+                }
+            }
+        }
+
+        return map;
+    }
+
+    private Map<String, Integer> getMenusCountMap(String restaurantId, int kind) {
+        List<String> ordersList = getOrders(restaurantId);
+        if (ordersList.isEmpty()) return new HashMap<>();
+
+        Map<String, Integer> map = new HashMap<>();
+        for (Menu menu : getMenus(restaurantId)) {
+            map.put(menu.getId(), 0);
+        }
+
+        Order order;
+        for (String orderKey : ordersList) {
+            order = orderRepository.get(orderKey);
+            if (order.getOrderItems() == null || !checkTime(order, kind)) continue;
+
+            OrderItem orderItem;
+            for (String orderItemKey : order.getOrderItems().keySet()) {
+                orderItem = orderItemRepository.get(orderItemKey);
+                if (orderItem.getMenuId() != null) {
+                    Integer count = map.get(orderItem.getMenuId()) + 1;
+                    map.put(orderItem.getMenuId(), count);
+                }
+            }
+        }
+
+        return map;
+    }
+
     public Integer getOrdersCount(String restaurantId, int kind) {
         Integer count = 0;
 
@@ -272,19 +328,71 @@ public class RestaurantService extends Service<Restaurant> {
     }
 
     public String getBestDish(String restaurantId, int kind) {
-        return "";
+        Map<String, Integer> map = getDishesCountMap(restaurantId, kind);
+
+        String bestId = "";
+        Integer max = -1;
+        for (String key : map.keySet()) {
+            Integer current = map.get(key);
+            if (current > max) {
+                max = current;
+                bestId = key;
+            }
+        }
+
+        if (bestId.isEmpty()) return bestId;
+        else return dishRepository.get(bestId).getName() + ": " + max + " times.";
     }
 
     public String getWorstDish(String restaurantId, int kind) {
-        return "";
+        Map<String, Integer> map = getDishesCountMap(restaurantId, kind);
+
+        String bestId = "";
+        Integer min = Integer.MAX_VALUE;
+        for (String key : map.keySet()) {
+            Integer current = map.get(key);
+            if (current < min) {
+                min = current;
+                bestId = key;
+            }
+        }
+
+        if (bestId.isEmpty()) return bestId;
+        else return dishRepository.get(bestId).getName() + ": " + min + " times.";
     }
 
     public String getBestMenu(String restaurantId, int kind) {
-        return "";
+        Map<String, Integer> map = getMenusCountMap(restaurantId, kind);
+
+        String bestId = "";
+        Integer max = -1;
+        for (String key : map.keySet()) {
+            Integer current = map.get(key)/getNumberOptions(menuRepository.get(key));
+            if (current > max) {
+                max = current;
+                bestId = key;
+            }
+        }
+
+        if (bestId.isEmpty()) return bestId;
+        else return menuRepository.get(bestId).getName() + ": " + max + " times.";
     }
 
     public String getWorstMenu(String restaurantId, int kind) {
-        return "";
+        Map<String, Integer> map = getMenusCountMap(restaurantId, kind);
+
+        String bestId = "";
+        Integer min = Integer.MAX_VALUE;
+        for (String key : map.keySet()) {
+            Integer current = map.get(key)/getNumberOptions(menuRepository.get(key));
+            if (current < min) {
+                min = current;
+                bestId = key;
+            }
+        }
+
+        if (bestId.isEmpty()) return bestId;
+        else return menuRepository.get(bestId).getName() + ": " + min + " times.";
     }
 
     public String getBestTimeRange(String restaurantId, int kind) {
