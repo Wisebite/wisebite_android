@@ -1,5 +1,10 @@
 package dev.wisebite.wisebite.service;
 
+import android.util.Pair;
+
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -17,6 +22,7 @@ import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.domain.User;
+import dev.wisebite.wisebite.utils.PieChartData;
 import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Service;
@@ -446,4 +452,34 @@ public class RestaurantService extends Service<Restaurant> {
         return result;
     }
 
+    public PieChartData getAllDishesCount(String restaurantId, int kind) {
+        Map<String, Integer> map = getDishesCountMap(restaurantId, kind);
+
+        Integer count = 0;
+        for (Integer val : map.values()) {
+            if (val != 0) ++count;
+        }
+
+        PieChartData data = new PieChartData(count);
+        String[] xData = data.getXData();
+        float[] yData = data.getYData();
+
+        Float total = 0.0f;
+        for (Integer value : map.values()) total += value;
+
+        Integer i = 0;
+        for (String key : map.keySet()) {
+            if (map.get(key) != 0) {
+                String name = dishRepository.get(key).getName();
+                Float percent = (map.get(key) / total) * 100.0f;
+                xData[i] = name;
+                yData[i] = percent;
+                i++;
+            }
+        }
+
+        data.setXData(xData);
+        data.setYData(yData);
+        return data;
+    }
 }

@@ -232,4 +232,7 @@
     <string name="worst_menu">Worst menu</string>
     <string name="best_time_range">Best time range</string>
     <string name="total_earned">Total earned</string>
+    <string name="title_pies">Pies</string>
+    <string name="sold_dishes">Sold dishes</string>
+    <string name="no_data_show">No data to show</string>
 </resources>
