@@ -81,11 +81,7 @@ public class AnalyticsWeekFragment extends Fragment {
 
     }
 
-    private void initializePieCharts(final View view) {
-        PieChartData data = restaurantService.getAllDishesCount(restaurantId, Calendar.WEEK_OF_YEAR);
-
-        if (!data.isEmpty()) view.findViewById(R.id.mock_first_pie).setVisibility(View.GONE);
-
+    private void createPieChart(View view, PieChartData data) {
         float[] yData = data.getYData();
         final String[] xData = data.getXData();
 
@@ -126,6 +122,16 @@ public class AnalyticsWeekFragment extends Fragment {
         pieChart.setData(pieData);
         pieChart.setEntryLabelTextSize(0);
         pieChart.invalidate();
+    }
+
+    private void initializePieCharts(final View view) {
+        PieChartData data = restaurantService.getAllDishesCount(restaurantId, Calendar.WEEK_OF_YEAR);
+        if (!data.isEmpty()) {
+            view.findViewById(R.id.mock_first_pie).setVisibility(View.GONE);
+            createPieChart(view, data);
+        } else {
+            view.findViewById(R.id.best_dishes_pie_chart).setVisibility(View.GONE);
+        }
     }
 
 }
