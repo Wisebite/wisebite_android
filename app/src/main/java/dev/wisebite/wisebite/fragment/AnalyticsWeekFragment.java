@@ -81,15 +81,11 @@ public class AnalyticsWeekFragment extends Fragment {
 
     }
 
-    private void initializePieCharts(final View view) {
-        PieChartData data = restaurantService.getAllDishesCount(restaurantId, Calendar.WEEK_OF_YEAR);
-
-        if (!data.isEmpty()) view.findViewById(R.id.mock_first_pie).setVisibility(View.GONE);
-
+    private void createPieChart(View view, PieChartData data, int id) {
         float[] yData = data.getYData();
         final String[] xData = data.getXData();
 
-        PieChart pieChart = (PieChart) view.findViewById(R.id.best_dishes_pie_chart);
+        PieChart pieChart = (PieChart) view.findViewById(id);
         pieChart.setRotationEnabled(true);
         pieChart.setHoleRadius(0);
         pieChart.setTransparentCircleAlpha(0);
@@ -126,6 +122,24 @@ public class AnalyticsWeekFragment extends Fragment {
         pieChart.setData(pieData);
         pieChart.setEntryLabelTextSize(0);
         pieChart.invalidate();
+    }
+
+    private void initializePieCharts(final View view) {
+        PieChartData dishesData = restaurantService.getAllDishesCount(restaurantId, Calendar.WEEK_OF_YEAR);
+        if (!dishesData.isEmpty()) {
+            view.findViewById(R.id.mock_first_pie).setVisibility(View.GONE);
+            createPieChart(view, dishesData, R.id.best_dishes_pie_chart);
+        } else {
+            view.findViewById(R.id.best_dishes_pie_chart).setVisibility(View.GONE);
+        }
+
+        PieChartData menusData = restaurantService.getAllMenusCount(restaurantId, Calendar.WEEK_OF_YEAR);
+        if (!menusData.isEmpty()) {
+            view.findViewById(R.id.mock_second_pie).setVisibility(View.GONE);
+            createPieChart(view, menusData, R.id.best_menus_pie_chart);
+        } else {
+            view.findViewById(R.id.best_menus_pie_chart).setVisibility(View.GONE);
+        }
     }
 
 }

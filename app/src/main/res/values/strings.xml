@@ -235,4 +235,5 @@
     <string name="title_pies">Pies</string>
     <string name="sold_dishes">Sold dishes</string>
     <string name="no_data_show">No data to show</string>
+    <string name="sold_menus">Sold menus</string>
 </resources>

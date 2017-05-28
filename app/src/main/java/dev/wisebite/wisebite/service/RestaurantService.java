@@ -482,4 +482,42 @@ public class RestaurantService extends Service<Restaurant> {
         data.setYData(yData);
         return data;
     }
+
+    public PieChartData getAllMenusCount(String restaurantId, int kind) {
+        Map<String, Integer> map = getMenusCountMap(restaurantId, kind);
+
+        Integer count = 0;
+        for (Integer val : map.values()) {
+            if (val != 0) ++count;
+        }
+
+        Menu menu;
+        for (String key : map.keySet()) {
+            menu = menuRepository.get(key);
+            Integer current = map.get(key)/getNumberOptions(menu);
+            map.put(key, current);
+        }
+
+        PieChartData data = new PieChartData(count);
+        String[] xData = data.getXData();
+        float[] yData = data.getYData();
+
+        Float total = 0.0f;
+        for (Integer value : map.values()) total += value;
+
+        Integer i = 0;
+        for (String key : map.keySet()) {
+            if (map.get(key) != 0) {
+                String name = menuRepository.get(key).getName();
+                Float percent = (map.get(key) / total) * 100.0f;
+                xData[i] = name;
+                yData[i] = percent;
+                i++;
+            }
+        }
+
+        data.setXData(xData);
+        data.setYData(yData);
+        return data;
+    }
 }
