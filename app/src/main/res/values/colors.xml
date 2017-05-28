@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#125688</color>
-    <color name="colorPrimaryDark">#125688</color>
-    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#E64A19</color>
+    <color name="textColorPrimary">#212121</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#c8e8ff</color>
+    <color name="colorAccent">#FF9800</color>
     <color name="black">#000000</color>
-    <color name="colorNormal">#da3c2f</color>
-    <color name="colorPressed">#dc4b3f</color>
+    <color name="colorNormal">#FF9800</color>
+    <color name="colorPressed">#dc8300</color>
     <color name="colorRipple">#99d4d4d4</color>
     <color name="colorNormalLabel">#333</color>
     <color name="colorPressedLabel">#444</color>
     <color name="colorRippleLabel">#66efecec</color>
     <color name="textColorLabel">#f2f1f1</color>
-    <color name="shadowColor">#66aff198</color>
+    <color name="shadowColor">#FFCDD2</color>
     <color name="white">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
     <color name="green">#4aba1d</color>
