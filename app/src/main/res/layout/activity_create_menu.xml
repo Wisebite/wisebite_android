@@ -56,7 +56,6 @@
         fab:menu_colorNormal="@color/colorNormal"
         fab:menu_colorPressed="@color/colorPressed"
         fab:menu_colorRipple="@color/colorRipple"
-        fab:menu_fab_label="What do you want to add?"
         fab:menu_fab_size="normal"
         fab:menu_icon="@drawable/fab_add"
         fab:menu_labels_colorNormal="@color/colorNormalLabel"
@@ -75,7 +74,6 @@
         fab:menu_labels_textColor="@color/textColorLabel"
         fab:menu_labels_textSize="15sp"
         fab:menu_openDirection="up"
-        fab:menu_shadowColor="@color/shadowColor"
         fab:menu_shadowRadius="4dp"
         fab:menu_shadowXOffset="1dp"
         fab:menu_shadowYOffset="4dp"
@@ -86,6 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_numeric_1"
+            app:fab_colorNormal="@color/colorPressed"
             fab:fab_label="Main dish"
             fab:fab_size="mini"
             android:onClick="typeMainDishes"/>
@@ -95,6 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_numeric_2"
+            app:fab_colorNormal="@color/colorPressed"
             fab:fab_label="Secondary dish"
             fab:fab_size="mini"
             android:onClick="typeSecondaryDishes"/>
@@ -104,6 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_numeric_3"
+            app:fab_colorNormal="@color/colorPressed"
             fab:fab_label="Other dish"
             fab:fab_size="mini"
             android:onClick="typeOtherDishes"/>
