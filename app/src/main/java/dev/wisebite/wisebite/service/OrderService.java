@@ -325,6 +325,8 @@ public class OrderService extends Service<Order> {
                 }
             }
         }
+        order.setLastDate(new Date());
+        repository.update(order);
     }
 
     public boolean isPartially(Order order) {
@@ -339,6 +341,18 @@ public class OrderService extends Service<Order> {
             orderItemRepository.delete(key);
         }
         repository.delete(order.getId());
+
+        for (Restaurant restaurant : restaurantRepository.all()) {
+            if (restaurant.getUsers() == null) continue;
+            User user;
+            for (String userKey : restaurant.getUsers().keySet()) {
+                user = userRepository.get(userKey);
+                if (user.getMyOrders() != null && user.getMyOrders().containsKey(order.getId())) {
+                    user.getMyOrders().remove(order.getId());
+                    userRepository.update(user);
+                }
+            }
+        }
     }
 
     public ArrayList<Order> getNonReadyOrders(String restaurantId) {
