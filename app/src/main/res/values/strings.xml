@@ -236,4 +236,5 @@
     <string name="sold_dishes">Sold dishes</string>
     <string name="no_data_show">No data to show</string>
     <string name="sold_menus">Sold menus</string>
+    <string name="average_time">Average time</string>
 </resources>

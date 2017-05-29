@@ -301,6 +301,49 @@ public class RestaurantService extends Service<Restaurant> {
         return map;
     }
 
+    private double getPaidOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        Map<String, List<Pair<String, Boolean>>> menuMap = new LinkedHashMap<>();
+        double total = getPriceOfOrder(id);
+        double paid = 0.0;
+
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem != null) {
+                if (orderItem.getMenuId() == null) {
+                    if (orderItem.isPaid()) {
+                        paid += dishRepository.get(orderItem.getDishId()).getPrice();
+                    }
+                } else {
+                    List<Pair<String, Boolean>> dishes = menuMap.get(orderItem.getMenuId());
+                    if (dishes == null) {
+                        dishes = new ArrayList<>();
+                    }
+                    dishes.add(new Pair<>(orderItem.getDishId(), orderItem.isPaid()));
+                    menuMap.put(orderItem.getMenuId(), dishes);
+                }
+            }
+        }
+        Menu menu;
+        for (String key : menuMap.keySet()) {
+            menu = menuRepository.get(key);
+
+            Integer numberPaid = 0;
+            for (Pair<String, Boolean> pair : menuMap.get(key)) {
+                if (pair.second) ++numberPaid;
+            }
+            if (numberPaid != 0) {
+                double totalPaid = (double) (numberPaid / menuMap.get(key).size());
+                double totalMenus = (double) (menuMap.get(key).size() / getNumberOptions(menu));
+                paid += totalPaid*totalMenus*menu.getPrice();
+            }
+        }
+
+        return (paid/total)*100.0;
+    }
+
     public Integer getOrdersCount(String restaurantId, int kind) {
         Integer count = 0;
 
@@ -360,7 +403,7 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
 
-        if (bestId.isEmpty()) return bestId;
+        if (bestId.isEmpty()) return "---";
         else return dishRepository.get(bestId).getName() + ": " + max + " times.";
     }
 
@@ -377,7 +420,7 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
 
-        if (bestId.isEmpty()) return bestId;
+        if (bestId.isEmpty()) return "---";
         else return dishRepository.get(bestId).getName() + ": " + min + " times.";
     }
 
@@ -394,7 +437,7 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
 
-        if (bestId.isEmpty()) return bestId;
+        if (bestId.isEmpty()) return "---";
         else return menuRepository.get(bestId).getName() + ": " + max + " times.";
     }
 
@@ -411,7 +454,7 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
 
-        if (bestId.isEmpty()) return bestId;
+        if (bestId.isEmpty()) return "---";
         else return menuRepository.get(bestId).getName() + ": " + min + " times.";
     }
 
@@ -520,4 +563,31 @@ public class RestaurantService extends Service<Restaurant> {
         data.setYData(yData);
         return data;
     }
+
+    public String getAverageTime(String restaurantId, int kind) {
+        long total = 0;
+        long count = 0;
+
+        List<String> ordersList = getOrders(restaurantId);
+        if (ordersList.isEmpty()) return "No finished orders";
+
+        Order order;
+        for (String orderKey : ordersList) {
+            order = orderRepository.get(orderKey);
+            if (checkTime(order, kind) && getPaidOfOrder(orderKey) == 100.0) {
+                total += (order.getLastDate().getTime() - order.getDate().getTime());
+                ++count;
+            }
+        }
+
+        if (count == 0) return "No finished orders";
+
+        long averageTime = total/count;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(averageTime);
+
+        return  String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) + "h " +
+                String.valueOf(calendar.get(Calendar.MINUTE) + "min");
+    }
+
 }

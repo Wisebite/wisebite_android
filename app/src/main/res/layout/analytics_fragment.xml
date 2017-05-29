@@ -351,6 +351,46 @@
 
                 </LinearLayout>
 
+                <!-- Eighth -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:baselineAligned="false">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.4">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/average_time"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.5">
+
+                        <TextView
+                            android:id="@+id/average_time_refill"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="@string/average_time"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -402,6 +442,7 @@
                     android:id="@+id/third_subtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10sp"
                     android:text="@string/sold_menus"
                     android:textColor="@color/colorAccent"
