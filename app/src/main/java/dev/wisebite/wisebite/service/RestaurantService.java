@@ -2,13 +2,8 @@ package dev.wisebite.wisebite.service;
 
 import android.util.Pair;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,7 +17,7 @@ import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.domain.User;
-import dev.wisebite.wisebite.utils.PieChartData;
+import dev.wisebite.wisebite.charts.PieChartData;
 import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Service;
@@ -495,6 +490,32 @@ public class RestaurantService extends Service<Restaurant> {
         return result;
     }
 
+    public String getAverageTime(String restaurantId, int kind) {
+        long total = 0;
+        long count = 0;
+
+        List<String> ordersList = getOrders(restaurantId);
+        if (ordersList.isEmpty()) return "No finished orders";
+
+        Order order;
+        for (String orderKey : ordersList) {
+            order = orderRepository.get(orderKey);
+            if (checkTime(order, kind) && getPaidOfOrder(orderKey) == 100.0) {
+                total += (order.getLastDate().getTime() - order.getDate().getTime());
+                ++count;
+            }
+        }
+
+        if (count == 0) return "No finished orders";
+
+        long averageTime = total/count;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(averageTime);
+
+        return  String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) + "h " +
+                String.valueOf(calendar.get(Calendar.MINUTE) + "min");
+    }
+
     public PieChartData getAllDishesCount(String restaurantId, int kind) {
         Map<String, Integer> map = getDishesCountMap(restaurantId, kind);
 
@@ -564,30 +585,47 @@ public class RestaurantService extends Service<Restaurant> {
         return data;
     }
 
-    public String getAverageTime(String restaurantId, int kind) {
-        long total = 0;
-        long count = 0;
+    public PieChartData getAllOrdersCount(String restaurantId, int kind) {
+        float[] hours = new float[24];
+        for (int i = 0; i < hours.length; i++) hours[i] = 0;
 
         List<String> ordersList = getOrders(restaurantId);
-        if (ordersList.isEmpty()) return "No finished orders";
 
+        Calendar calendar = Calendar.getInstance();
         Order order;
         for (String orderKey : ordersList) {
             order = orderRepository.get(orderKey);
-            if (checkTime(order, kind) && getPaidOfOrder(orderKey) == 100.0) {
-                total += (order.getLastDate().getTime() - order.getDate().getTime());
-                ++count;
+            if (checkTime(order, kind)) {
+                calendar.setTime(order.getDate());
+                hours[calendar.get(Calendar.HOUR_OF_DAY)] += 1.0f;
             }
         }
 
-        if (count == 0) return "No finished orders";
+        Integer count = 0;
+        for (float hour : hours) if (hour != 0) ++count;
 
-        long averageTime = total/count;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(averageTime);
+        PieChartData data = new PieChartData(count);
+        String[] xData = data.getXData();
+        float[] yData = data.getYData();
 
-        return  String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) + "h " +
-                String.valueOf(calendar.get(Calendar.MINUTE) + "min");
+        Integer j = 0;
+        for (int i = 0; i < hours.length; i++) {
+            if (hours[i] != 0) {
+                yData[j] = hours[i];
+
+                String label = "";
+                if (i < 10) label += '0';
+                label += String.valueOf(i) + "h - ";
+                if (i + 1 < 10) label += '0';
+                label += String.valueOf(i + 1) + 'h';
+                xData[j] = label;
+
+                ++j;
+            }
+        }
+
+        data.setXData(xData);
+        data.setYData(yData);
+        return data;
     }
-
 }

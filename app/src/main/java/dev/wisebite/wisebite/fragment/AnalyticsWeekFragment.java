@@ -24,10 +24,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.activity.MainActivity;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
-import dev.wisebite.wisebite.utils.PieChartData;
+import dev.wisebite.wisebite.charts.PieChartData;
 import dev.wisebite.wisebite.utils.Utils;
 
 /**
