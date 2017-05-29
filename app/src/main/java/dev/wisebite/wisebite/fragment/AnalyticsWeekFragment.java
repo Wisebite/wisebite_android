@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,19 +12,30 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.charts.MyXAxisValueFormatter;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.charts.PieChartData;
@@ -54,6 +66,7 @@ public class AnalyticsWeekFragment extends Fragment {
 
         initializeValues(view);
         initializePieCharts(view);
+        initializeBarCharts(view);
 
         return view;
 
@@ -125,6 +138,53 @@ public class AnalyticsWeekFragment extends Fragment {
         pieChart.invalidate();
     }
 
+    private void createBarChart(final View view, PieChartData data, int id) {
+        float[] yData = data.getYData();
+        final String[] xData = data.getXData();
+
+        BarChart barChart = (BarChart) view.findViewById(id);
+
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        for (int i = 0; i < yData.length; i++) barEntries.add(new BarEntry(i, yData[i]));
+
+        BarDataSet barDataSet;
+        barDataSet = new BarDataSet(barEntries, "");
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(barDataSet);
+
+        YAxis left = barChart.getAxisLeft();
+        left.setDrawLabels(false);
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setValueFormatter(new MyXAxisValueFormatter(xData));
+
+        BarData barData = new BarData(dataSets);
+        barChart.setData(barData);
+
+        Description description = new Description();
+        description.setText("");
+        barChart.setDescription(description);
+
+        barChart.getLegend().setEnabled(false);
+
+        barChart.animateY(1000);
+        barChart.setHorizontalScrollBarEnabled(true);
+        barChart.invalidate();
+
+        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                Snackbar.make(view, "Time range: " + xData[(int) e.getX()], Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+    }
+
     private void initializePieCharts(final View view) {
         PieChartData dishesData = restaurantService.getAllDishesCount(restaurantId, Calendar.WEEK_OF_YEAR);
         if (!dishesData.isEmpty()) {
@@ -142,5 +202,16 @@ public class AnalyticsWeekFragment extends Fragment {
             view.findViewById(R.id.best_menus_pie_chart).setVisibility(View.GONE);
         }
     }
+
+    private void initializeBarCharts(final View view) {
+        PieChartData ordersData = restaurantService.getAllOrdersCount(restaurantId, Calendar.WEEK_OF_YEAR);
+        if (!ordersData.isEmpty()) {
+            view.findViewById(R.id.mock_third_pie).setVisibility(View.GONE);
+            createBarChart(view, ordersData, R.id.orders_time_range);
+        } else {
+            view.findViewById(R.id.orders_time_range).setVisibility(View.GONE);
+        }
+    }
+
 
 }

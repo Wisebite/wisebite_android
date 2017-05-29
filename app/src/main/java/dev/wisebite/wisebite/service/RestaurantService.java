@@ -586,8 +586,11 @@ public class RestaurantService extends Service<Restaurant> {
     }
 
     public PieChartData getAllOrdersCount(String restaurantId, int kind) {
-        float[] hours = new float[24];
-        for (int i = 0; i < hours.length; i++) hours[i] = 0;
+        float[] time;
+        if (kind == Calendar.DATE) time = new float[24];
+        else if (kind == Calendar.WEEK_OF_YEAR) time = new float[7];
+        else time = new float[31];
+        for (int i = 0; i < time.length; i++) time[i] = 0;
 
         List<String> ordersList = getOrders(restaurantId);
 
@@ -597,27 +600,45 @@ public class RestaurantService extends Service<Restaurant> {
             order = orderRepository.get(orderKey);
             if (checkTime(order, kind)) {
                 calendar.setTime(order.getDate());
-                hours[calendar.get(Calendar.HOUR_OF_DAY)] += 1.0f;
+                if (kind == Calendar.DATE)
+                    time[calendar.get(Calendar.HOUR_OF_DAY)] += 1.0f;
+                else if (kind == Calendar.WEEK_OF_YEAR)
+                    time[calendar.get(Calendar.DAY_OF_WEEK)-1] += 1.0f;
+                else
+                    time[calendar.get(Calendar.DAY_OF_MONTH)] += 1.0f;
             }
         }
 
         Integer count = 0;
-        for (float hour : hours) if (hour != 0) ++count;
+        for (float t : time) if (t != 0) ++count;
 
         PieChartData data = new PieChartData(count);
         String[] xData = data.getXData();
         float[] yData = data.getYData();
 
         Integer j = 0;
-        for (int i = 0; i < hours.length; i++) {
-            if (hours[i] != 0) {
-                yData[j] = hours[i];
+        for (int i = 0; i < time.length; i++) {
+            if (time[i] != 0) {
+                yData[j] = time[i];
+
 
                 String label = "";
-                if (i < 10) label += '0';
-                label += String.valueOf(i) + "h - ";
-                if (i + 1 < 10) label += '0';
-                label += String.valueOf(i + 1) + 'h';
+                if (kind == Calendar.DATE) {
+                    if (i < 10) label += '0';
+                    label += String.valueOf(i) + "h - ";
+                    if (i + 1 < 10) label += '0';
+                    label += String.valueOf(i + 1) + 'h';
+                } else if (kind == Calendar.WEEK_OF_YEAR) {
+                    if (i == 0) label = "Sunday";
+                    else if (i == 1) label = "Monday";
+                    else if (i == 2) label = "Tuesday";
+                    else if (i == 3) label = "Wednesday";
+                    else if (i == 4) label = "Thursday";
+                    else if (i == 5) label = "Friday";
+                    else if (i == 6) label = "Saturday";
+                } else {
+                    label = "Day number " + String.valueOf(i) + " of the month.";
+                }
                 xData[j] = label;
 
                 ++j;
