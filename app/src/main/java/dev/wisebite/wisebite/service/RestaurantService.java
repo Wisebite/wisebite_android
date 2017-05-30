@@ -651,4 +651,28 @@ public class RestaurantService extends Service<Restaurant> {
         data.setYData(yData);
         return data;
     }
+
+    public boolean addNewUserToRestaurant(String restaurantId, String userToAdd) {
+        Boolean found = false;
+        for (User user : userRepository.all()) {
+            if (user.getEmail().equals(userToAdd)) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) return false;
+
+        for (Restaurant restaurant : repository.all()) {
+            if (restaurant.getUsers() == null) continue;
+            User user;
+            for (String userKey : restaurant.getUsers().keySet()) {
+                user = userRepository.get(userKey);
+                if (user.getEmail().equals(userToAdd)) return false;
+            }
+        }
+
+        addUserToRestaurant(restaurantId, Utils.skipAts(userToAdd));
+
+        return true;
+    }
 }

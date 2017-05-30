@@ -242,4 +242,8 @@
     <string name="change_date_message">Select the date that you want to go</string>
     <string name="analytics_date">Analytics date</string>
     <string name="no_select_dishes">Your order doesn\'t have any dish or menu.</string>
+    <string name="email_form_title">Add user to your restaurant</string>
+    <string name="email_form_message">Specify the email. The user must exist and it isn\'t member of some restaurant.</string>
+    <string name="add_user_correct">The user has added correctly.</string>
+    <string name="add_user_uncorrect">The user have not added because it doesn\'t exists or it\'s a member of an other restaurant.</string>
 </resources>

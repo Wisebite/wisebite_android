@@ -1,12 +1,17 @@
 package dev.wisebite.wisebite.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,6 +39,7 @@ public class GetRestaurantActivity extends BaseActivity {
     private String restaurantId;
 
     private FloatingActionButton fab;
+    private LayoutInflater inflater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +55,13 @@ public class GetRestaurantActivity extends BaseActivity {
 
         restaurantService = ServiceFactory.getRestaurantService(GetRestaurantActivity.this);
         restaurant = restaurantService.get(restaurantId);
+        inflater = LayoutInflater.from(GetRestaurantActivity.this);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editRestaurant();
+                addUserToSomeRestaurant(view);
             }
         });
 
@@ -155,8 +162,38 @@ public class GetRestaurantActivity extends BaseActivity {
         recyclerView.setAdapter(detailAdapter);
     }
 
-    private void editRestaurant() {
-
+    private void addUserToSomeRestaurant(final View view) {
+        final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.email_form), null);
+        AlertDialog alertDialog = new AlertDialog.Builder(GetRestaurantActivity.this)
+                .setTitle(getResources().getString(R.string.email_form_title))
+                .setMessage(getResources().getString(R.string.email_form_message))
+                .setView(form)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TextView email = (TextView) form.findViewById(R.id.form_email);
+                        if (restaurantService.addNewUserToRestaurant(restaurantId, email.getText().toString())) {
+                            Snackbar.make(view, getResources().getString(R.string.add_user_correct), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(view, getResources().getString(R.string.add_user_uncorrect), Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        // do nothing
+                    }
+                })
+                .create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
     }
 
 }
