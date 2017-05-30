@@ -21,6 +21,7 @@ import dev.wisebite.wisebite.charts.PieChartData;
 import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Service;
+import dev.wisebite.wisebite.utils.Utils;
 
 /**
  * Created by albert on 13/03/17.
@@ -175,6 +176,7 @@ public class RestaurantService extends Service<Restaurant> {
 
     private boolean checkTime(Order order, int kind) {
         Calendar currentCalendar = Calendar.getInstance();
+        currentCalendar.setTime(Utils.getAnalyticsDate());
         Calendar orderCalendar = Calendar.getInstance();
         orderCalendar.setTime(order.getDate());
         switch (kind) {

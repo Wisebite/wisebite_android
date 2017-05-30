@@ -240,4 +240,5 @@
     <string name="orders_per_time_range">Orders per time range</string>
     <string name="change_date">Change date</string>
     <string name="change_date_message">Select the date that you want to go</string>
+    <string name="analytics_date">Analytics date</string>
 </resources>

@@ -31,6 +31,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -63,6 +64,10 @@ public class AnalyticsWeekFragment extends Fragment {
 
         LinearLayout mainFragmentLayout = (LinearLayout) view.findViewById(R.id.main_fragment_layout);
         mainFragmentLayout.setBackgroundColor(getResources().getColor(R.color.week_color));
+
+        TextView analyticsDate = (TextView) view.findViewById(R.id.analytics_date_refill);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        analyticsDate.setText(simpleDateFormat.format(Utils.getAnalyticsDate()));
 
         initializeValues(view);
         initializePieCharts(view);
