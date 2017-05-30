@@ -160,15 +160,19 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
                         TextView name = (TextView) form.findViewById(R.id.form_name);
                         TextView description = (TextView) form.findViewById(R.id.form_description);
                         TextView price = (TextView) form.findViewById(R.id.form_price);
-                        dishes.add(Dish.builder()
-                                .name(name.getText().toString().trim())
-                                .description(description.getText().toString().trim())
-                                .price(Double.valueOf(price.getText().toString().trim()))
-                                .build());
-                        if (dishes.size() != 0) {
-                            mockDishes.setVisibility(View.GONE);
+                        if (    !name.getText().toString().trim().isEmpty() &&
+                                !description.getText().toString().trim().isEmpty() &&
+                                !price.getText().toString().trim().isEmpty()) {
+                            dishes.add(Dish.builder()
+                                    .name(name.getText().toString().trim())
+                                    .description(description.getText().toString().trim())
+                                    .price(Double.valueOf(price.getText().toString().trim()))
+                                    .build());
+                            if (dishes.size() != 0) {
+                                mockDishes.setVisibility(View.GONE);
+                            }
+                            dishAdapter.notifyDataSetChanged();
                         }
-                        dishAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

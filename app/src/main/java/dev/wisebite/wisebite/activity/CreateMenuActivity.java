@@ -93,19 +93,25 @@ public class CreateMenuActivity extends BaseActivity {
                         TextView name = (TextView) form.findViewById(R.id.form_name);
                         TextView description = (TextView) form.findViewById(R.id.form_description);
                         TextView price = (TextView) form.findViewById(R.id.form_price);
-                        menu = Menu.builder()
-                                .name(name.getText().toString().trim())
-                                .description(description.getText().toString().trim())
-                                .price(Double.valueOf(price.getText().toString().trim()))
-                                .build();
-                        LinearLayout menuInfo = (LinearLayout) findViewById(R.id.menu_info);
-                        TextView nameResult = (TextView) findViewById(R.id.name_form_result);
-                        TextView descriptionResult = (TextView) findViewById(R.id.description_form_result);
-                        TextView priceResult = (TextView) findViewById(R.id.price_form_result);
-                        nameResult.setText(menu.getName());
-                        descriptionResult.setText(menu.getDescription());
-                        priceResult.setText(String.valueOf(menu.getPrice() + " €"));
-                        menuInfo.setVisibility(View.VISIBLE);
+                        if (    !name.getText().toString().trim().isEmpty() &&
+                                !description.getText().toString().trim().isEmpty() &&
+                                !price.getText().toString().trim().isEmpty()) {
+                            menu = Menu.builder()
+                                    .name(name.getText().toString().trim())
+                                    .description(description.getText().toString().trim())
+                                    .price(Double.valueOf(price.getText().toString().trim()))
+                                    .build();
+                            LinearLayout menuInfo = (LinearLayout) findViewById(R.id.menu_info);
+                            TextView nameResult = (TextView) findViewById(R.id.name_form_result);
+                            TextView descriptionResult = (TextView) findViewById(R.id.description_form_result);
+                            TextView priceResult = (TextView) findViewById(R.id.price_form_result);
+                            nameResult.setText(menu.getName());
+                            descriptionResult.setText(menu.getDescription());
+                            priceResult.setText(String.valueOf(menu.getPrice() + " €"));
+                            menuInfo.setVisibility(View.VISIBLE);
+                        } else {
+                            onBackPressed();
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -164,14 +170,17 @@ public class CreateMenuActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         TextView name = (TextView) form.findViewById(R.id.form_name);
                         TextView description = (TextView) form.findViewById(R.id.form_description);
-                        mainDishes.add(Dish.builder()
-                                .name(name.getText().toString().trim())
-                                .description(description.getText().toString().trim())
-                                .build());
-                        if (mainDishes.size() != 0) {
-                            mockMainDishes.setVisibility(View.GONE);
+                        if (!name.getText().toString().trim().isEmpty() &&
+                                !description.getText().toString().trim().isEmpty()) {
+                            mainDishes.add(Dish.builder()
+                                    .name(name.getText().toString().trim())
+                                    .description(description.getText().toString().trim())
+                                    .build());
+                            if (mainDishes.size() != 0) {
+                                mockMainDishes.setVisibility(View.GONE);
+                            }
+                            mainDishesAdapter.notifyDataSetChanged();
                         }
-                        mainDishesAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
