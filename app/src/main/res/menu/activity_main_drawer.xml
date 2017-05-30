@@ -16,15 +16,15 @@
             android:title="@string/kitchen" />
         <item
             android:id="@+id/nav_see_restaurant"
-            android:icon="@drawable/ic_numeric_1"
+            android:icon="@mipmap/eye"
             android:title="@string/see_restaurant" />
         <item
             android:id="@+id/nav_list_restaurants"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@mipmap/format_list_bullet"
             android:title="@string/list_restaurants" />
         <item
             android:id="@+id/nav_analytics"
-            android:icon="@drawable/common_full_open_on_phone"
+            android:icon="@mipmap/google_analytics"
             android:title="@string/analytics" />
     </group>
 
