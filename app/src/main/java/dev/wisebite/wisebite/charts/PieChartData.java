@@ -1,4 +1,4 @@
-package dev.wisebite.wisebite.utils;
+package dev.wisebite.wisebite.charts;
 
 import lombok.Getter;
 import lombok.Setter;

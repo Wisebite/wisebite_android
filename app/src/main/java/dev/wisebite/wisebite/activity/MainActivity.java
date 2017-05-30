@@ -1,6 +1,8 @@
 package dev.wisebite.wisebite.activity;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,8 +24,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -34,7 +38,10 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import dev.wisebite.wisebite.R;
@@ -53,6 +60,7 @@ import dev.wisebite.wisebite.service.ServiceFactory;
 import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.Preferences;
+import dev.wisebite.wisebite.utils.Utils;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -68,6 +76,7 @@ public class MainActivity extends BaseActivity
     private GoogleApiClient mGoogleApiClient;
     private TabLayout tabs;
     private AppBarLayout appBar;
+    private Menu menu;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -115,6 +124,8 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().getItem(4).setChecked(true);
         }
 
+        Utils.setAnalyticsDate(new Date());
+
     }
 
     @Override
@@ -140,6 +151,7 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -164,6 +176,42 @@ public class MainActivity extends BaseActivity
                         }
                     });
             return true;
+        } else if (id == R.id.action_change_day) {
+            final DatePicker datePicker = new DatePicker(MainActivity.this);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(Utils.getAnalyticsDate());
+            datePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), null);
+            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                    .setTitle(getResources().getString(R.string.change_date))
+                    .setMessage(getResources().getString(R.string.change_date_message))
+                    .setView(datePicker)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTimeInMillis(0);
+                            calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+                            calendar.set(Calendar.MONTH, datePicker.getMonth());
+                            calendar.set(Calendar.YEAR, datePicker.getYear());
+                            Utils.setAnalyticsDate(calendar.getTime());
+                            initializeAnalytics();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            // do nothing
+                        }
+                    })
+                    .create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -282,6 +330,7 @@ public class MainActivity extends BaseActivity
     private void initializeActiveOrders() {
         setTitle(getResources().getString(R.string.active_orders));
         removeTabs();
+        if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(false);
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -303,6 +352,7 @@ public class MainActivity extends BaseActivity
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
         removeTabs();
+        if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(false);
         fab.setVisibility(View.GONE);
         ArrayList<Order> ordersList = orderService.getNonReadyOrders(restaurantId);
         checkList(R.id.mock_kitchen, ordersList.size());
@@ -317,6 +367,7 @@ public class MainActivity extends BaseActivity
     private void initializeListRestaurants() {
         setTitle(getResources().getString(R.string.list_restaurants));
         removeTabs();
+        if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(false);
         fab.setVisibility(View.GONE);
         List<Restaurant> restaurantsList = restaurantService.getAll();
         checkList(R.id.restaurant_mock, restaurantsList.size());
@@ -331,6 +382,7 @@ public class MainActivity extends BaseActivity
     private void initializeAnalytics() {
         setTitle(getResources().getString(R.string.analytics));
         removeTabs();
+        if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(true);
         fab.setVisibility(View.GONE);
 
         tabs = new TabLayout(MainActivity.this);

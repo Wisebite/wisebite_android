@@ -2,13 +2,8 @@ package dev.wisebite.wisebite.service;
 
 import android.util.Pair;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,10 +17,11 @@ import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.domain.User;
-import dev.wisebite.wisebite.utils.PieChartData;
+import dev.wisebite.wisebite.charts.PieChartData;
 import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Service;
+import dev.wisebite.wisebite.utils.Utils;
 
 /**
  * Created by albert on 13/03/17.
@@ -180,6 +176,7 @@ public class RestaurantService extends Service<Restaurant> {
 
     private boolean checkTime(Order order, int kind) {
         Calendar currentCalendar = Calendar.getInstance();
+        currentCalendar.setTime(Utils.getAnalyticsDate());
         Calendar orderCalendar = Calendar.getInstance();
         orderCalendar.setTime(order.getDate());
         switch (kind) {
@@ -301,6 +298,49 @@ public class RestaurantService extends Service<Restaurant> {
         return map;
     }
 
+    private double getPaidOfOrder(String id) {
+        Order order = orderRepository.get(id);
+        if (order == null) return 100.0;
+
+        Map<String, List<Pair<String, Boolean>>> menuMap = new LinkedHashMap<>();
+        double total = getPriceOfOrder(id);
+        double paid = 0.0;
+
+        for (String orderItemId : order.getOrderItems().keySet()) {
+            OrderItem orderItem = orderItemRepository.get(orderItemId);
+            if (orderItem != null) {
+                if (orderItem.getMenuId() == null) {
+                    if (orderItem.isPaid()) {
+                        paid += dishRepository.get(orderItem.getDishId()).getPrice();
+                    }
+                } else {
+                    List<Pair<String, Boolean>> dishes = menuMap.get(orderItem.getMenuId());
+                    if (dishes == null) {
+                        dishes = new ArrayList<>();
+                    }
+                    dishes.add(new Pair<>(orderItem.getDishId(), orderItem.isPaid()));
+                    menuMap.put(orderItem.getMenuId(), dishes);
+                }
+            }
+        }
+        Menu menu;
+        for (String key : menuMap.keySet()) {
+            menu = menuRepository.get(key);
+
+            Integer numberPaid = 0;
+            for (Pair<String, Boolean> pair : menuMap.get(key)) {
+                if (pair.second) ++numberPaid;
+            }
+            if (numberPaid != 0) {
+                double totalPaid = (double) (numberPaid / menuMap.get(key).size());
+                double totalMenus = (double) (menuMap.get(key).size() / getNumberOptions(menu));
+                paid += totalPaid*totalMenus*menu.getPrice();
+            }
+        }
+
+        return (paid/total)*100.0;
+    }
+
     public Integer getOrdersCount(String restaurantId, int kind) {
         Integer count = 0;
 
@@ -360,7 +400,7 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
 
-        if (bestId.isEmpty()) return bestId;
+        if (bestId.isEmpty()) return "---";
         else return dishRepository.get(bestId).getName() + ": " + max + " times.";
     }
 
@@ -377,7 +417,7 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
 
-        if (bestId.isEmpty()) return bestId;
+        if (bestId.isEmpty()) return "---";
         else return dishRepository.get(bestId).getName() + ": " + min + " times.";
     }
 
@@ -394,7 +434,7 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
 
-        if (bestId.isEmpty()) return bestId;
+        if (bestId.isEmpty()) return "---";
         else return menuRepository.get(bestId).getName() + ": " + max + " times.";
     }
 
@@ -411,7 +451,7 @@ public class RestaurantService extends Service<Restaurant> {
             }
         }
 
-        if (bestId.isEmpty()) return bestId;
+        if (bestId.isEmpty()) return "---";
         else return menuRepository.get(bestId).getName() + ": " + min + " times.";
     }
 
@@ -450,6 +490,32 @@ public class RestaurantService extends Service<Restaurant> {
         if (index < 10) result += '0';
         result += String.valueOf(index) + "h";
         return result;
+    }
+
+    public String getAverageTime(String restaurantId, int kind) {
+        long total = 0;
+        long count = 0;
+
+        List<String> ordersList = getOrders(restaurantId);
+        if (ordersList.isEmpty()) return "No finished orders";
+
+        Order order;
+        for (String orderKey : ordersList) {
+            order = orderRepository.get(orderKey);
+            if (checkTime(order, kind) && getPaidOfOrder(orderKey) == 100.0) {
+                total += (order.getLastDate().getTime() - order.getDate().getTime());
+                ++count;
+            }
+        }
+
+        if (count == 0) return "No finished orders";
+
+        long averageTime = total/count;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(averageTime);
+
+        return  String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) + "h " +
+                String.valueOf(calendar.get(Calendar.MINUTE) + "min");
     }
 
     public PieChartData getAllDishesCount(String restaurantId, int kind) {
@@ -513,6 +579,71 @@ public class RestaurantService extends Service<Restaurant> {
                 xData[i] = name;
                 yData[i] = percent;
                 i++;
+            }
+        }
+
+        data.setXData(xData);
+        data.setYData(yData);
+        return data;
+    }
+
+    public PieChartData getAllOrdersCount(String restaurantId, int kind) {
+        float[] time;
+        if (kind == Calendar.DATE) time = new float[24];
+        else if (kind == Calendar.WEEK_OF_YEAR) time = new float[7];
+        else time = new float[31];
+        for (int i = 0; i < time.length; i++) time[i] = 0;
+
+        List<String> ordersList = getOrders(restaurantId);
+
+        Calendar calendar = Calendar.getInstance();
+        Order order;
+        for (String orderKey : ordersList) {
+            order = orderRepository.get(orderKey);
+            if (checkTime(order, kind)) {
+                calendar.setTime(order.getDate());
+                if (kind == Calendar.DATE)
+                    time[calendar.get(Calendar.HOUR_OF_DAY)] += 1.0f;
+                else if (kind == Calendar.WEEK_OF_YEAR)
+                    time[calendar.get(Calendar.DAY_OF_WEEK)-1] += 1.0f;
+                else
+                    time[calendar.get(Calendar.DAY_OF_MONTH)] += 1.0f;
+            }
+        }
+
+        Integer count = 0;
+        for (float t : time) if (t != 0) ++count;
+
+        PieChartData data = new PieChartData(count);
+        String[] xData = data.getXData();
+        float[] yData = data.getYData();
+
+        Integer j = 0;
+        for (int i = 0; i < time.length; i++) {
+            if (time[i] != 0) {
+                yData[j] = time[i];
+
+
+                String label = "";
+                if (kind == Calendar.DATE) {
+                    if (i < 10) label += '0';
+                    label += String.valueOf(i) + "h - ";
+                    if (i + 1 < 10) label += '0';
+                    label += String.valueOf(i + 1) + 'h';
+                } else if (kind == Calendar.WEEK_OF_YEAR) {
+                    if (i == 0) label = "Sunday";
+                    else if (i == 1) label = "Monday";
+                    else if (i == 2) label = "Tuesday";
+                    else if (i == 3) label = "Wednesday";
+                    else if (i == 4) label = "Thursday";
+                    else if (i == 5) label = "Friday";
+                    else if (i == 6) label = "Saturday";
+                } else {
+                    label = "Day number " + String.valueOf(i) + " of the month.";
+                }
+                xData[j] = label;
+
+                ++j;
             }
         }
 
