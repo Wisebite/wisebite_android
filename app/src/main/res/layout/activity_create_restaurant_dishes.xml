@@ -85,6 +85,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_food_apple"
             app:fab_colorNormal="@color/colorPressed"
+            app:fab_colorPressed="@color/colorPressed"
             fab:fab_label="Dish"
             fab:fab_size="mini"
             android:onClick="typeDish"/>
@@ -95,6 +96,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_food"
             app:fab_colorNormal="@color/colorPressed"
+            app:fab_colorPressed="@color/colorPressed"
             fab:fab_label="Menu"
             fab:fab_size="mini"
             android:onClick="redirectToMenuActivity"/>
