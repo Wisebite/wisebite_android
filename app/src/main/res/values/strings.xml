@@ -241,4 +241,5 @@
     <string name="change_date">Change date</string>
     <string name="change_date_message">Select the date that you want to go</string>
     <string name="analytics_date">Analytics date</string>
+    <string name="no_select_dishes">Your order doesn\'t have any dish or menu.</string>
 </resources>

@@ -3,6 +3,7 @@ package dev.wisebite.wisebite.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -60,7 +62,7 @@ public class CreateOrderActivity extends BaseActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                done();
+                done(v);
             }
         });
 
@@ -140,9 +142,13 @@ public class CreateOrderActivity extends BaseActivity {
         recyclerView.setAdapter(orderItemMenuAdapter);
     }
 
-    private void done() {
-        orderService.addOrder(selectedDishes, tableNumber, selectedMenusDishes);
-        finish();
+    private void done(View view) {
+        if (selectedDishes.isEmpty() && selectedMenusDishes.isEmpty()) {
+            Snackbar.make(view, getResources().getString(R.string.no_select_dishes), Snackbar.LENGTH_LONG).show();
+        } else {
+            orderService.addOrder(selectedDishes, tableNumber, selectedMenusDishes);
+            finish();
+        }
     }
 
 }
