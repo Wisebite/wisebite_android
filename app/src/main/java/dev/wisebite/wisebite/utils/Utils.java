@@ -17,6 +17,7 @@ import dev.wisebite.wisebite.domain.OpenTime;
 public class Utils {
 
     private static Menu tempMenu;
+    private static Date tempDate;
     private static Integer loaded = 0;
 
     public static String parseStartEndDate(TimePicker firstTimePicker, TimePicker secondTimePicker) {
@@ -163,4 +164,11 @@ public class Utils {
         return str == null || str.trim().isEmpty();
     }
 
+    public static void setAnalyticsDate(Date date) {
+        tempDate = date;
+    }
+
+    public static Date getAnalyticsDate() {
+        return tempDate;
+    }
 }

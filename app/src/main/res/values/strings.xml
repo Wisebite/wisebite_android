@@ -238,4 +238,6 @@
     <string name="sold_menus">Sold menus</string>
     <string name="average_time">Average time</string>
     <string name="orders_per_time_range">Orders per time range</string>
+    <string name="change_date">Change date</string>
+    <string name="change_date_message">Select the date that you want to go</string>
 </resources>
