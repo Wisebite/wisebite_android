@@ -3,6 +3,7 @@ package dev.wisebite.wisebite.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,7 +58,7 @@ public class GetRestaurantActivity extends BaseActivity {
         restaurant = restaurantService.get(restaurantId);
         inflater = LayoutInflater.from(GetRestaurantActivity.this);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab_add);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +98,9 @@ public class GetRestaurantActivity extends BaseActivity {
         numberOfTables.setText(String.valueOf(restaurant.getNumberOfTables() + " tables"));
 
         if (!restaurantService.isPartOfTheStuff(restaurantId, Preferences.getCurrentUserEmail())) {
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
             fab.setVisibility(View.GONE);
         }
     }
@@ -163,6 +167,7 @@ public class GetRestaurantActivity extends BaseActivity {
     }
 
     private void addUserToSomeRestaurant(final View view) {
+        if (!restaurantService.isPartOfTheStuff(restaurantId, Preferences.getCurrentUserEmail())) return;
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.email_form), null);
         AlertDialog alertDialog = new AlertDialog.Builder(GetRestaurantActivity.this)
                 .setTitle(getResources().getString(R.string.email_form_title))
