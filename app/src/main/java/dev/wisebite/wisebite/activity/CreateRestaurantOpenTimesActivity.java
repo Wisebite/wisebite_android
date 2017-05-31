@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -123,6 +124,7 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
                                         TextView textView = (TextView) view;
                                         textView.setText(Utils.parseStartEndDate(firstTimePicker, secondTimePicker));
                                         addOpenTimeToList(Utils.createOpenTimeByTimePicker(firstTimePicker, secondTimePicker, view.getId()));
+                                        setClosedVisible(view.getId());
                                     }
                                 })
                                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -144,6 +146,55 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
 
     }
 
+    public void setClosed(View view) {
+        int datePickerId = getDatePickerIdByCloseId(view.getId());
+        TextView textView = (TextView) findViewById(datePickerId);
+        textView.setText(getResources().getString(R.string.time_picker_test));
+
+        removeOpenTimeByDay(Utils.parseViewIdToDayOfWeek(datePickerId));
+
+        view.setVisibility(View.INVISIBLE);
+    }
+
+    private int getDatePickerIdByCloseId(int id) {
+        switch (id) {
+            case R.id.monday_close:
+                return R.id.monday_date_picker;
+            case R.id.tuesday_close:
+                return R.id.tuesday_date_picker;
+            case R.id.wednesday_close:
+                return R.id.wednesday_date_picker;
+            case R.id.thursday_close:
+                return R.id.thursday_date_picker;
+            case R.id.friday_close:
+                return R.id.friday_date_picker;
+            case R.id.saturday_close:
+                return R.id.saturday_date_picker;
+            case R.id.sunday_close:
+                return R.id.sunday_date_picker;
+        }
+        return -1;
+    }
+
+    private void setClosedVisible(int id) {
+        switch (id) {
+            case R.id.monday_date_picker:
+                findViewById(R.id.monday_close).setVisibility(View.VISIBLE); break;
+            case R.id.tuesday_date_picker:
+                findViewById(R.id.tuesday_close).setVisibility(View.VISIBLE); break;
+            case R.id.wednesday_date_picker:
+                findViewById(R.id.wednesday_close).setVisibility(View.VISIBLE); break;
+            case R.id.thursday_date_picker:
+                findViewById(R.id.thursday_close).setVisibility(View.VISIBLE); break;
+            case R.id.friday_date_picker:
+                findViewById(R.id.friday_close).setVisibility(View.VISIBLE); break;
+            case R.id.saturday_date_picker:
+                findViewById(R.id.saturday_close).setVisibility(View.VISIBLE); break;
+            case R.id.sunday_date_picker:
+                findViewById(R.id.sunday_close).setVisibility(View.VISIBLE); break;
+        }
+    }
+
     private void addOpenTimeToList(OpenTime openTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(openTime.getStartDate());
@@ -159,4 +210,16 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
 
         this.openTimes.add(openTime);
     }
+
+    private void removeOpenTimeByDay(int day) {
+        Calendar calendar = Calendar.getInstance();
+        for (OpenTime time : this.openTimes) {
+            calendar.setTime(time.getStartDate());
+            if (calendar.get(Calendar.DAY_OF_WEEK) == day) {
+                this.openTimes.remove(time);
+                return;
+            }
+        }
+    }
+
 }
