@@ -247,8 +247,37 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         if (openTimes.isEmpty()) {
             this.menu.findItem(R.id.action_copy).setVisible(false);
         } else {
-            this.menu.findItem(R.id.action_copy).setVisible(true);
+            if (sameHour()) {
+                this.menu.findItem(R.id.action_copy).setVisible(true);
+            } else {
+                this.menu.findItem(R.id.action_copy).setVisible(false);
+            }
         }
+    }
+
+    private boolean sameHour() {
+        if (this.openTimes.size() == 1) return true;
+
+        Calendar calendar = Calendar.getInstance();
+
+        OpenTime first = this.openTimes.get(0);
+        calendar.setTime(first.getStartDate());
+        int startHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int startMinute = calendar.get(Calendar.MINUTE);
+        calendar.setTime(first.getEndDate());
+        int endHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int endMinute = calendar.get(Calendar.MINUTE);
+
+        for (OpenTime openTime : this.openTimes) {
+            calendar.setTime(openTime.getStartDate());
+            if (calendar.get(Calendar.HOUR_OF_DAY) != startHour || calendar.get(Calendar.MINUTE) != startMinute)
+                return false;
+            calendar.setTime(openTime.getEndDate());
+            if (calendar.get(Calendar.HOUR_OF_DAY) != endHour || calendar.get(Calendar.MINUTE) != endMinute)
+                return false;
+        }
+
+        return true;
     }
 
 }
