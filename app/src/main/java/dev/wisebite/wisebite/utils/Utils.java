@@ -135,7 +135,7 @@ public class Utils {
         return parsed;
     }
 
-    private static int parseViewIdToDayOfWeek(Integer viewId) {
+    public static int parseViewIdToDayOfWeek(Integer viewId) {
         switch (viewId) {
             case R.id.monday_date_picker:
                 return Calendar.MONDAY;
