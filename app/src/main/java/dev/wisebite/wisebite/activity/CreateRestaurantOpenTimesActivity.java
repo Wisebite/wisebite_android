@@ -116,7 +116,7 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
             onBackPressed();
             return true;
         } else if (id == R.id.action_copy) {
-
+            copyOpenTimes();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -257,6 +257,7 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
 
     private boolean sameHour() {
         if (this.openTimes.size() == 1) return true;
+        else if (this.openTimes.size() == 7) return false;
 
         Calendar calendar = Calendar.getInstance();
 
@@ -278,6 +279,45 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+    private void copyOpenTimes() {
+        OpenTime openTimeToCopy = this.openTimes.get(0);
+
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(openTimeToCopy.getStartDate());
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(openTimeToCopy.getEndDate());
+
+        this.openTimes.clear();
+        for (int dayOfWeek = Calendar.SUNDAY; dayOfWeek <= Calendar.SATURDAY; dayOfWeek++) {
+            startCalendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+            endCalendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+            this.openTimes.add(OpenTime.builder()
+                    .startDate(startCalendar.getTime())
+                    .endDate(endCalendar.getTime())
+                    .build());
+        }
+
+        TextView monday = (TextView) findViewById(R.id.monday_date_picker);
+        TextView tuesday = (TextView) findViewById(R.id.tuesday_date_picker);
+        TextView wednesday = (TextView) findViewById(R.id.wednesday_date_picker);
+        TextView thursday = (TextView) findViewById(R.id.thursday_date_picker);
+        TextView friday = (TextView) findViewById(R.id.friday_date_picker);
+        TextView saturday = (TextView) findViewById(R.id.saturday_date_picker);
+        TextView sunday = (TextView) findViewById(R.id.sunday_date_picker);
+
+        String text = Utils.parseStartEndDate(startCalendar.getTime(), endCalendar.getTime());
+
+        monday.setText(text); setClosedVisible(monday.getId());
+        tuesday.setText(text); setClosedVisible(tuesday.getId());
+        wednesday.setText(text); setClosedVisible(wednesday.getId());
+        thursday.setText(text); setClosedVisible(thursday.getId());
+        friday.setText(text); setClosedVisible(friday.getId());
+        saturday.setText(text); setClosedVisible(saturday.getId());
+        sunday.setText(text); setClosedVisible(sunday.getId());
+
+        setCopyVisible();
     }
 
 }
