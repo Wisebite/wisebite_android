@@ -4,15 +4,22 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +39,7 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
 
     private Restaurant restaurant;
     private LayoutInflater inflater;
+    private Menu menu;
 
     private List<OpenTime> openTimes;
     private RestaurantService restaurantService;
@@ -70,6 +78,7 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
                 }
             }
         });
+
     }
 
     @Override
@@ -93,11 +102,21 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.create_open_time_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
+        } else if (id == R.id.action_copy) {
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -125,6 +144,7 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
                                         textView.setText(Utils.parseStartEndDate(firstTimePicker, secondTimePicker));
                                         addOpenTimeToList(Utils.createOpenTimeByTimePicker(firstTimePicker, secondTimePicker, view.getId()));
                                         setClosedVisible(view.getId());
+                                        setCopyVisible();
                                     }
                                 })
                                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -154,6 +174,7 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         removeOpenTimeByDay(Utils.parseViewIdToDayOfWeek(datePickerId));
 
         view.setVisibility(View.INVISIBLE);
+        setCopyVisible();
     }
 
     private int getDatePickerIdByCloseId(int id) {
@@ -219,6 +240,14 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
                 this.openTimes.remove(time);
                 return;
             }
+        }
+    }
+
+    private void setCopyVisible() {
+        if (openTimes.isEmpty()) {
+            this.menu.findItem(R.id.action_copy).setVisible(false);
+        } else {
+            this.menu.findItem(R.id.action_copy).setVisible(true);
         }
     }
 
