@@ -28,8 +28,7 @@ import dev.wisebite.wisebite.utils.BaseActivity;
 public class CreateOrderActivity extends BaseActivity {
 
     public static final String RESTAURANT_ID = "RESTAURANT_ID";
-
-    private LayoutInflater inflater;
+    public static final String TABLE_NUMBER = "TABLE_NUMBER";
 
     private RestaurantService restaurantService;
     private OrderService orderService;
@@ -52,7 +51,11 @@ public class CreateOrderActivity extends BaseActivity {
             this.restaurantId = getIntent().getExtras().getString(RESTAURANT_ID);
         }
 
-        inflater = LayoutInflater.from(CreateOrderActivity.this);
+        if (getIntent().getSerializableExtra(TABLE_NUMBER) != null) {
+            this.tableNumber = getIntent().getExtras().getInt(TABLE_NUMBER);
+            TextView titleTableNumber = (TextView) findViewById(R.id.table_number_title);
+            titleTableNumber.setText(String.valueOf("at table " + tableNumber));
+        }
 
         restaurantService = ServiceFactory.getRestaurantService(CreateOrderActivity.this);
         orderService = ServiceFactory.getOrderService(CreateOrderActivity.this);
@@ -68,51 +71,12 @@ public class CreateOrderActivity extends BaseActivity {
 
         initializeDishesItems();
         initializeMenusItems();
-
-        showTableNumberForm();
-
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(android.R.anim.slide_out_right, android.R.anim.slide_in_left);
-    }
-
-    private void showTableNumberForm() {
-        final LinearLayout tableNumberForm = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.table_number_form), null);
-        AlertDialog alertDialog = new AlertDialog.Builder(CreateOrderActivity.this)
-                .setTitle(getResources().getString(R.string.title_table_number_form))
-                .setView(tableNumberForm)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        TextView tableNumberView = (TextView) tableNumberForm.findViewById(R.id.form_number);
-                        if (!tableNumberView.getText().toString().trim().isEmpty()) {
-                            tableNumber = Integer.valueOf(tableNumberView.getText().toString());
-                            TextView titleTableNumber = (TextView) findViewById(R.id.table_number_title);
-                            titleTableNumber.setText(String.valueOf("at table " + tableNumber));
-                        } else {
-                            onBackPressed();
-                        }
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        onBackPressed();
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        onBackPressed();
-                    }
-                })
-                .create();
-        alertDialog.setCanceledOnTouchOutside(false);
-        alertDialog.show();
-
     }
 
     private void initializeDishesItems() {

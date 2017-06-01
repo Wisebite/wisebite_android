@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -70,6 +71,7 @@ public class MainActivity extends BaseActivity
     private UserService userService;
     private OrderService orderService;
     private String restaurantId;
+    private LayoutInflater inflater;
 
     private FloatingActionButton fab;
     private NavigationView navigationView;
@@ -101,6 +103,7 @@ public class MainActivity extends BaseActivity
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         appBar = (AppBarLayout) findViewById(R.id.appbar);
+        inflater = LayoutInflater.from(MainActivity.this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -327,6 +330,45 @@ public class MainActivity extends BaseActivity
         frameLayout.addView(v);
     }
 
+    private void showTableNumberForm(final View view) {
+        final LinearLayout tableNumberForm = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.table_number_form), null);
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                .setTitle(getResources().getString(R.string.title_table_number_form))
+                .setView(tableNumberForm)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TextView tableNumberView = (TextView) tableNumberForm.findViewById(R.id.form_number);
+                        if (!tableNumberView.getText().toString().trim().isEmpty()) {
+                            Integer tableNumber = Integer.valueOf(tableNumberView.getText().toString());
+                            Intent intent = new Intent(MainActivity.this, CreateOrderActivity.class);
+                            intent.putExtra(CreateOrderActivity.RESTAURANT_ID, restaurantId);
+                            intent.putExtra(CreateOrderActivity.TABLE_NUMBER, tableNumber);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        } else {
+                            Snackbar.make(view, getResources().getString(R.string.no_select_table), Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        // do nothing
+                    }
+                })
+                .create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+
+    }
+
     private void initializeActiveOrders() {
         setTitle(getResources().getString(R.string.active_orders));
         removeTabs();
@@ -335,10 +377,7 @@ public class MainActivity extends BaseActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CreateOrderActivity.class);
-                intent.putExtra(CreateOrderActivity.RESTAURANT_ID, restaurantId);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                showTableNumberForm(view);
             }
         });
         ArrayList<Order> ordersList = orderService.getActiveOrders(restaurantId);
