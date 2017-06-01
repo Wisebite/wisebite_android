@@ -341,11 +341,18 @@ public class MainActivity extends BaseActivity
                         TextView tableNumberView = (TextView) tableNumberForm.findViewById(R.id.form_number);
                         if (!tableNumberView.getText().toString().trim().isEmpty()) {
                             Integer tableNumber = Integer.valueOf(tableNumberView.getText().toString());
-                            Intent intent = new Intent(MainActivity.this, CreateOrderActivity.class);
-                            intent.putExtra(CreateOrderActivity.RESTAURANT_ID, restaurantId);
-                            intent.putExtra(CreateOrderActivity.TABLE_NUMBER, tableNumber);
-                            startActivity(intent);
-                            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                            Integer maxTableNumber = restaurantService.get(restaurantId).getNumberOfTables();
+
+                            if (tableNumber <= 0 || tableNumber > maxTableNumber) {
+                                Snackbar.make(view, getResources().getString(R.string.no_exists_table), Snackbar.LENGTH_LONG).show();
+                            } else {
+                                Intent intent = new Intent(MainActivity.this, CreateOrderActivity.class);
+                                intent.putExtra(CreateOrderActivity.RESTAURANT_ID, restaurantId);
+                                intent.putExtra(CreateOrderActivity.TABLE_NUMBER, tableNumber);
+                                startActivity(intent);
+                                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                            }
+
                         } else {
                             Snackbar.make(view, getResources().getString(R.string.no_select_table), Snackbar.LENGTH_LONG).show();
                         }
