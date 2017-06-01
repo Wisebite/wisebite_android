@@ -248,4 +248,5 @@
     <string name="add_user_uncorrect">The user have not added because it doesn\'t exists or it\'s a member of an other restaurant.</string>
     <string name="close">X</string>
     <string name="no_select_table">You don\'t have selected a table.</string>
+    <string name="extra_information">Extra information about</string>
 </resources>

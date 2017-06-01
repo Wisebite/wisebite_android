@@ -144,7 +144,7 @@ public class GetRestaurantActivity extends BaseActivity {
             TextView textView = (TextView) findViewById(R.id.mock_dishes);
             textView.setVisibility(View.GONE);
         }
-        DetailAdapter detailAdapter = new DetailAdapter(dishes, null);
+        DetailAdapter detailAdapter = new DetailAdapter(dishes, null, GetRestaurantActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.dishes_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -158,7 +158,7 @@ public class GetRestaurantActivity extends BaseActivity {
             TextView textView = (TextView) findViewById(R.id.mock_menus);
             textView.setVisibility(View.GONE);
         }
-        DetailAdapter detailAdapter = new DetailAdapter(null, menus);
+        DetailAdapter detailAdapter = new DetailAdapter(null, menus, GetRestaurantActivity.this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.menus_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
