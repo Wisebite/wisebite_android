@@ -675,4 +675,25 @@ public class RestaurantService extends Service<Restaurant> {
 
         return true;
     }
+
+    public int getTimesOrdered(String id, int kind) {
+        int count = 0;
+
+        Menu menu = menuRepository.get(id);
+
+        for (Order order : orderRepository.all()) {
+            if (order.getOrderItems() == null) continue;
+            OrderItem orderItem;
+            for (String orderItemKey : order.getOrderItems().keySet()) {
+                orderItem = orderItemRepository.get(orderItemKey);
+                if (checkTime(order, kind)) {
+                    if (menu != null && orderItem.getMenuId() != null && orderItem.getMenuId().equals(id)) ++count;
+                    else if (menu == null && orderItem.getDishId().equals(id)) ++count;
+                }
+            }
+        }
+
+        if (menu != null) count /= getNumberOptions(menu);
+        return count;
+    }
 }
