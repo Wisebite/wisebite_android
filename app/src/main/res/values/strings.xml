@@ -252,4 +252,5 @@
     <string name="number_ordered_today">Times ordered today</string>
     <string name="number_ordered_this_week">Times ordered this week</string>
     <string name="number_ordered_this_month">Times ordered this month</string>
+    <string name="no_exists_table">This table doesn\'t exist</string>
 </resources>
