@@ -410,13 +410,23 @@ public class OrderService extends Service<Order> {
             User user = userRepository.get(userId);
             Map<String, Object> orderIds = user.getMyOrders();
             if (orderIds != null && !orderIds.isEmpty()) {
-                orderKeys.addAll(orderIds.keySet());
+                for (String key : orderIds.keySet()) {
+                    if (!isExternal(key)) orderKeys.add(key);
+                }
             }
         }
         if (restaurant.getExternalOrders() != null) {
             orderKeys.addAll(restaurant.getExternalOrders().keySet());
         }
         return orderKeys;
+    }
+
+    private boolean isExternal(String orderKey) {
+        for (Restaurant restaurant : restaurantRepository.all()) {
+            if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(orderKey))
+                return true;
+        }
+        return false;
     }
 
     private void addNullNonReadyOrder(final String id, final ArrayList<Order> orders) {
