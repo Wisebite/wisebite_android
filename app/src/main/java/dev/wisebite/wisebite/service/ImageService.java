@@ -14,6 +14,7 @@ public class ImageService extends Service<Image> {
         super(repository);
     }
 
+    @SuppressWarnings("unused")
     public String getImageUrl(String key) {
         Image image = repository.get(key);
         return (image != null ? image.getImageFile() : "");

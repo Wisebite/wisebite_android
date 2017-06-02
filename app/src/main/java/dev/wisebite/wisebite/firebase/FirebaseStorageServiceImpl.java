@@ -24,13 +24,11 @@ import dev.wisebite.wisebite.utils.Preferences;
  */
 public class FirebaseStorageServiceImpl implements FirebaseStorageService {
 
-    private FirebaseStorage storage;
     private StorageReference reference;
-
     private UserService userService;
 
     public FirebaseStorageServiceImpl(Context context) {
-        this.storage = FirebaseStorage.getInstance("gs://wisebite-f7a53.appspot.com");
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://wisebite-f7a53.appspot.com");
         this.reference = storage.getReference();
         this.userService = ServiceFactory.getUserService(context);
     }
@@ -65,8 +63,4 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
         }
     }
 
-    @Override
-    public void download(String path) {
-
-    }
 }

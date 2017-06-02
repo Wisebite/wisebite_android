@@ -25,10 +25,12 @@ public abstract class Service<T extends Entity> {
         return repository.get(key);
     }
 
+    @SuppressWarnings("unused")
     public void delete(String key){
         repository.delete(key);
     }
 
+    @SuppressWarnings("unused")
     public int getAmount(){
         return repository.all().size();
     }

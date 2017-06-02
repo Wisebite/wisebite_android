@@ -37,9 +37,9 @@ import java.util.Calendar;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.charts.MyXAxisValueFormatter;
+import dev.wisebite.wisebite.charts.PieChartData;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
-import dev.wisebite.wisebite.charts.PieChartData;
 import dev.wisebite.wisebite.utils.Utils;
 
 /**
@@ -63,6 +63,7 @@ public class AnalyticsMonthFragment extends Fragment {
         View view = inflater.inflate(R.layout.analytics_fragment, container, false);
 
         LinearLayout mainFragmentLayout = (LinearLayout) view.findViewById(R.id.main_fragment_layout);
+        //noinspection deprecation
         mainFragmentLayout.setBackgroundColor(getResources().getColor(R.color.month_color));
 
         TextView analyticsDate = (TextView) view.findViewById(R.id.analytics_date_refill);
@@ -121,6 +122,7 @@ public class AnalyticsMonthFragment extends Fragment {
         pieDataSet.setSelectionShift(5);
 
         Legend legend = pieChart.getLegend();
+        //noinspection deprecation
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
         legend.setWordWrapEnabled(true);
 

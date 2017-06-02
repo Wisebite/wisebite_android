@@ -1,7 +1,6 @@
 package dev.wisebite.wisebite.domain;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import dev.wisebite.wisebite.utils.Entity;

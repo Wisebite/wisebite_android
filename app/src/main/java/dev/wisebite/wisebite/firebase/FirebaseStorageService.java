@@ -1,7 +1,6 @@
 package dev.wisebite.wisebite.firebase;
 
 import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 
 /**
@@ -11,7 +10,5 @@ import android.net.Uri;
 public interface FirebaseStorageService {
 
     void upload(Uri path, Activity activity);
-
-    void download(String path);
 
 }

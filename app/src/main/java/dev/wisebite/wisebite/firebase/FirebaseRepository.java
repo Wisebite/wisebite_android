@@ -22,8 +22,6 @@ import dev.wisebite.wisebite.utils.Entity;
  */
 public abstract class FirebaseRepository<T extends Entity> extends Repository<T> {
 
-    private OnChangedListener listener;
-
     public static final String FIREBASE_URI = "https://wisebite-f7a53.firebaseio.com/";
     private static final String TAG = FirebaseRepository.class.getSimpleName();
     private final HashMap<String, T> map;
@@ -34,7 +32,7 @@ public abstract class FirebaseRepository<T extends Entity> extends Repository<T>
      * Constructor class
      * @param context Repository's context
      */
-    public FirebaseRepository(Context context) {
+    public FirebaseRepository(@SuppressWarnings("UnusedParameters") Context context) {
         firebase = FirebaseDatabase.getInstance(FIREBASE_URI);
         database = firebase.getReference().child(getObjectReference());
         map = new LinkedHashMap<>();

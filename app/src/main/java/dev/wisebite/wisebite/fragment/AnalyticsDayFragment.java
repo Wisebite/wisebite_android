@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -38,9 +37,9 @@ import java.util.Calendar;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.charts.MyXAxisValueFormatter;
+import dev.wisebite.wisebite.charts.PieChartData;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
-import dev.wisebite.wisebite.charts.PieChartData;
 import dev.wisebite.wisebite.utils.Utils;
 
 /**
@@ -50,12 +49,10 @@ import dev.wisebite.wisebite.utils.Utils;
 @SuppressLint("ValidFragment")
 public class AnalyticsDayFragment extends Fragment {
 
-    private Context context;
     private RestaurantService restaurantService;
     private String restaurantId;
 
     public AnalyticsDayFragment(Context context, String restaurantId) {
-        this.context = context;
         this.restaurantService = ServiceFactory.getRestaurantService(context);
         this.restaurantId = restaurantId;
     }
@@ -66,6 +63,7 @@ public class AnalyticsDayFragment extends Fragment {
         View view = inflater.inflate(R.layout.analytics_fragment, container, false);
 
         LinearLayout mainFragmentLayout = (LinearLayout) view.findViewById(R.id.main_fragment_layout);
+        //noinspection deprecation
         mainFragmentLayout.setBackgroundColor(getResources().getColor(R.color.day_color));
 
         TextView analyticsDate = (TextView) view.findViewById(R.id.analytics_date_refill);
@@ -124,6 +122,7 @@ public class AnalyticsDayFragment extends Fragment {
         pieDataSet.setSelectionShift(5);
 
         Legend legend = pieChart.getLegend();
+        //noinspection deprecation
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
         legend.setWordWrapEnabled(true);
 

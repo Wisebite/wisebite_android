@@ -11,13 +11,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.activity.GetOrderActivity;
 import dev.wisebite.wisebite.activity.GetRestaurantActivity;
-import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
-import dev.wisebite.wisebite.utils.Utils;
 
 /**
  * Created by albert on 20/03/17.
@@ -26,13 +23,11 @@ import dev.wisebite.wisebite.utils.Utils;
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.OrderHolder> {
 
     private List<Restaurant> restaurants;
-    private Context context;
     private RestaurantService restaurantService;
 
     public RestaurantAdapter(List<Restaurant> restaurantsList, Context context) {
         this.restaurants = restaurantsList;
-        this.context = context;
-        this.restaurantService = ServiceFactory.getRestaurantService(this.context);
+        this.restaurantService = ServiceFactory.getRestaurantService(context);
         notifyDataSetChanged();
     }
 

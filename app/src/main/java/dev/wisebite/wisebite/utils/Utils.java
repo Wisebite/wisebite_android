@@ -20,6 +20,7 @@ public class Utils {
     private static Date tempDate;
     private static Integer loaded = 0;
 
+    @SuppressWarnings("deprecation")
     public static String parseStartEndDate(TimePicker firstTimePicker, TimePicker secondTimePicker) {
         int firstHour, firstMinute, secondHour, secondMinute;
 
@@ -53,6 +54,7 @@ public class Utils {
         return datesToString(firstHour, firstMinute, secondHour, secondMinute);
     }
 
+    @SuppressWarnings("deprecation")
     public static OpenTime createOpenTimeByTimePicker(TimePicker firstTimePicker, TimePicker secondTimePicker, Integer viewId) {
         int dayOfTheWeek = parseViewIdToDayOfWeek(viewId);
 

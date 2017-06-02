@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.wisebite.wisebite.charts.PieChartData;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Menu;
@@ -17,9 +18,8 @@ import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.domain.User;
-import dev.wisebite.wisebite.charts.PieChartData;
-import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.firebase.Repository;
+import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.utils.Service;
 import dev.wisebite.wisebite.utils.Utils;
 
@@ -31,6 +31,7 @@ public class RestaurantService extends Service<Restaurant> {
 
     private final Repository<Menu> menuRepository;
     private final Repository<Dish> dishRepository;
+    @SuppressWarnings({"unused", "FieldCanBeLocal"})
     private final Repository<Image> imageRepository;
     private final Repository<OpenTime> openTimeRepository;
     private final Repository<Order> orderRepository;

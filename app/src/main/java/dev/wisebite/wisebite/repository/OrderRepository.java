@@ -2,7 +2,6 @@ package dev.wisebite.wisebite.repository;
 
 import android.content.Context;
 
-
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.Date;

@@ -69,6 +69,7 @@ public class CollectOrderItemAdapter extends RecyclerView.Adapter<CollectOrderIt
             this.description = (TextView) itemView.findViewById(R.id.description);
             this.price = (TextView) itemView.findViewById(R.id.price);
             this.view.setOnClickListener(new View.OnClickListener() {
+                @SuppressWarnings("deprecation")
                 @Override
                 public void onClick(View v) {
                     if (selectedItems.contains(item)) {

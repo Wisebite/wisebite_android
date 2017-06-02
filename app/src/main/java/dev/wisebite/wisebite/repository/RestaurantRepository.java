@@ -25,7 +25,6 @@ public class RestaurantRepository extends FirebaseRepository<Restaurant> {
     public static final String NUMBER_OF_TABLES_REFERENCE = "numberOfTables";
 
     public static final String OPEN_TIMES_REFERENCE = "openTimes";
-    public static final String IMAGES_REFERENCE = "images";
     public static final String MENUS_REFERENCE = "menus";
     public static final String DISHES_REFERENCE = "dishes";
     public static final String USERS_REFERENCE = "users";
