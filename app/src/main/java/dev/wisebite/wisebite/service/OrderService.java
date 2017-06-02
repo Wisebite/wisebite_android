@@ -363,6 +363,11 @@ public class OrderService extends Service<Order> {
                     userRepository.update(user);
                 }
             }
+
+            if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(order.getId())) {
+                restaurant.getExternalOrders().remove(order.getId());
+                restaurantRepository.update(restaurant);
+            }
         }
     }
 

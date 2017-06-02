@@ -171,6 +171,10 @@ public class RestaurantService extends Service<Restaurant> {
             if (user != null && user.getMyOrders() != null) ordersList.addAll(user.getMyOrders().keySet());
         }
 
+        if (restaurant.getExternalOrders() != null) {
+            ordersList.addAll(restaurant.getExternalOrders().keySet());
+        }
+
         return ordersList;
     }
 
