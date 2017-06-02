@@ -466,7 +466,10 @@ public class MainActivity extends BaseActivity
         fab.setVisibility(View.GONE);
         
         TextView currentTableNumber = (TextView) findViewById(R.id.current_table_number);
-        currentTableNumber.setText(String.valueOf(currentOrder.getTableNumber()));
+        currentTableNumber.setText(String.format("at table %s", String.valueOf(currentOrder.getTableNumber())));
+
+        TextView totalPrice = (TextView) findViewById(R.id.current_total_price);
+        totalPrice.setText(String.format("%s €", String.valueOf(orderService.getPriceOfOrder(currentOrder.getId()))));
 
         ArrayList<OrderItem> dishesOrderItems = orderService.getOnlyDishItemsOf(currentOrder);
         if (dishesOrderItems != null && !dishesOrderItems.isEmpty()) {

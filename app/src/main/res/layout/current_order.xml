@@ -26,22 +26,30 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/order_at"
+                    android:text="@string/current_order"
                     android:textColor="@color/colorPrimaryDark"
                     android:gravity="start"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/current_table_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/number"
-                    android:layout_marginStart="8dp"
+                    android:text="@string/title_table_number_order"
                     android:textColor="@color/colorPrimaryDark"
+                    android:layout_marginStart="5dp"
                     android:gravity="start"
-                    android:textSize="25sp"
-                    android:textStyle="bold"/>
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/current_total_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/price_test_zero"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:gravity="end"
+                    android:textSize="18sp"/>
 
             </LinearLayout>
 
@@ -52,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10sp"
                 android:text="@string/dish_title"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimary"
                 android:gravity="start"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
@@ -82,7 +90,7 @@
                 android:layout_marginTop="10sp"
                 android:layout_marginBottom="10sp"
                 android:text="@string/menu_dish_title"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimary"
                 android:gravity="start"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
