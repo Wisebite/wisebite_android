@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import java.util.HashMap;
 import java.util.Map;
 import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Order;
@@ -119,13 +120,22 @@ public class UserService extends Service<User> {
     public boolean hasActiveOrder(String userKey) {
         User user = repository.get(userKey);
 
-        // TODO Search into restaurant orders
+        Map<String, Object> dishesMap = new HashMap<>();
+        Map<String, Object> menusMap = new HashMap<>();
+        if (user != null && user.getMyRestaurants() != null) {
+            Restaurant restaurant;
+            for (String restaurantKey : user.getMyRestaurants().keySet()) {
+                restaurant = restaurantRepository.get(restaurantKey);
+                if (restaurant.getDishes() != null) dishesMap = restaurant.getDishes();
+                if (restaurant.getMenus() != null) menusMap = restaurant.getMenus();
+            }
+        }
 
         if (user != null && user.getMyOrders() != null) {
             Order order;
             for (String orderKey : user.getMyOrders().keySet()) {
                 order = orderRepository.get(orderKey);
-                if (!isFinished(order.getOrderItems())) return true;
+                if (!isFinished(order.getOrderItems()) && !partOfYourRestaurant(order, dishesMap, menusMap)) return true;
             }
         }
 
@@ -142,4 +152,18 @@ public class UserService extends Service<User> {
         }
         return true;
     }
+
+    @SuppressWarnings("LoopStatementThatDoesntLoop")
+    private boolean partOfYourRestaurant(Order order, Map<String, Object> dishesMap, Map<String, Object> menusMap) {
+        OrderItem orderItem;
+        for (String orderItemKey : order.getOrderItems().keySet()) {
+            orderItem = orderItemRepository.get(orderItemKey);
+            return orderItem.getMenuId() != null &&
+                    menusMap.containsKey(orderItem.getMenuId()) ||
+                    orderItem.getMenuId() == null && dishesMap.containsKey(orderItem.getDishId());
+        }
+
+        return false;
+    }
+
 }
