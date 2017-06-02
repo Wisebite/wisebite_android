@@ -49,8 +49,10 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.FragmentAdapter;
 import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
+import dev.wisebite.wisebite.adapter.OrderItemAdapter;
 import dev.wisebite.wisebite.adapter.RestaurantAdapter;
 import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.fragment.AnalyticsDayFragment;
 import dev.wisebite.wisebite.fragment.AnalyticsMonthFragment;
@@ -71,6 +73,7 @@ public class MainActivity extends BaseActivity
     private UserService userService;
     private OrderService orderService;
     private String restaurantId;
+    private Order currentOrder;
     private LayoutInflater inflater;
 
     private FloatingActionButton fab;
@@ -108,6 +111,7 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        //noinspection deprecation
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -283,8 +287,8 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_current_order).setVisible(false);
         }
 
-
-        if (userService.hasActiveOrder(Preferences.getCurrentUserEmail())) {
+        this.currentOrder = userService.hasActiveOrder(Preferences.getCurrentUserEmail()); 
+        if (this.currentOrder != null) {
             navigationView.getMenu().findItem(R.id.nav_current_order).setVisible(true);
         } else {
             navigationView.getMenu().findItem(R.id.nav_current_order).setVisible(false);
@@ -460,6 +464,35 @@ public class MainActivity extends BaseActivity
         removeTabs();
         if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(false);
         fab.setVisibility(View.GONE);
+        
+        TextView currentTableNumber = (TextView) findViewById(R.id.current_table_number);
+        currentTableNumber.setText(String.valueOf(currentOrder.getTableNumber()));
+
+        ArrayList<OrderItem> dishesOrderItems = orderService.getOnlyDishItemsOf(currentOrder);
+        if (dishesOrderItems != null && !dishesOrderItems.isEmpty()) {
+            TextView textView = (TextView) findViewById(R.id.mock_dishes);
+            textView.setVisibility(View.GONE);
+        }
+        OrderItemAdapter dishesOrderItemAdapter = new OrderItemAdapter(dishesOrderItems,
+                MainActivity.this, this.currentOrder);
+        RecyclerView dishesRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
+        LinearLayoutManager dishesLinearLayoutManager = new LinearLayoutManager(this);
+        assert dishesRecyclerView != null;
+        dishesRecyclerView.setLayoutManager(dishesLinearLayoutManager);
+        dishesRecyclerView.setAdapter(dishesOrderItemAdapter);
+
+        ArrayList<OrderItem> menusOrderItems = orderService.getOnlyMenuItemsOf(currentOrder);
+        if (menusOrderItems != null && !menusOrderItems.isEmpty()) {
+            TextView textView = (TextView) findViewById(R.id.mock_menus);
+            textView.setVisibility(View.GONE);
+        }
+        OrderItemAdapter menusOrderItemAdapter = new OrderItemAdapter(menusOrderItems,
+                MainActivity.this, this.currentOrder);
+        RecyclerView menusRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_menu);
+        LinearLayoutManager menusLinearLayoutManager = new LinearLayoutManager(this);
+        assert menusRecyclerView != null;
+        menusRecyclerView.setLayoutManager(menusLinearLayoutManager);
+        menusRecyclerView.setAdapter(menusOrderItemAdapter);
     }
 
 }

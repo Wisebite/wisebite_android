@@ -209,7 +209,7 @@ public class GetRestaurantActivity extends BaseActivity {
     }
 
     private void createOrder(final View v) {
-        if (userService.hasActiveOrder(Preferences.getCurrentUserEmail())) {
+        if (userService.hasActiveOrder(Preferences.getCurrentUserEmail()) != null) {
             Snackbar.make(v, getResources().getString(R.string.has_active_order), Snackbar.LENGTH_LONG).show();
             return;
         }

@@ -255,4 +255,6 @@
     <string name="no_exists_table">This table doesn\'t exist</string>
     <string name="has_active_order">I\'m sorry but you\'ve already had an active order. Please, finish it first and then you can create another one.</string>
     <string name="current_order">Current order</string>
+    <string name="order_at">Order at table</string>
+    <string name="number">number</string>
 </resources>

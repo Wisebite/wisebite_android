@@ -1,5 +1,6 @@
 package dev.wisebite.wisebite.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.activity.GetOrderActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.service.OrderItemService;
@@ -28,6 +30,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
 
     private OrderService orderService;
     private OrderItemService orderItemService;
+    private Context context;
 
     public OrderItemAdapter(ArrayList<OrderItem> orderItems, Context context, Order order) {
         this.orderItems = orderItems;
@@ -35,6 +38,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
 
         this.orderService = ServiceFactory.getOrderService(context);
         this.orderItemService = ServiceFactory.getOrderItemService(context);
+        this.context = context;
         notifyDataSetChanged();
     }
 
@@ -87,13 +91,19 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
     }
 
     private void setFlags(OrderItemHolder holder) {
+        Activity activity = (Activity) context;
+
         if (holder.item.isReady()) {
             holder.ready.setVisibility(View.VISIBLE);
-            if (!holder.item.isDelivered()) {
-                holder.mark.setVisibility(View.VISIBLE);
-            } else {
-                holder.mark.setVisibility(View.GONE);
+
+            if (activity instanceof GetOrderActivity) {
+                if (!holder.item.isDelivered()) {
+                    holder.mark.setVisibility(View.VISIBLE);
+                } else {
+                    holder.mark.setVisibility(View.GONE);
+                }
             }
+
         }
         if (holder.item.isDelivered()) {
             holder.delivered.setVisibility(View.VISIBLE);

@@ -117,7 +117,7 @@ public class UserService extends Service<User> {
         repository.update(user);
     }
 
-    public boolean hasActiveOrder(String userKey) {
+    public Order hasActiveOrder(String userKey) {
         User user = repository.get(userKey);
 
         Map<String, Object> dishesMap = new HashMap<>();
@@ -135,11 +135,11 @@ public class UserService extends Service<User> {
             Order order;
             for (String orderKey : user.getMyOrders().keySet()) {
                 order = orderRepository.get(orderKey);
-                if (!isFinished(order.getOrderItems()) && !partOfYourRestaurant(order, dishesMap, menusMap)) return true;
+                if (!isFinished(order.getOrderItems()) && !partOfYourRestaurant(order, dishesMap, menusMap)) return order;
             }
         }
 
-        return false;
+        return null;
     }
 
     private boolean isFinished(Map<String, Object> orderItems) {
