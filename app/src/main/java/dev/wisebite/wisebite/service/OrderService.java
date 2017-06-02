@@ -168,7 +168,7 @@ public class OrderService extends Service<Order> {
         return orders;
     }
 
-    public void addOrder(ArrayList<Dish> selectedDishes, Integer tableNumber, ArrayList<Menu> selectedMenus) {
+    public void addOrder(ArrayList<Dish> selectedDishes, Integer tableNumber, ArrayList<Menu> selectedMenus, String restaurantId) {
         Map<String, Object> orderItems = new LinkedHashMap<>();
         for (Dish dish : selectedDishes) {
             String insertedId = orderItemRepository.insert(OrderItem.builder()
@@ -211,6 +211,17 @@ public class OrderService extends Service<Order> {
         myOrders.put(newId, true);
         user.setMyOrders(myOrders);
         userRepository.update(user);
+
+        Restaurant restaurant = restaurantRepository.get(restaurantId);
+        if (restaurant.getUsers() != null && !restaurant.getUsers().containsKey(user.getId())) {
+            Map<String, Object> externalOrders = restaurant.getExternalOrders();
+            if (externalOrders == null) {
+                externalOrders = new LinkedHashMap<>();
+            }
+            externalOrders.put(newId, true);
+            restaurant.setExternalOrders(externalOrders);
+            restaurantRepository.update(restaurant);
+        }
 
     }
 
@@ -396,6 +407,9 @@ public class OrderService extends Service<Order> {
             if (orderIds != null && !orderIds.isEmpty()) {
                 orderKeys.addAll(orderIds.keySet());
             }
+        }
+        if (restaurant.getExternalOrders() != null) {
+            orderKeys.addAll(restaurant.getExternalOrders().keySet());
         }
         return orderKeys;
     }
