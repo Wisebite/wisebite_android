@@ -96,7 +96,8 @@ public final class ServiceFactory {
                     new UserRepository(context),
                     new ImageRepository(context),
                     new RestaurantRepository(context),
-                    new OrderRepository(context));
+                    new OrderRepository(context),
+                    new OrderItemRepository(context));
         return userService;
     }
 

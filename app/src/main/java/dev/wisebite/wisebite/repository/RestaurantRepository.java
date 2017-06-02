@@ -29,6 +29,7 @@ public class RestaurantRepository extends FirebaseRepository<Restaurant> {
     public static final String MENUS_REFERENCE = "menus";
     public static final String DISHES_REFERENCE = "dishes";
     public static final String USERS_REFERENCE = "users";
+    public static final String EXTERNAL_ORDERS_REFERENCE = "externalOrders";
 
     /**
      * Constructor class
@@ -79,6 +80,12 @@ public class RestaurantRepository extends FirebaseRepository<Restaurant> {
                     users.put(dish.getKey(), true);
                 }
                 restaurant.setUsers(users);
+            } else if (d.getKey().equals(EXTERNAL_ORDERS_REFERENCE)) {
+                Map<String, Object> externalOrders = new LinkedHashMap<>();
+                for (DataSnapshot dish : d.getChildren()) {
+                    externalOrders.put(dish.getKey(), true);
+                }
+                restaurant.setExternalOrders(externalOrders);
             }
         }
         return restaurant;

@@ -168,10 +168,26 @@ public class RestaurantService extends Service<Restaurant> {
         User user;
         for (String userKey : restaurant.getUsers().keySet()) {
             user = userRepository.get(userKey);
-            if (user != null && user.getMyOrders() != null) ordersList.addAll(user.getMyOrders().keySet());
+            if (user != null && user.getMyOrders() != null) {
+                for (String key : user.getMyOrders().keySet()) {
+                    if (!isExternal(key)) ordersList.add(key);
+                }
+            }
+        }
+
+        if (restaurant.getExternalOrders() != null) {
+            ordersList.addAll(restaurant.getExternalOrders().keySet());
         }
 
         return ordersList;
+    }
+
+    private boolean isExternal(String orderKey) {
+        for (Restaurant restaurant : repository.all()) {
+            if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(orderKey))
+                return true;
+        }
+        return false;
     }
 
     private boolean checkTime(Order order, int kind) {

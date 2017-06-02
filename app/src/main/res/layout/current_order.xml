@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:id="@+id/current_order_layout"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <LinearLayout
+                android:id="@+id/view_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10sp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current_order"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:gravity="start"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/current_table_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_table_number_order"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_marginStart="5dp"
+                    android:gravity="start"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/current_total_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/price_test_zero"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:gravity="end"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/dish_title"
+                android:layout_below="@id/view_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10sp"
+                android:text="@string/dish_title"
+                android:textColor="@color/colorPrimary"
+                android:gravity="start"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/mock_dishes"
+                android:layout_below="@id/dish_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mock_dish_item"
+                android:textSize="15sp"
+                android:textStyle="italic"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_order_item_dish"
+                android:layout_below="@id/mock_dishes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/menu_title"
+                android:layout_below="@id/recycler_view_order_item_dish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:layout_marginBottom="10sp"
+                android:text="@string/menu_dish_title"
+                android:textColor="@color/colorPrimary"
+                android:gravity="start"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/mock_menus"
+                android:layout_below="@id/menu_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mock_dish_item"
+                android:textSize="15sp"
+                android:textStyle="italic"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_order_item_menu"
+                android:layout_below="@id/mock_menus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="60dp">
+
+            </android.support.v7.widget.RecyclerView>
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
