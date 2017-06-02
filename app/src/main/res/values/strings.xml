@@ -254,4 +254,5 @@
     <string name="number_ordered_this_month">Times ordered this month</string>
     <string name="no_exists_table">This table doesn\'t exist</string>
     <string name="has_active_order">I\'m sorry but you\'ve already an active order. Please, finish it first and then you can create another one.</string>
+    <string name="current_order">Current order</string>
 </resources>

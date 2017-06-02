@@ -247,6 +247,9 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_analytics) {
             initFragment(R.layout.content_analytics);
             initializeAnalytics();
+        } else if (id == R.id.nav_current_order) {
+            initFragment(R.layout.current_order);
+            initializeCurrentOrder();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -277,6 +280,14 @@ public class MainActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_see_restaurant).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_list_restaurants).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_analytics).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_current_order).setVisible(false);
+        }
+
+
+        if (userService.hasActiveOrder(Preferences.getCurrentUserEmail())) {
+            navigationView.getMenu().findItem(R.id.nav_current_order).setVisible(true);
+        } else {
+            navigationView.getMenu().findItem(R.id.nav_current_order).setVisible(false);
         }
 
         String url = userService.getProfilePhoto(Preferences.getCurrentUserEmail());
@@ -442,6 +453,13 @@ public class MainActivity extends BaseActivity
         adapter.addFragment(new AnalyticsMonthFragment(MainActivity.this, restaurantId), getString(R.string.per_month));
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
+    }
+
+    private void initializeCurrentOrder() {
+        setTitle(getResources().getString(R.string.current_order));
+        removeTabs();
+        if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(false);
+        fab.setVisibility(View.GONE);
     }
 
 }

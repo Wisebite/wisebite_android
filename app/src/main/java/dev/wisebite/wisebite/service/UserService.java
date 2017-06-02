@@ -119,6 +119,8 @@ public class UserService extends Service<User> {
     public boolean hasActiveOrder(String userKey) {
         User user = repository.get(userKey);
 
+        // TODO Search into restaurant orders
+
         if (user != null && user.getMyOrders() != null) {
             Order order;
             for (String orderKey : user.getMyOrders().keySet()) {
