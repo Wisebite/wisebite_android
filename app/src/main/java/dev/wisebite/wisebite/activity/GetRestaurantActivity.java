@@ -2,6 +2,7 @@ package dev.wisebite.wisebite.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +28,7 @@ import dev.wisebite.wisebite.domain.OpenTime;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.service.UserService;
 import dev.wisebite.wisebite.utils.BaseActivity;
 import dev.wisebite.wisebite.utils.Preferences;
 import dev.wisebite.wisebite.utils.Utils;
@@ -36,6 +38,7 @@ public class GetRestaurantActivity extends BaseActivity {
     public static final String RESTAURANT_ID = "RESTAURANT_ID";
 
     private RestaurantService restaurantService;
+    private UserService userService;
     private Restaurant restaurant;
     private String restaurantId;
 
@@ -55,16 +58,11 @@ public class GetRestaurantActivity extends BaseActivity {
         }
 
         restaurantService = ServiceFactory.getRestaurantService(GetRestaurantActivity.this);
+        userService = ServiceFactory.getUserService(GetRestaurantActivity.this);
         restaurant = restaurantService.get(restaurantId);
         inflater = LayoutInflater.from(GetRestaurantActivity.this);
 
         fab = (FloatingActionButton) findViewById(R.id.fab_add);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addUserToSomeRestaurant(view);
-            }
-        });
 
         initializeGeneralInfo();
         initializeOpenTimes();
@@ -97,11 +95,20 @@ public class GetRestaurantActivity extends BaseActivity {
         website.setText(restaurant.getWebsite());
         numberOfTables.setText(String.valueOf(restaurant.getNumberOfTables() + " tables"));
 
-        if (!restaurantService.isPartOfTheStuff(restaurantId, Preferences.getCurrentUserEmail())) {
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-            p.setAnchorId(View.NO_ID);
-            fab.setLayoutParams(p);
-            fab.setVisibility(View.GONE);
+        if (restaurantService.isPartOfTheStuff(restaurantId, Preferences.getCurrentUserEmail())) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    addUserToSomeRestaurant(view);
+                }
+            });
+        } else {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createOrder(v);
+                }
+            });
         }
     }
 
@@ -199,6 +206,57 @@ public class GetRestaurantActivity extends BaseActivity {
                 .create();
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
+    }
+
+    private void createOrder(final View v) {
+        if (userService.hasActiveOrder(Preferences.getCurrentUserEmail())) {
+            Snackbar.make(v, getResources().getString(R.string.has_active_order), Snackbar.LENGTH_LONG);
+            return;
+        }
+
+        final LinearLayout tableNumberForm = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.table_number_form), null);
+        AlertDialog alertDialog = new AlertDialog.Builder(GetRestaurantActivity.this)
+                .setTitle(getResources().getString(R.string.title_table_number_form))
+                .setView(tableNumberForm)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TextView tableNumberView = (TextView) tableNumberForm.findViewById(R.id.form_number);
+                        if (!tableNumberView.getText().toString().trim().isEmpty()) {
+                            Integer tableNumber = Integer.valueOf(tableNumberView.getText().toString());
+                            Integer maxTableNumber = restaurantService.get(restaurantId).getNumberOfTables();
+
+                            if (tableNumber <= 0 || tableNumber > maxTableNumber) {
+                                Snackbar.make(v, getResources().getString(R.string.no_exists_table), Snackbar.LENGTH_LONG).show();
+                            } else {
+                                Intent intent = new Intent(GetRestaurantActivity.this, CreateOrderActivity.class);
+                                intent.putExtra(CreateOrderActivity.RESTAURANT_ID, restaurantId);
+                                intent.putExtra(CreateOrderActivity.TABLE_NUMBER, tableNumber);
+                                startActivity(intent);
+                                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                            }
+
+                        } else {
+                            Snackbar.make(v, getResources().getString(R.string.no_select_table), Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        // do nothing
+                    }
+                })
+                .create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+
     }
 
 }

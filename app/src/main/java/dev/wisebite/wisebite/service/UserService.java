@@ -7,6 +7,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import java.util.Map;
 import dev.wisebite.wisebite.domain.Image;
 import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.domain.User;
 import dev.wisebite.wisebite.utils.Preferences;
@@ -23,15 +24,18 @@ public class UserService extends Service<User> {
     private final Repository<Image> imageRepository;
     private final Repository<Restaurant> restaurantRepository;
     private final Repository<Order> orderRepository;
+    private final Repository<OrderItem> orderItemRepository;
 
     public UserService(Repository<User> repository,
                        Repository<Image> imageRepository,
                        Repository<Restaurant> restaurantRepository,
-                       Repository<Order> orderRepository) {
+                       Repository<Order> orderRepository,
+                       Repository<OrderItem> orderItemRepository) {
         super(repository);
         this.imageRepository = imageRepository;
         this.restaurantRepository = restaurantRepository;
         this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     public boolean logIn(GoogleSignInAccount acct) {
@@ -111,5 +115,29 @@ public class UserService extends Service<User> {
 
         repository.update(user);
     }
-  
+
+    public boolean hasActiveOrder(String userKey) {
+        User user = repository.get(userKey);
+
+        if (user != null && user.getMyOrders() != null) {
+            Order order;
+            for (String orderKey : user.getMyOrders().keySet()) {
+                order = orderRepository.get(orderKey);
+                if (!isFinished(order.getOrderItems())) return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isFinished(Map<String, Object> orderItems) {
+        if (orderItems != null) {
+            OrderItem orderItem;
+            for (String orderItemKey : orderItems.keySet()) {
+                orderItem = orderItemRepository.get(orderItemKey);
+                if (orderItem != null && !orderItem.isPaid()) return false;
+            }
+        }
+        return true;
+    }
 }
