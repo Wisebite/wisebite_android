@@ -251,6 +251,9 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_current_order) {
             initFragment(R.layout.current_order);
             initializeCurrentOrder();
+        } else if (id == R.id.nav_pending_reviews) {
+            initFragment(R.layout.pending_reviews);
+            initializePendingReviews();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -493,6 +496,15 @@ public class MainActivity extends BaseActivity
         assert menusRecyclerView != null;
         menusRecyclerView.setLayoutManager(menusLinearLayoutManager);
         menusRecyclerView.setAdapter(menusOrderItemAdapter);
+    }
+
+    private void initializePendingReviews() {
+        setTitle(getResources().getString(R.string.pending_reviews));
+        removeTabs();
+        if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(false);
+        fab.setVisibility(View.GONE);
+        List<Order> orderList = userService.getOrdersToReview(Preferences.getCurrentUserEmail());
+        checkList(R.id.review_mock, orderList.size());
     }
 
 }

@@ -257,4 +257,6 @@
     <string name="current_order">Current order</string>
     <string name="order_at">Order at table</string>
     <string name="number">number</string>
+    <string name="pending_reviews">Pending reviews</string>
+    <string name="mock_review">No orders to review.</string>
 </resources>
