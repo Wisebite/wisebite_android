@@ -48,6 +48,7 @@ import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
 import dev.wisebite.wisebite.adapter.OrderItemAdapter;
 import dev.wisebite.wisebite.adapter.RestaurantAdapter;
+import dev.wisebite.wisebite.adapter.ReviewOrderAdapter;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
@@ -505,6 +506,12 @@ public class MainActivity extends BaseActivity
         fab.setVisibility(View.GONE);
         List<Order> orderList = userService.getOrdersToReview(Preferences.getCurrentUserEmail());
         checkList(R.id.review_mock, orderList.size());
+        ReviewOrderAdapter reviewOrderAdapter = new ReviewOrderAdapter(orderList, MainActivity.this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.order_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(reviewOrderAdapter);
     }
 
 }

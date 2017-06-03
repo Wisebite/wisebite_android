@@ -1,7 +1,9 @@
 package dev.wisebite.wisebite.service;
 
+import android.annotation.SuppressLint;
 import android.util.Pair;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -45,6 +47,34 @@ public class OrderService extends Service<Order> {
         this.menuRepository = menuRepository;
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
+    }
+
+    public String getRestaurantName(String id) {
+        for (Restaurant restaurant : restaurantRepository.all()) {
+            if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(id))
+                return restaurant.getName();
+            else {
+                User user;
+                for (String userKey : restaurant.getUsers().keySet()) {
+                    user = userRepository.get(userKey);
+                    if (user.getMyOrders() != null && user.getMyOrders().containsKey(id)) return restaurant.getName();
+                }
+            }
+        }
+        return "";
+    }
+
+    public String getDescription(String id) {
+        Order order = repository.get(id);
+
+        String result = "Order at table number ";
+        result += String.valueOf(order.getTableNumber());
+        result += " on ";
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        result += dateFormat.format(order.getDate());
+
+        return result;
     }
 
     public double getPriceOfOrder(String id) {
