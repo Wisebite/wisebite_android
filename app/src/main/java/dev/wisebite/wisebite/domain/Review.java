@@ -1,8 +1,5 @@
 package dev.wisebite.wisebite.domain;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import dev.wisebite.wisebite.utils.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +9,7 @@ import lombok.ToString;
 import lombok.experimental.Builder;
 
 /**
- * Created by albert on 13/03/17.
+ * Created by albert on 3/06/17.
  *
  * @author albert
  */
@@ -22,15 +19,12 @@ import lombok.experimental.Builder;
 @NoArgsConstructor
 @ToString
 @Builder
-public class Dish implements Entity {
+public class Review implements Entity {
 
     private String id;
-    private String name;
-    private Double price;
-    private String description;
-
-    private Map<String, Object> reviews = new LinkedHashMap<>();
-
+    private double points;
+    private String comment;
+    private String userId;
 
     @Override
     public String getId() {

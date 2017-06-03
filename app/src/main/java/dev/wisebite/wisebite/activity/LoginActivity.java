@@ -197,7 +197,9 @@ public class LoginActivity extends BaseActivity implements
 
         ServiceFactory.getDishService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
             @Override
-            public void onChanged(EventType type) { increaseLoaded(type); }
+            public void onChanged(EventType type) {
+                increaseLoaded(type);
+            }
         });
         ServiceFactory.getImageService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
             @Override
@@ -215,6 +217,9 @@ public class LoginActivity extends BaseActivity implements
             @Override
             public void onChanged(EventType type) { increaseLoaded(type); }});
         ServiceFactory.getRestaurantService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) { increaseLoaded(type); }});
+        ServiceFactory.getReviewService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
             @Override
             public void onChanged(EventType type) { increaseLoaded(type); }});
 

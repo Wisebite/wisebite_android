@@ -31,6 +31,7 @@ public class User implements Entity {
 
     private Map<String, Object> myRestaurants;
     private Map<String, Object> myOrders;
+    private Map<String, Object> ordersToReview;
 
     @Override
     public String getId() {

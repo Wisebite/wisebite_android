@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.google.firebase.database.DataSnapshot;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.firebase.FirebaseRepository;
 
@@ -17,6 +20,7 @@ public class DishRepository extends FirebaseRepository<Dish> {
     public static final String NAME_REFERENCE = "name";
     public static final String PRICE_REFERENCE = "price";
     public static final String DESCRIPTION_REFERENCE = "description";
+    public static final String REVIEWS_REFERENCE = "reviews";
 
     /**
      * Constructor class
@@ -37,6 +41,12 @@ public class DishRepository extends FirebaseRepository<Dish> {
                 dish.setPrice(d.getValue(Double.class));
             } else if (d.getKey().equals(DESCRIPTION_REFERENCE)) {
                 dish.setDescription(d.getValue(String.class));
+            } else if (d.getKey().equals(REVIEWS_REFERENCE)) {
+                Map<String, Object> reviews = new LinkedHashMap<>();
+                for (DataSnapshot review : d.getChildren()) {
+                    reviews.put(review.getKey(), true);
+                }
+                dish.setReviews(reviews);
             }
         }
         return dish;

@@ -23,6 +23,7 @@ public class MenuRepository extends FirebaseRepository<Menu> {
     public static final String MAIN_DISHES_REFERENCE = "mainDishes";
     public static final String SECONDARY_DISHES_REFERENCE = "secondaryDishes";
     public static final String OTHER_DISHES_REFERENCE = "otherDishes";
+    public static final String REVIEWS_REFERENCE = "reviews";
 
     /**
      * Constructor class
@@ -61,6 +62,12 @@ public class MenuRepository extends FirebaseRepository<Menu> {
                     dishes.put(dish.getKey(), true);
                 }
                 menu.setOtherDishes(dishes);
+            } else if (d.getKey().equals(REVIEWS_REFERENCE)) {
+                Map<String, Object> reviews = new LinkedHashMap<>();
+                for (DataSnapshot review : d.getChildren()) {
+                    reviews.put(review.getKey(), true);
+                }
+                menu.setReviews(reviews);
             }
         }
         return menu;

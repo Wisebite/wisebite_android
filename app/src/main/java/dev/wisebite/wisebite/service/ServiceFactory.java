@@ -9,6 +9,7 @@ import dev.wisebite.wisebite.repository.OpenTimeRepository;
 import dev.wisebite.wisebite.repository.OrderItemRepository;
 import dev.wisebite.wisebite.repository.OrderRepository;
 import dev.wisebite.wisebite.repository.RestaurantRepository;
+import dev.wisebite.wisebite.repository.ReviewRepository;
 import dev.wisebite.wisebite.repository.UserRepository;
 
 /**
@@ -24,6 +25,7 @@ public final class ServiceFactory {
     private static OrderItemService orderItemService;
     private static OrderService orderService;
     private static RestaurantService restaurantService;
+    private static ReviewService reviewService;
     private static UserService userService;
 
     public static DishService getDishService(Context context){
@@ -90,6 +92,14 @@ public final class ServiceFactory {
         return restaurantService;
     }
 
+    public static ReviewService getReviewService(Context context) {
+        if (reviewService == null) {
+            reviewService = new ReviewService(
+                    new ReviewRepository(context));
+        }
+        return reviewService;
+    }
+
     public static UserService getUserService(Context context){
         if (userService == null)
             userService = new UserService(
@@ -102,6 +112,6 @@ public final class ServiceFactory {
     }
 
     public static Integer getServiceCount() {
-        return 8;
+        return 9;
     }
 }
