@@ -221,6 +221,14 @@ public class OrderService extends Service<Order> {
             externalOrders.put(newId, true);
             restaurant.setExternalOrders(externalOrders);
             restaurantRepository.update(restaurant);
+
+            Map<String, Object> ordersToReview = user.getOrdersToReview();
+            if (ordersToReview == null) {
+                ordersToReview = new LinkedHashMap<>();
+            }
+            ordersToReview.put(newId, true);
+            user.setOrdersToReview(ordersToReview);
+            userRepository.update(user);
         }
 
     }
