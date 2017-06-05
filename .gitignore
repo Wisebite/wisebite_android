@@ -57,6 +57,3 @@ proguard/
 
 # Android Studio captures folder
 captures/
-
-# Security files
-app/src/main/java/dev/wisebite/wisebite/utils/Security.java
