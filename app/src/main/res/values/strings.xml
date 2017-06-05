@@ -258,4 +258,5 @@
     <string name="order_at">Order at table</string>
     <string name="number">number</string>
     <string name="no_select_dishes_menu">You haven\'t selected any dish in your menu.</string>
+    <string name="err_msg_number_of_tables_too_much_tables">Are you sure about your number of tables?</string>
 </resources>
