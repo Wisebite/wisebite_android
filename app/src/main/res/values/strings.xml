@@ -257,6 +257,14 @@
     <string name="current_order">Current order</string>
     <string name="order_at">Order at table</string>
     <string name="number">number</string>
+    <string name="pending_reviews">Pending reviews</string>
+    <string name="mock_review">No orders to review.</string>
     <string name="no_select_dishes_menu">You haven\'t selected any dish in your menu.</string>
     <string name="err_msg_number_of_tables_too_much_tables">Are you sure about your number of tables?</string>
+    <string name="title_activity_review">ReviewActivity</string>
+    <string name="dishes_and_menus">Dishes and menus</string>
+    <string name="restaurant_review">Restaurant review</string>
+    <string name="form_hint_comment">Comment</string>
+    <string name="thanks">Thank you!</string>
+    <string name="no_review">You have to complete all reviews.</string>
 </resources>

@@ -48,6 +48,7 @@ import dev.wisebite.wisebite.adapter.KitchenAdapter;
 import dev.wisebite.wisebite.adapter.OrderAdapter;
 import dev.wisebite.wisebite.adapter.OrderItemAdapter;
 import dev.wisebite.wisebite.adapter.RestaurantAdapter;
+import dev.wisebite.wisebite.adapter.ReviewOrderAdapter;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
@@ -251,6 +252,9 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_current_order) {
             initFragment(R.layout.current_order);
             initializeCurrentOrder();
+        } else if (id == R.id.nav_pending_reviews) {
+            initFragment(R.layout.pending_reviews);
+            initializePendingReviews();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -461,7 +465,10 @@ public class MainActivity extends BaseActivity
         removeTabs();
         if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(false);
         fab.setVisibility(View.GONE);
-        
+
+        TextView restaurantName = (TextView) findViewById(R.id.restaurant_name);
+        restaurantName.setText(orderService.getRestaurantName(currentOrder.getId()));
+
         TextView currentTableNumber = (TextView) findViewById(R.id.current_table_number);
         currentTableNumber.setText(String.format("at table %s", String.valueOf(currentOrder.getTableNumber())));
 
@@ -493,6 +500,21 @@ public class MainActivity extends BaseActivity
         assert menusRecyclerView != null;
         menusRecyclerView.setLayoutManager(menusLinearLayoutManager);
         menusRecyclerView.setAdapter(menusOrderItemAdapter);
+    }
+
+    private void initializePendingReviews() {
+        setTitle(getResources().getString(R.string.pending_reviews));
+        removeTabs();
+        if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(false);
+        fab.setVisibility(View.GONE);
+        List<Order> orderList = userService.getOrdersToReview(Preferences.getCurrentUserEmail());
+        checkList(R.id.review_mock, orderList.size());
+        ReviewOrderAdapter reviewOrderAdapter = new ReviewOrderAdapter(orderList, MainActivity.this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.order_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(reviewOrderAdapter);
     }
 
 }

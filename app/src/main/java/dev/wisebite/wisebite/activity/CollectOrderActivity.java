@@ -161,7 +161,7 @@ public class CollectOrderActivity extends BaseActivity {
 
     private void initializeOrderItems() {
         this.selectedItems = new ArrayList<>();
-        ArrayList<OrderItem> orderItems = orderService.getItemsToCollect(order);
+        ArrayList<OrderItem> orderItems = orderService.getItems(order, true);
         if (orderItems != null && !orderItems.isEmpty()) {
             TextView textView = (TextView) findViewById(R.id.mock_order_items);
             textView.setVisibility(View.GONE);

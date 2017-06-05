@@ -4,7 +4,9 @@ import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import dev.wisebite.wisebite.domain.Image;
@@ -136,7 +138,8 @@ public class UserService extends Service<User> {
             Order order;
             for (String orderKey : user.getMyOrders().keySet()) {
                 order = orderRepository.get(orderKey);
-                if (!isFinished(order.getOrderItems()) && !partOfYourRestaurant(order, dishesMap, menusMap)) return order;
+                if (order != null && !isFinished(order.getOrderItems()) && !partOfYourRestaurant(order, dishesMap, menusMap))
+                    return order;
             }
         }
 
@@ -167,4 +170,18 @@ public class UserService extends Service<User> {
         return false;
     }
 
+    public List<Order> getOrdersToReview(String userKey) {
+        List<Order> orders = new ArrayList<>();
+
+        User user = repository.get(userKey);
+        if (user != null && user.getOrdersToReview() != null) {
+            Order order;
+            for (String orderKey : user.getOrdersToReview().keySet()) {
+                order = orderRepository.get(orderKey);
+                orders.add(order);
+            }
+        }
+
+        return orders;
+    }
 }

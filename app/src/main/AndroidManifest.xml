@@ -26,8 +26,8 @@
         <activity
             android:name=".activity.CreateRestaurantOpenTimesActivity"
             android:label="@string/title_activity_create_restaurant_open_times"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activity.CreateRestaurantInfoActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -36,8 +36,8 @@
         <activity
             android:name=".activity.CreateRestaurantDishesActivity"
             android:label="@string/title_activity_create_restaurant_dishes"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activity.CreateRestaurantOpenTimesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -46,8 +46,8 @@
         <activity
             android:name=".activity.CreateMenuActivity"
             android:label="@string/title_activity_create_menu"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activity.CreateRestaurantDishesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -61,8 +61,8 @@
         <activity
             android:name=".activity.CreateOrderActivity"
             android:label="@string/title_activity_create_order"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -71,8 +71,8 @@
         <activity
             android:name=".activity.GetOrderActivity"
             android:label="@string/title_activity_get_order"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -81,8 +81,8 @@
         <activity
             android:name=".activity.CollectOrderActivity"
             android:label="@string/title_activity_collect_order"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activity.GetOrderActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -91,8 +91,8 @@
         <activity
             android:name=".activity.GetRestaurantActivity"
             android:label="@string/title_activity_get_restaurant"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -111,8 +111,8 @@
         <activity
             android:name=".activity.GetUserActivity"
             android:label="@string/title_activity_get_user"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -121,12 +121,21 @@
         <activity
             android:name=".activity.EditUserActivity"
             android:label="@string/title_activity_edit_user"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activity.GetUserActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.wisebite.wisebite.activity.GetUserActivity" />
+        </activity>
+        <activity
+            android:name=".activity.ReviewActivity"
+            android:label="@string/title_activity_review"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.MainActivity" />
         </activity>
     </application>
 

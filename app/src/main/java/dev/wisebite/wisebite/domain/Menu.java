@@ -31,6 +31,7 @@ public class Menu implements Entity {
     private Map<String, Object> mainDishes = new LinkedHashMap<>();
     private Map<String, Object> secondaryDishes = new LinkedHashMap<>();
     private Map<String, Object> otherDishes = new LinkedHashMap<>();
+    private Map<String, Object> reviews = new LinkedHashMap<>();
 
     @Override
     public String getId() {

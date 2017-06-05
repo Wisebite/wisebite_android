@@ -15,9 +15,11 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.activity.GetOrderActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.service.OrderItemService;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.Preferences;
 
 /**
  * Created by albert on 20/03/17.

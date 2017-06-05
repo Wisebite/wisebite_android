@@ -1,7 +1,9 @@
 package dev.wisebite.wisebite.service;
 
+import android.annotation.SuppressLint;
 import android.util.Pair;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -45,6 +47,35 @@ public class OrderService extends Service<Order> {
         this.menuRepository = menuRepository;
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
+    }
+
+    public String getRestaurantName(String id) {
+        for (Restaurant restaurant : restaurantRepository.all()) {
+            if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(id))
+                return restaurant.getName();
+        }
+        return "";
+    }
+
+    public String getRestaurantId(String orderId) {
+        for (Restaurant restaurant : restaurantRepository.all()) {
+            if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(orderId))
+                return restaurant.getId();
+        }
+        return null;
+    }
+
+    public String getDescription(String id) {
+        Order order = repository.get(id);
+
+        String result = "Order at table number ";
+        result += String.valueOf(order.getTableNumber());
+        result += " on ";
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        result += dateFormat.format(order.getDate());
+
+        return result;
     }
 
     public double getPriceOfOrder(String id) {
@@ -221,6 +252,14 @@ public class OrderService extends Service<Order> {
             externalOrders.put(newId, true);
             restaurant.setExternalOrders(externalOrders);
             restaurantRepository.update(restaurant);
+
+            Map<String, Object> ordersToReview = user.getOrdersToReview();
+            if (ordersToReview == null) {
+                ordersToReview = new LinkedHashMap<>();
+            }
+            ordersToReview.put(newId, true);
+            user.setOrdersToReview(ordersToReview);
+            userRepository.update(user);
         }
 
     }
@@ -278,16 +317,17 @@ public class OrderService extends Service<Order> {
         repository.update(order);
     }
 
-    public ArrayList<OrderItem> getItemsToCollect(Order order) {
+    public ArrayList<OrderItem> getItems(Order order, boolean collectCondition) {
         ArrayList<OrderItem> orderItems = new ArrayList<>();
 
         Map<String, List<OrderItem>> menuIds = new LinkedHashMap<>();
         OrderItem orderItem;
         for (String key : order.getOrderItems().keySet()) {
             orderItem = orderItemRepository.get(key);
-            if (!orderItem.isPaid()) {
+            if (!collectCondition || !orderItem.isPaid()) {
                 if (orderItem.getMenuId() == null) {
-                    orderItems.add(orderItem);
+                    if (collectCondition || !containsDish(orderItem, orderItems))
+                        orderItems.add(orderItem);
                 } else {
                     List<OrderItem> count = menuIds.get(orderItem.getMenuId());
                     if (count == null) {
@@ -303,7 +343,8 @@ public class OrderService extends Service<Order> {
             Menu menu = menuRepository.get(key);
             Integer numberOptions = getNumberOptions(menu);
             for (int i = 0; i < count.size()/numberOptions; ++i) {
-                orderItems.add(count.get(i));
+                if (collectCondition || !containsMenu(count.get(i), orderItems))
+                    orderItems.add(count.get(i));
             }
         }
 
@@ -354,20 +395,34 @@ public class OrderService extends Service<Order> {
         repository.delete(order.getId());
 
         for (Restaurant restaurant : restaurantRepository.all()) {
-            if (restaurant.getUsers() == null) continue;
-            User user;
-            for (String userKey : restaurant.getUsers().keySet()) {
-                user = userRepository.get(userKey);
-                if (user.getMyOrders() != null && user.getMyOrders().containsKey(order.getId())) {
-                    user.getMyOrders().remove(order.getId());
-                    userRepository.update(user);
-                }
-            }
-
             if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(order.getId())) {
                 restaurant.getExternalOrders().remove(order.getId());
                 restaurantRepository.update(restaurant);
             }
+        }
+
+        for (User user : userRepository.all()) {
+            boolean change = false;
+
+            Map<String, Object> ordersToReview = user.getOrdersToReview();
+            if (ordersToReview != null) {
+                if (ordersToReview.containsKey(order.getId())) {
+                    ordersToReview.remove(order.getId());
+                    user.setOrdersToReview(ordersToReview);
+                    change = true;
+                }
+            }
+
+            Map<String, Object> myOrders = user.getMyOrders();
+            if (myOrders != null) {
+                if (myOrders.containsKey(order.getId())) {
+                    myOrders.remove(order.getId());
+                    user.setMyOrders(myOrders);
+                    change = true;
+                }
+            }
+
+            if (change) userRepository.update(user);
         }
     }
 
@@ -467,4 +522,18 @@ public class OrderService extends Service<Order> {
         }.start();
     }
 
+    private boolean containsDish(OrderItem orderItem, ArrayList<OrderItem> orderItems) {
+        for (OrderItem item : orderItems) {
+            if (item.getDishId().equals(orderItem.getDishId())) return true;
+        }
+        return false;
+    }
+
+    private boolean containsMenu(OrderItem orderItem, ArrayList<OrderItem> orderItems) {
+        for (OrderItem item : orderItems) {
+            if (item.getMenuId() != null && item.getMenuId().equals(orderItem.getMenuId()))
+                return true;
+        }
+        return false;
+    }
 }
