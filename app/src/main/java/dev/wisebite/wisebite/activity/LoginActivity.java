@@ -193,7 +193,10 @@ public class LoginActivity extends BaseActivity implements
         this.userService = ServiceFactory.getUserService(LoginActivity.this);
         this.userService.setOnChangedListener(new Repository.OnChangedListener() {
             @Override
-            public void onChanged(EventType type) { increaseLoaded(type); }});
+            public void onChanged(EventType type) {
+                increaseLoaded(type);
+            }
+        });
 
         ServiceFactory.getDishService(LoginActivity.this).setOnChangedListener(new Repository.OnChangedListener() {
             @Override
