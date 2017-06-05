@@ -2,7 +2,6 @@ package dev.wisebite.wisebite.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,16 +11,17 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.adapter.ReviewAdapter;
-import dev.wisebite.wisebite.adapter.ReviewOrderAdapter;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
+import dev.wisebite.wisebite.domain.Review;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
-import dev.wisebite.wisebite.utils.Preferences;
 
 public class ReviewActivity extends AppCompatActivity {
 
@@ -29,6 +29,7 @@ public class ReviewActivity extends AppCompatActivity {
 
     private Order order;
     private OrderService orderService;
+    private Map<String, Review> reviews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,8 @@ public class ReviewActivity extends AppCompatActivity {
 
     private void initializeDynamicData() {
         List<OrderItem> orderItemList = orderService.getItems(order, false);
-        ReviewAdapter reviewAdapter = new ReviewAdapter(orderItemList, ReviewActivity.this);
+        this.reviews = createReviewMap(orderItemList);
+        ReviewAdapter reviewAdapter = new ReviewAdapter(orderItemList, ReviewActivity.this, this.reviews);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.dishes_menus_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -92,7 +94,19 @@ public class ReviewActivity extends AppCompatActivity {
         recyclerView.setAdapter(reviewAdapter);
     }
 
-    private void save(View view) {
+    private Map<String, Review> createReviewMap(List<OrderItem> orderItemList) {
+        Map<String, Review> map = new HashMap<>();
+        for (OrderItem item : orderItemList) {
+            if (item.getMenuId() == null) {
+                map.put(item.getDishId(), null);
+            } else {
+                map.put(item.getMenuId(), null);
+            }
+        }
+        return map;
+    }
+
+    private void save(final View view) {
 
     }
 
