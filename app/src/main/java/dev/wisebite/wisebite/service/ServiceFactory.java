@@ -95,7 +95,11 @@ public final class ServiceFactory {
     public static ReviewService getReviewService(Context context) {
         if (reviewService == null) {
             reviewService = new ReviewService(
-                    new ReviewRepository(context));
+                    new ReviewRepository(context),
+                    new RestaurantRepository(context),
+                    new DishRepository(context),
+                    new MenuRepository(context),
+                    new UserRepository(context));
         }
         return reviewService;
     }

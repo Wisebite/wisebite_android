@@ -2,6 +2,8 @@ package dev.wisebite.wisebite.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,29 +50,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.OrderItemH
         OrderItem orderItem = orderItems.get(position);
         holder.item = orderItem;
         holder.name.setText(orderItemService.getName(orderItem));
-        updateReview(holder);
     }
 
     @Override
     public int getItemCount() {
         return orderItems.size();
-    }
-
-    private void updateReview(OrderItemHolder holder) {
-        if (holder.ratingBar.getRating() == 0) return;
-
-        OrderItem orderItem = holder.item;
-        String id;
-        if (orderItem.getMenuId() == null) id = orderItem.getDishId();
-        else id = orderItem.getMenuId();
-
-        Review review = this.reviews.get(id);
-        if (review == null) review = Review.builder().build();
-        review.setPoints(holder.ratingBar.getRating());
-        review.setComment(holder.comment.getText().toString());
-        review.setUserId(Preferences.getCurrentUserEmail());
-
-        this.reviews.put(id, review);
     }
 
     class OrderItemHolder extends RecyclerView.ViewHolder {
@@ -87,6 +71,45 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.OrderItemH
             this.name = (TextView) itemView.findViewById(R.id.dish_title);
             this.ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
             this.comment = (EditText) itemView.findViewById(R.id.form_comment);
+
+            this.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    String id;
+                    if (item.getMenuId() == null) id = item.getDishId();
+                    else id = item.getMenuId();
+
+                    Review review = reviews.get(id);
+                    if (review == null) review = Review.builder().build();
+                    review.setPoints(rating);
+
+                    reviews.put(id, review);
+                }
+            });
+            this.comment.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // do nothing
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // do nothing
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    String id;
+                    if (item.getMenuId() == null) id = item.getDishId();
+                    else id = item.getMenuId();
+
+                    Review review = reviews.get(id);
+                    if (review == null) review = Review.builder().build();
+                    review.setComment(s.toString());
+
+                    reviews.put(id, review);
+                }
+            });
         }
     }
 

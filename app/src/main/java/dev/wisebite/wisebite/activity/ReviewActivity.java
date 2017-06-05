@@ -2,13 +2,16 @@ package dev.wisebite.wisebite.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -21,6 +24,7 @@ import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Review;
 import dev.wisebite.wisebite.service.OrderService;
+import dev.wisebite.wisebite.service.ReviewService;
 import dev.wisebite.wisebite.service.ServiceFactory;
 
 public class ReviewActivity extends AppCompatActivity {
@@ -29,6 +33,7 @@ public class ReviewActivity extends AppCompatActivity {
 
     private Order order;
     private OrderService orderService;
+    private ReviewService reviewService;
     private Map<String, Review> reviews;
 
     @Override
@@ -40,6 +45,7 @@ public class ReviewActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         orderService = ServiceFactory.getOrderService(ReviewActivity.this);
+        reviewService = ServiceFactory.getReviewService(ReviewActivity.this);
         if (getIntent().getSerializableExtra(ORDER_ID) != null) {
             this.order = orderService.get(getIntent().getExtras().getString(ORDER_ID));
         }
@@ -107,7 +113,28 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
     private void save(final View view) {
+        LinearLayout ratingRestaurant = (LinearLayout) findViewById(R.id.rating_restaurant);
 
+        RatingBar ratingBar = (RatingBar) ratingRestaurant.findViewById(R.id.rating_bar);
+        EditText comment = (EditText) ratingRestaurant.findViewById(R.id.form_comment);
+        if (ratingBar.getRating() == 0 || !isComplete()) {
+            Snackbar.make(view, getResources().getString(R.string.no_review), Snackbar.LENGTH_LONG).show();
+        } else {
+            reviewService.addDishesReview(reviews);
+            reviewService.addRestaurantReview(orderService.getRestaurantId(order.getId()),
+                    ratingBar.getRating(), comment.getText().toString());
+            reviewService.deleteOrderToReview(order.getId());
+            finish();
+        }
+    }
+
+    private boolean isComplete() {
+        Review review;
+        for (String key : reviews.keySet()) {
+            review = reviews.get(key);
+            if (review == null || review.getPoints() == 0) return false;
+        }
+        return true;
     }
 
 }

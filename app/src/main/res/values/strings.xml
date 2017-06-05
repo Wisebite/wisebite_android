@@ -266,4 +266,5 @@
     <string name="restaurant_review">Restaurant review</string>
     <string name="form_hint_comment">Comment</string>
     <string name="thanks">Thank you!</string>
+    <string name="no_review">You have to complete all reviews.</string>
 </resources>

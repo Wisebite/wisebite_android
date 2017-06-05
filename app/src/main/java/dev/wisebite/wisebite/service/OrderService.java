@@ -57,6 +57,14 @@ public class OrderService extends Service<Order> {
         return "";
     }
 
+    public String getRestaurantId(String orderId) {
+        for (Restaurant restaurant : restaurantRepository.all()) {
+            if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(orderId))
+                return restaurant.getId();
+        }
+        return null;
+    }
+
     public String getDescription(String id) {
         Order order = repository.get(id);
 
@@ -514,5 +522,4 @@ public class OrderService extends Service<Order> {
         }
         return false;
     }
-
 }
