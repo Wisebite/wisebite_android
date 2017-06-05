@@ -15,9 +15,11 @@ import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.activity.GetOrderActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.service.OrderItemService;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.Preferences;
 
 /**
  * Created by albert on 20/03/17.
@@ -27,19 +29,22 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
 
     private ArrayList<OrderItem> orderItems;
     private final Order order;
+    private final boolean isGettingOnlyDishes;
 
     private OrderService orderService;
     private OrderItemService orderItemService;
     private Context context;
 
-    public OrderItemAdapter(ArrayList<OrderItem> orderItems, Context context, Order order) {
+    public OrderItemAdapter(ArrayList<OrderItem> orderItems, Context context, Order order, boolean isGettingOnlyDishes) {
         this.orderItems = orderItems;
         this.order = order;
+        this.isGettingOnlyDishes = isGettingOnlyDishes;
 
         this.orderService = ServiceFactory.getOrderService(context);
         this.orderItemService = ServiceFactory.getOrderItemService(context);
         this.context = context;
         notifyDataSetChanged();
+        setListener();
     }
 
     @Override
@@ -111,6 +116,21 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
         if (holder.item.isPaid()) {
             holder.paid.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setListener() {
+        orderService.setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) {
+                if (type.equals(EventType.Full)) {
+                    if (isGettingOnlyDishes)
+                        orderItems = orderService.getOnlyDishItemsOf(order);
+                    else
+                        orderItems = orderService.getOnlyMenuItemsOf(order);
+                    notifyDataSetChanged();
+                }
+            }
+        });
     }
 
 }

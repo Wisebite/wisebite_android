@@ -138,7 +138,8 @@ public class UserService extends Service<User> {
             Order order;
             for (String orderKey : user.getMyOrders().keySet()) {
                 order = orderRepository.get(orderKey);
-                if (!isFinished(order.getOrderItems()) && !partOfYourRestaurant(order, dishesMap, menusMap)) return order;
+                if (order != null && !isFinished(order.getOrderItems()) && !partOfYourRestaurant(order, dishesMap, menusMap))
+                    return order;
             }
         }
 

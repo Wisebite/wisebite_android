@@ -395,20 +395,34 @@ public class OrderService extends Service<Order> {
         repository.delete(order.getId());
 
         for (Restaurant restaurant : restaurantRepository.all()) {
-            if (restaurant.getUsers() == null) continue;
-            User user;
-            for (String userKey : restaurant.getUsers().keySet()) {
-                user = userRepository.get(userKey);
-                if (user.getMyOrders() != null && user.getMyOrders().containsKey(order.getId())) {
-                    user.getMyOrders().remove(order.getId());
-                    userRepository.update(user);
-                }
-            }
-
             if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(order.getId())) {
                 restaurant.getExternalOrders().remove(order.getId());
                 restaurantRepository.update(restaurant);
             }
+        }
+
+        for (User user : userRepository.all()) {
+            boolean change = false;
+
+            Map<String, Object> ordersToReview = user.getOrdersToReview();
+            if (ordersToReview != null) {
+                if (ordersToReview.containsKey(order.getId())) {
+                    ordersToReview.remove(order.getId());
+                    user.setOrdersToReview(ordersToReview);
+                    change = true;
+                }
+            }
+
+            Map<String, Object> myOrders = user.getMyOrders();
+            if (myOrders != null) {
+                if (myOrders.containsKey(order.getId())) {
+                    myOrders.remove(order.getId());
+                    user.setMyOrders(myOrders);
+                    change = true;
+                }
+            }
+
+            if (change) userRepository.update(user);
         }
     }
 
