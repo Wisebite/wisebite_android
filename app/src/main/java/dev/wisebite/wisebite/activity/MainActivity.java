@@ -481,7 +481,7 @@ public class MainActivity extends BaseActivity
             textView.setVisibility(View.GONE);
         }
         OrderItemAdapter dishesOrderItemAdapter = new OrderItemAdapter(dishesOrderItems,
-                MainActivity.this, this.currentOrder, true);
+                MainActivity.this, this.currentOrder);
         RecyclerView dishesRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
         LinearLayoutManager dishesLinearLayoutManager = new LinearLayoutManager(this);
         assert dishesRecyclerView != null;
@@ -494,7 +494,7 @@ public class MainActivity extends BaseActivity
             textView.setVisibility(View.GONE);
         }
         OrderItemAdapter menusOrderItemAdapter = new OrderItemAdapter(menusOrderItems,
-                MainActivity.this, this.currentOrder, false);
+                MainActivity.this, this.currentOrder);
         RecyclerView menusRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_menu);
         LinearLayoutManager menusLinearLayoutManager = new LinearLayoutManager(this);
         assert menusRecyclerView != null;

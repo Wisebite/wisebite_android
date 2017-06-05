@@ -117,7 +117,7 @@ public class GetOrderActivity extends BaseActivity {
             textView.setVisibility(View.GONE);
         }
         OrderItemAdapter orderItemAdapter = new OrderItemAdapter(orderItems,
-                GetOrderActivity.this, this.order, true);
+                GetOrderActivity.this, this.order);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_dish);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
@@ -132,7 +132,7 @@ public class GetOrderActivity extends BaseActivity {
             textView.setVisibility(View.GONE);
         }
         OrderItemAdapter orderItemAdapter = new OrderItemAdapter(orderItems,
-                GetOrderActivity.this, this.order, false);
+                GetOrderActivity.this, this.order);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_order_item_menu);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         assert recyclerView != null;
