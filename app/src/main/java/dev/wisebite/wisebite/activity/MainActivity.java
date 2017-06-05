@@ -465,7 +465,10 @@ public class MainActivity extends BaseActivity
         removeTabs();
         if (this.menu != null) this.menu.findItem(R.id.action_change_day).setVisible(false);
         fab.setVisibility(View.GONE);
-        
+
+        TextView restaurantName = (TextView) findViewById(R.id.restaurant_name);
+        restaurantName.setText(orderService.getRestaurantName(currentOrder.getId()));
+
         TextView currentTableNumber = (TextView) findViewById(R.id.current_table_number);
         currentTableNumber.setText(String.format("at table %s", String.valueOf(currentOrder.getTableNumber())));
 
