@@ -157,6 +157,10 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
             inputLayoutNumberOfTables.setError(getString(R.string.err_msg_number_of_tables));
             requestFocus(inputNumberOfTables);
             return false;
+        } else if (Integer.valueOf(numberOfTables) > 1000) {
+            inputLayoutNumberOfTables.setError(getString(R.string.err_msg_number_of_tables_too_much_tables));
+            requestFocus(inputNumberOfTables);
+            return false;
         } else {
             inputLayoutNumberOfTables.setErrorEnabled(false);
         }
