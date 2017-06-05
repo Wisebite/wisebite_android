@@ -257,4 +257,5 @@
     <string name="current_order">Current order</string>
     <string name="order_at">Order at table</string>
     <string name="number">number</string>
+    <string name="no_select_dishes_menu">You haven\'t selected any dish in your menu.</string>
 </resources>
