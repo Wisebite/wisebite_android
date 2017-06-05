@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import dev.wisebite.wisebite.R;
@@ -68,6 +69,9 @@ public class ReviewActivity extends AppCompatActivity {
                 " tasted, and the restaurant?\nThank you very much!";
         restaurantName.setText(orderService.getRestaurantName(order.getId()));
         descriptionView.setText(description);
+
+        LinearLayout ratingRestaurant = (LinearLayout) findViewById(R.id.rating_restaurant);
+        ratingRestaurant.findViewById(R.id.dish_title).setVisibility(View.GONE);
     }
 
     private void initializeDynamicData() {

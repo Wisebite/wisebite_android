@@ -12,25 +12,91 @@
     tools:context="dev.wisebite.wisebite.activity.ReviewActivity"
     tools:showIn="@layout/activity_review">
 
-    <TextView
-        android:id="@+id/restaurant_name"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:textStyle="bold"
-        android:gravity="center_horizontal"
-        android:text="@string/restaurant_name_test"
-        android:textSize="25sp"
-        android:textColor="@color/black"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/restaurant_name"
-        android:layout_marginBottom="15dp"
-        android:gravity="start"
-        android:text="@string/description_test"
-        android:textSize="15sp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/restaurant_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:text="@string/restaurant_name_test"
+                android:textSize="25sp"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/restaurant_name"
+                android:layout_marginBottom="15dp"
+                android:gravity="start"
+                android:text="@string/description_test"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/dishes_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/description"
+                android:layout_marginBottom="15dp"
+                android:gravity="start"
+                android:text="@string/dishes_and_menus"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/dishes_menus_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_below="@id/dishes_title"/>
+
+            <TextView
+                android:id="@+id/restaurant_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dishes_menus_list"
+                android:layout_marginBottom="15dp"
+                android:gravity="start"
+                android:text="@string/restaurant_review"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <LinearLayout
+                android:id="@+id/rating_restaurant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/restaurant_title"
+                android:layout_marginBottom="15dp">
+
+                <include layout="@layout/review_item"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/thanks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rating_restaurant"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="40dp"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:text="@string/thanks"
+                android:textSize="20sp"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
 
 </RelativeLayout>
