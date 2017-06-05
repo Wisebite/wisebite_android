@@ -53,13 +53,6 @@ public class OrderService extends Service<Order> {
         for (Restaurant restaurant : restaurantRepository.all()) {
             if (restaurant.getExternalOrders() != null && restaurant.getExternalOrders().containsKey(id))
                 return restaurant.getName();
-            else {
-                User user;
-                for (String userKey : restaurant.getUsers().keySet()) {
-                    user = userRepository.get(userKey);
-                    if (user.getMyOrders() != null && user.getMyOrders().containsKey(id)) return restaurant.getName();
-                }
-            }
         }
         return "";
     }
