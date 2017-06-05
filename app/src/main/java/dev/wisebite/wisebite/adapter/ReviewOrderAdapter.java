@@ -15,8 +15,11 @@ import dev.wisebite.wisebite.activity.GetRestaurantActivity;
 import dev.wisebite.wisebite.activity.ReviewActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.Restaurant;
+import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.service.UserService;
+import dev.wisebite.wisebite.utils.Preferences;
 
 /**
  * Created by albert on 20/03/17.
@@ -26,11 +29,14 @@ public class ReviewOrderAdapter extends RecyclerView.Adapter<ReviewOrderAdapter.
 
     private List<Order> orders;
     private OrderService orderService;
+    private UserService userService;
 
     public ReviewOrderAdapter(List<Order> orderList, Context context) {
         this.orders = orderList;
         this.orderService = ServiceFactory.getOrderService(context);
+        this.userService = ServiceFactory.getUserService(context);
         notifyDataSetChanged();
+        setListener();
     }
 
     @Override
@@ -75,6 +81,18 @@ public class ReviewOrderAdapter extends RecyclerView.Adapter<ReviewOrderAdapter.
                 }
             });
         }
+    }
+
+    private void setListener() {
+        userService.setOnChangedListener(new Repository.OnChangedListener() {
+            @Override
+            public void onChanged(EventType type) {
+                if (type.equals(EventType.Full)) {
+                    orders = userService.getOrdersToReview(Preferences.getCurrentUserEmail());
+                    notifyDataSetChanged();
+                }
+            }
+        });
     }
 
 }
