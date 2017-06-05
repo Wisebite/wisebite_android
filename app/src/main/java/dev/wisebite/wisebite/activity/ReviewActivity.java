@@ -4,16 +4,24 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.adapter.ReviewAdapter;
+import dev.wisebite.wisebite.adapter.ReviewOrderAdapter;
 import dev.wisebite.wisebite.domain.Order;
+import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.Preferences;
 
 public class ReviewActivity extends AppCompatActivity {
 
@@ -75,7 +83,13 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
     private void initializeDynamicData() {
-
+        List<OrderItem> orderItemList = orderService.getItems(order, false);
+        ReviewAdapter reviewAdapter = new ReviewAdapter(orderItemList, ReviewActivity.this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.dishes_menus_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(reviewAdapter);
     }
 
     private void save(View view) {

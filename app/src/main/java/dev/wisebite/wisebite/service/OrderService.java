@@ -309,16 +309,17 @@ public class OrderService extends Service<Order> {
         repository.update(order);
     }
 
-    public ArrayList<OrderItem> getItemsToCollect(Order order) {
+    public ArrayList<OrderItem> getItems(Order order, boolean collectCondition) {
         ArrayList<OrderItem> orderItems = new ArrayList<>();
 
         Map<String, List<OrderItem>> menuIds = new LinkedHashMap<>();
         OrderItem orderItem;
         for (String key : order.getOrderItems().keySet()) {
             orderItem = orderItemRepository.get(key);
-            if (!orderItem.isPaid()) {
+            if (!collectCondition || !orderItem.isPaid()) {
                 if (orderItem.getMenuId() == null) {
-                    orderItems.add(orderItem);
+                    if (collectCondition || !containsDish(orderItem, orderItems))
+                        orderItems.add(orderItem);
                 } else {
                     List<OrderItem> count = menuIds.get(orderItem.getMenuId());
                     if (count == null) {
@@ -334,7 +335,8 @@ public class OrderService extends Service<Order> {
             Menu menu = menuRepository.get(key);
             Integer numberOptions = getNumberOptions(menu);
             for (int i = 0; i < count.size()/numberOptions; ++i) {
-                orderItems.add(count.get(i));
+                if (collectCondition || !containsMenu(count.get(i), orderItems))
+                    orderItems.add(count.get(i));
             }
         }
 
@@ -496,6 +498,21 @@ public class OrderService extends Service<Order> {
                 }
             }
         }.start();
+    }
+
+    private boolean containsDish(OrderItem orderItem, ArrayList<OrderItem> orderItems) {
+        for (OrderItem item : orderItems) {
+            if (item.getDishId().equals(orderItem.getDishId())) return true;
+        }
+        return false;
+    }
+
+    private boolean containsMenu(OrderItem orderItem, ArrayList<OrderItem> orderItems) {
+        for (OrderItem item : orderItems) {
+            if (item.getMenuId() != null && item.getMenuId().equals(orderItem.getMenuId()))
+                return true;
+        }
+        return false;
     }
 
 }
