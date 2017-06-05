@@ -12,6 +12,7 @@ import java.util.List;
 
 import dev.wisebite.wisebite.R;
 import dev.wisebite.wisebite.activity.GetRestaurantActivity;
+import dev.wisebite.wisebite.activity.ReviewActivity;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.service.OrderService;
@@ -68,9 +69,9 @@ public class ReviewOrderAdapter extends RecyclerView.Adapter<ReviewOrderAdapter.
             this.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent intent = new Intent(v.getContext(), GetRestaurantActivity.class);
-//                    intent.putExtra(GetRestaurantActivity.RESTAURANT_ID, item.getId());
-//                    v.getContext().startActivity(intent);
+                    Intent intent = new Intent(v.getContext(), ReviewActivity.class);
+                    intent.putExtra(ReviewActivity.ORDER_ID, item.getId());
+                    v.getContext().startActivity(intent);
                 }
             });
         }
