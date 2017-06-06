@@ -1,5 +1,7 @@
 package dev.wisebite.wisebite.domain;
 
+import java.util.Date;
+
 import dev.wisebite.wisebite.utils.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +27,7 @@ public class Review implements Entity {
     private double points;
     private String comment;
     private String userId;
+    private Date date;
 
     @Override
     public String getId() {
