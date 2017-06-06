@@ -94,9 +94,9 @@ public class GetRestaurantActivity extends BaseActivity {
         phone.setText(String.valueOf(restaurant.getPhone()));
         website.setText(restaurant.getWebsite());
         numberOfTables.setText(String.valueOf(restaurant.getNumberOfTables() + " tables"));
-        averagePunctuation.setText(restaurantService.getAveragePunctuation(restaurantId) == -1.0 ?
+        averagePunctuation.setText(restaurantService.getAveragePunctuationOfRestaurant(restaurantId) == -1.0 ?
                 "---" :
-                Utils.toStringWithTwoDecimals(restaurantService.getAveragePunctuation(restaurantId)) + " / 5.0");
+                Utils.toStringWithTwoDecimals(restaurantService.getAveragePunctuationOfRestaurant(restaurantId)) + " / 5.0");
 
         if (restaurantService.isPartOfTheStuff(restaurantId, Preferences.getCurrentUserEmail())) {
             fab.setOnClickListener(new View.OnClickListener() {

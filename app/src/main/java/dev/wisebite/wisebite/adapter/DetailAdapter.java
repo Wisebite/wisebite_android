@@ -18,6 +18,7 @@ import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.Utils;
 
 /**
  * Created by albert on 20/03/17.
@@ -70,6 +71,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailHold
                 TextView orderedWeek = (TextView) extra.findViewById(R.id.ordered_week_refill);
                 TextView orderedMonth = (TextView) extra.findViewById(R.id.ordered_month_refill);
                 TextView priceDish = (TextView) extra.findViewById(R.id.price_refill);
+                TextView averagePunctuation = (TextView) extra.findViewById(R.id.average_punctuation_refill);
 
                 String id = "";
                 if (dishes != null) id = dishes.get(position).getId();
@@ -81,6 +83,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailHold
                 orderedWeek.setText(String.format("%s times", String.valueOf(restaurantService.getTimesOrdered(id, Calendar.WEEK_OF_YEAR))));
                 orderedMonth.setText(String.format("%s times", String.valueOf(restaurantService.getTimesOrdered(id, Calendar.MONTH))));
                 priceDish.setText(holder.price.getText().toString());
+                averagePunctuation.setText(restaurantService.getAveragePunctuationOfDish(id) == -1.0 ?
+                        "---" :
+                        Utils.toStringWithTwoDecimals(restaurantService.getAveragePunctuationOfDish(id)) + " / 5.0");
 
                 AlertDialog alertDialog = new AlertDialog.Builder(context)
                         .setTitle(context.getResources().getString(R.string.extra_information))

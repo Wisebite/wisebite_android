@@ -718,7 +718,7 @@ public class RestaurantService extends Service<Restaurant> {
         return count;
     }
 
-    public double getAveragePunctuation(String restaurantId) {
+    public double getAveragePunctuationOfRestaurant(String restaurantId) {
         Restaurant restaurant = repository.get(restaurantId);
         double average = -1.0;
         double count = 0.0;
@@ -733,6 +733,36 @@ public class RestaurantService extends Service<Restaurant> {
                 }
             }
             average = total / count;
+        }
+        return average;
+    }
+
+    public double getAveragePunctuationOfDish(String id) {
+        double average = -1.0;
+        double count = 0.0;
+        double total = 0.0;
+
+        Object object;
+        if (dishRepository.get(id) != null) object = dishRepository.get(id);
+        else if (menuRepository.get(id) != null) object = menuRepository.get(id);
+        else object = null;
+
+        Map<String, Object> map;
+        if (object != null) {
+            if (object instanceof Dish) map = ((Dish) object).getReviews();
+            else map = ((Menu) object).getReviews();
+
+            if (map != null && !map.isEmpty()) {
+                Review review;
+                for (String reviewKey : map.keySet()) {
+                    review = reviewRepository.get(reviewKey);
+                    if (review != null) {
+                        total += review.getPoints();
+                        count += 1.0;
+                    }
+                }
+                average = total / count;
+            }
         }
         return average;
     }
