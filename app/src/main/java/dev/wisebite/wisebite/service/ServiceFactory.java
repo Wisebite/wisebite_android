@@ -88,7 +88,8 @@ public final class ServiceFactory {
                     new OpenTimeRepository(context),
                     new OrderRepository(context),
                     new OrderItemRepository(context),
-                    new UserRepository(context));
+                    new UserRepository(context),
+                    new ReviewRepository(context));
         return restaurantService;
     }
 

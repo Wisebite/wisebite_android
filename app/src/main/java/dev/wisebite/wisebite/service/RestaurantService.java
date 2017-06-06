@@ -17,6 +17,7 @@ import dev.wisebite.wisebite.domain.OpenTime;
 import dev.wisebite.wisebite.domain.Order;
 import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Restaurant;
+import dev.wisebite.wisebite.domain.Review;
 import dev.wisebite.wisebite.domain.User;
 import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.utils.Preferences;
@@ -37,6 +38,7 @@ public class RestaurantService extends Service<Restaurant> {
     private final Repository<Order> orderRepository;
     private final Repository<OrderItem> orderItemRepository;
     private final Repository<User> userRepository;
+    private final Repository<Review> reviewRepository;
 
     public RestaurantService(Repository<Restaurant> repository,
                              Repository<Menu> menuRepository,
@@ -45,7 +47,8 @@ public class RestaurantService extends Service<Restaurant> {
                              Repository<OpenTime> openTimeRepository,
                              Repository<Order> orderRepository,
                              Repository<OrderItem> orderItemRepository,
-                             Repository<User> userRepository) {
+                             Repository<User> userRepository,
+                             Repository<Review> reviewRepository) {
         super(repository);
         this.menuRepository = menuRepository;
         this.dishRepository = dishRepository;
@@ -54,6 +57,7 @@ public class RestaurantService extends Service<Restaurant> {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.userRepository = userRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     public void addOpenTimes(Restaurant restaurant, List<OpenTime> openTimeList) {
@@ -712,5 +716,24 @@ public class RestaurantService extends Service<Restaurant> {
 
         if (menu != null) count /= getNumberOptions(menu);
         return count;
+    }
+
+    public double getAveragePunctuation(String restaurantId) {
+        Restaurant restaurant = repository.get(restaurantId);
+        double average = -1.0;
+        double count = 0.0;
+        double total = 0.0;
+        if (restaurant.getReviews() != null && !restaurant.getReviews().isEmpty()) {
+            Review review;
+            for (String reviewKey : restaurant.getReviews().keySet()) {
+                review = reviewRepository.get(reviewKey);
+                if (review != null) {
+                    total += review.getPoints();
+                    count += 1.0;
+                }
+            }
+            average = total / count;
+        }
+        return average;
     }
 }

@@ -267,4 +267,5 @@
     <string name="form_hint_comment">Comment</string>
     <string name="thanks">Thank you!</string>
     <string name="no_review">You have to complete all reviews.</string>
+    <string name="average_punctuation">Average punctuation</string>
 </resources>

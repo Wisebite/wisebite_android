@@ -82,17 +82,21 @@ public class GetRestaurantActivity extends BaseActivity {
 
     private void initializeGeneralInfo() {
         setTitle(restaurant.getName());
-        TextView description, location, phone, website, numberOfTables;
+        TextView description, location, phone, website, numberOfTables, averagePunctuation;
         description = (TextView) findViewById(R.id.description_refill);
         location = (TextView) findViewById(R.id.location_refill);
         phone = (TextView) findViewById(R.id.phone_refill);
         website = (TextView) findViewById(R.id.website_refill);
         numberOfTables = (TextView) findViewById(R.id.number_of_tables_refill);
+        averagePunctuation = (TextView) findViewById(R.id.average_punctuation_refill);
         description.setText(restaurant.getDescription());
         location.setText(restaurant.getLocation());
         phone.setText(String.valueOf(restaurant.getPhone()));
         website.setText(restaurant.getWebsite());
         numberOfTables.setText(String.valueOf(restaurant.getNumberOfTables() + " tables"));
+        averagePunctuation.setText(restaurantService.getAveragePunctuation(restaurantId) == -1.0 ?
+                "---" :
+                Utils.toStringWithTwoDecimals(restaurantService.getAveragePunctuation(restaurantId)) + " / 5.0");
 
         if (restaurantService.isPartOfTheStuff(restaurantId, Preferences.getCurrentUserEmail())) {
             fab.setOnClickListener(new View.OnClickListener() {
