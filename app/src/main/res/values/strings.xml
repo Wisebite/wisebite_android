@@ -268,4 +268,6 @@
     <string name="thanks">Thank you!</string>
     <string name="no_review">You have to complete all reviews.</string>
     <string name="average_punctuation">Average punctuation</string>
+    <string name="reviews">Reviews</string>
+    <string name="title_activity_review_list">ReviewListActivity</string>
 </resources>
