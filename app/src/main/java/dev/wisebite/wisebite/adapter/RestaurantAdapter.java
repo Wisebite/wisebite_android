@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -41,8 +42,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Or
     @Override
     public void onBindViewHolder(OrderHolder holder, int position) {
         Restaurant restaurant = restaurants.get(position);
+        float rating = (float) restaurantService.getAveragePunctuationOfRestaurant(restaurant.getId());
+
         holder.item = restaurant;
         holder.name.setText(restaurant.getName());
+
+        if (rating != -1) {
+            holder.ratingBar.setVisibility(View.VISIBLE);
+            holder.ratingBar.setRating(rating);
+        }
+        else holder.ratingBar.setVisibility(View.INVISIBLE);
+
         holder.description.setText(restaurant.getDescription());
         holder.daysOpen.setText(String.valueOf(calculateDaysOpen(restaurant) + " open days"));
         holder.dishesCount.setText(String.valueOf(calculateDishesCount(restaurant) + " different dishes"));
@@ -71,6 +81,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Or
         public View view;
         Restaurant item;
         TextView name;
+        RatingBar ratingBar;
         TextView description;
         TextView daysOpen;
         TextView dishesCount;
@@ -80,6 +91,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Or
             super(itemView);
             this.view = itemView;
             this.name = (TextView) itemView.findViewById(R.id.name);
+            this.ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
             this.description = (TextView) itemView.findViewById(R.id.description);
             this.daysOpen = (TextView) itemView.findViewById(R.id.days_open);
             this.dishesCount = (TextView) itemView.findViewById(R.id.dishes_count);
