@@ -271,4 +271,5 @@
     <string name="reviews">Reviews</string>
     <string name="title_activity_review_list">ReviewListActivity</string>
     <string name="mock_review_list">No reviews yet.</string>
+    <string name="reviews_count">Reviews count</string>
 </resources>

@@ -88,6 +88,8 @@ public class AnalyticsWeekFragment extends Fragment {
         TextView worstMenu = (TextView) view.findViewById(R.id.worst_menu_refill);
         TextView bestTimeRange = (TextView) view.findViewById(R.id.best_time_range_refill);
         TextView averageTime = (TextView) view.findViewById(R.id.average_time_refill);
+        TextView averagePunctuation = (TextView) view.findViewById(R.id.average_punctuation_refill);
+        TextView reviewsCount = (TextView) view.findViewById(R.id.reviews_count_refill);
 
         numberOfOrders.setText(String.valueOf(restaurantService.getOrdersCount(restaurantId, Calendar.WEEK_OF_YEAR)));
         averagePrice.setText(String.format("%s €", Utils.toStringWithTwoDecimals(restaurantService.getAveragePrice(restaurantId, Calendar.WEEK_OF_YEAR))));
@@ -98,6 +100,10 @@ public class AnalyticsWeekFragment extends Fragment {
         worstMenu.setText(restaurantService.getWorstMenu(restaurantId, Calendar.WEEK_OF_YEAR));
         bestTimeRange.setText(restaurantService.getBestTimeRange(restaurantId, Calendar.WEEK_OF_YEAR));
         averageTime.setText(restaurantService.getAverageTime(restaurantId, Calendar.WEEK_OF_YEAR));
+        averagePunctuation.setText(restaurantService.getAveragePunctuationOfRestaurant(restaurantId, Calendar.WEEK_OF_YEAR) == -1.0 ?
+                "---" :
+                Utils.toStringWithTwoDecimals(restaurantService.getAveragePunctuationOfRestaurant(restaurantId, Calendar.WEEK_OF_YEAR)));
+        reviewsCount.setText(String.valueOf(restaurantService.getReviewsCount(restaurantId, Calendar.WEEK_OF_YEAR)));
 
     }
 

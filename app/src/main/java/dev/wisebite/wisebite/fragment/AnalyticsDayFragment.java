@@ -88,6 +88,8 @@ public class AnalyticsDayFragment extends Fragment {
         TextView worstMenu = (TextView) view.findViewById(R.id.worst_menu_refill);
         TextView bestTimeRange = (TextView) view.findViewById(R.id.best_time_range_refill);
         TextView averageTime = (TextView) view.findViewById(R.id.average_time_refill);
+        TextView averagePunctuation = (TextView) view.findViewById(R.id.average_punctuation_refill);
+        TextView reviewsCount = (TextView) view.findViewById(R.id.reviews_count_refill);
 
         numberOfOrders.setText(String.valueOf(restaurantService.getOrdersCount(restaurantId, Calendar.DATE)));
         averagePrice.setText(String.format("%s €", Utils.toStringWithTwoDecimals(restaurantService.getAveragePrice(restaurantId, Calendar.DATE))));
@@ -98,7 +100,10 @@ public class AnalyticsDayFragment extends Fragment {
         worstMenu.setText(restaurantService.getWorstMenu(restaurantId, Calendar.DATE));
         bestTimeRange.setText(restaurantService.getBestTimeRange(restaurantId, Calendar.DATE));
         averageTime.setText(restaurantService.getAverageTime(restaurantId, Calendar.DATE));
-
+        averagePunctuation.setText(restaurantService.getAveragePunctuationOfRestaurant(restaurantId, Calendar.DATE) == -1.0 ?
+                "---" :
+                Utils.toStringWithTwoDecimals(restaurantService.getAveragePunctuationOfRestaurant(restaurantId, Calendar.DATE)));
+        reviewsCount.setText(String.valueOf(restaurantService.getReviewsCount(restaurantId, Calendar.DATE)));
     }
 
     private void createPieChart(View view, PieChartData data, int id) {

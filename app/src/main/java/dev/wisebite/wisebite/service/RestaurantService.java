@@ -4,6 +4,7 @@ import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -195,11 +196,12 @@ public class RestaurantService extends Service<Restaurant> {
         return false;
     }
 
-    private boolean checkTime(Order order, int kind) {
+    private boolean checkTime(Date date, int kind) {
         Calendar currentCalendar = Calendar.getInstance();
         currentCalendar.setTime(Utils.getAnalyticsDate());
+
         Calendar orderCalendar = Calendar.getInstance();
-        orderCalendar.setTime(order.getDate());
+        orderCalendar.setTime(date);
         switch (kind) {
             case Calendar.DATE:
                 if (orderCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
@@ -277,7 +279,7 @@ public class RestaurantService extends Service<Restaurant> {
         Order order;
         for (String orderKey : ordersList) {
             order = orderRepository.get(orderKey);
-            if (order.getOrderItems() == null || !checkTime(order, kind)) continue;
+            if (order.getOrderItems() == null || !checkTime(order.getDate(), kind)) continue;
 
             OrderItem orderItem;
             for (String orderItemKey : order.getOrderItems().keySet()) {
@@ -304,7 +306,7 @@ public class RestaurantService extends Service<Restaurant> {
         Order order;
         for (String orderKey : ordersList) {
             order = orderRepository.get(orderKey);
-            if (order.getOrderItems() == null || !checkTime(order, kind)) continue;
+            if (order.getOrderItems() == null || !checkTime(order.getDate(), kind)) continue;
 
             OrderItem orderItem;
             for (String orderItemKey : order.getOrderItems().keySet()) {
@@ -371,7 +373,7 @@ public class RestaurantService extends Service<Restaurant> {
         Order order;
         for (String orderKey : ordersList) {
             order = orderRepository.get(orderKey);
-            if (checkTime(order, kind)) ++count;
+            if (checkTime(order.getDate(), kind)) ++count;
         }
         return count;
     }
@@ -386,7 +388,7 @@ public class RestaurantService extends Service<Restaurant> {
         Order order;
         for (String orderKey : ordersList) {
             order = orderRepository.get(orderKey);
-            if (checkTime(order, kind)) {
+            if (checkTime(order.getDate(), kind)) {
                 total += getPriceOfOrder(orderKey);
                 count += 1.0;
             }
@@ -403,7 +405,7 @@ public class RestaurantService extends Service<Restaurant> {
         Order order;
         for (String orderKey : ordersList) {
             order = orderRepository.get(orderKey);
-            if (checkTime(order, kind)) total += getPriceOfOrder(orderKey);
+            if (checkTime(order.getDate(), kind)) total += getPriceOfOrder(orderKey);
         }
         return total;
     }
@@ -487,7 +489,7 @@ public class RestaurantService extends Service<Restaurant> {
         Order order;
         for (String orderKey : ordersList) {
             order = orderRepository.get(orderKey);
-            if (checkTime(order, kind)) {
+            if (checkTime(order.getDate(), kind)) {
                 calendar.setTime(order.getDate());
                 ++hours[calendar.get(Calendar.HOUR_OF_DAY)];
             }
@@ -523,7 +525,7 @@ public class RestaurantService extends Service<Restaurant> {
         Order order;
         for (String orderKey : ordersList) {
             order = orderRepository.get(orderKey);
-            if (checkTime(order, kind) && getPaidOfOrder(orderKey) == 100.0) {
+            if (checkTime(order.getDate(), kind) && getPaidOfOrder(orderKey) == 100.0) {
                 total += (order.getLastDate().getTime() - order.getDate().getTime());
                 ++count;
             }
@@ -537,6 +539,41 @@ public class RestaurantService extends Service<Restaurant> {
 
         return  String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) + "h " +
                 String.valueOf(calendar.get(Calendar.MINUTE) + "min");
+    }
+
+    public double getAveragePunctuationOfRestaurant(String restaurantId, int kind) {
+        Restaurant restaurant = repository.get(restaurantId);
+        double average = -1.0;
+        double count = 0.0;
+        double total = 0.0;
+        if (restaurant.getReviews() != null && !restaurant.getReviews().isEmpty()) {
+            Review review;
+            for (String reviewKey : restaurant.getReviews().keySet()) {
+                review = reviewRepository.get(reviewKey);
+                if (review != null && review.getDate() != null && checkTime(review.getDate(), kind)) {
+                    total += review.getPoints();
+                    count += 1.0;
+                }
+            }
+            if (count == 0.0) average = -1.0;
+            else average = total / count;
+        }
+        return average;
+    }
+
+    public Integer getReviewsCount(String restaurantId, int kind) {
+        Restaurant restaurant = repository.get(restaurantId);
+        Integer count = 0;
+        if (restaurant.getReviews() != null && !restaurant.getReviews().isEmpty()) {
+            Review review;
+            for (String reviewKey : restaurant.getReviews().keySet()) {
+                review = reviewRepository.get(reviewKey);
+                if (review != null && review.getDate() != null && checkTime(review.getDate(), kind)) {
+                    ++count;
+                }
+            }
+        }
+        return count;
     }
 
     public PieChartData getAllDishesCount(String restaurantId, int kind) {
@@ -621,7 +658,7 @@ public class RestaurantService extends Service<Restaurant> {
         Order order;
         for (String orderKey : ordersList) {
             order = orderRepository.get(orderKey);
-            if (checkTime(order, kind)) {
+            if (checkTime(order.getDate(), kind)) {
                 calendar.setTime(order.getDate());
                 if (kind == Calendar.DATE)
                     time[calendar.get(Calendar.HOUR_OF_DAY)] += 1.0f;
@@ -707,7 +744,7 @@ public class RestaurantService extends Service<Restaurant> {
             OrderItem orderItem;
             for (String orderItemKey : order.getOrderItems().keySet()) {
                 orderItem = orderItemRepository.get(orderItemKey);
-                if (checkTime(order, kind)) {
+                if (checkTime(order.getDate(), kind)) {
                     if (menu != null && orderItem.getMenuId() != null && orderItem.getMenuId().equals(id)) ++count;
                     else if (menu == null && orderItem.getDishId().equals(id)) ++count;
                 }
