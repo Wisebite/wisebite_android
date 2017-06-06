@@ -70,10 +70,22 @@ public class GetRestaurantActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.get_restaurant, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.action_reviews:
+                Intent intent = new Intent(GetRestaurantActivity.this, ReviewListActivity.class);
+                intent.putExtra(ReviewListActivity.DISH_ID, restaurantId);
+                startActivity(intent);
                 return true;
         }
 

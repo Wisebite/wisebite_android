@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -12,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.adapter.RestaurantAdapter;
+import dev.wisebite.wisebite.adapter.ReviewListAdapter;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.domain.Restaurant;
@@ -51,7 +55,7 @@ public class ReviewListActivity extends AppCompatActivity {
         }
 
         this.reviews = getReviews();
-
+        initializeData();
     }
 
     private List<Review> getReviews() {
@@ -62,9 +66,16 @@ public class ReviewListActivity extends AppCompatActivity {
         Menu menu = menuService.get(id);
 
         List<String> reviewKeys = new ArrayList<>();
-        if (restaurant != null && restaurant.getReviews() != null) reviewKeys.addAll(restaurant.getReviews().keySet());
-        else if (dish != null && dish.getReviews() != null) reviewKeys.addAll(dish.getReviews().keySet());
-        else if (menu != null && menu.getReviews() != null) reviewKeys.addAll(menu.getReviews().keySet());
+        if (restaurant != null && restaurant.getReviews() != null) {
+            reviewKeys.addAll(restaurant.getReviews().keySet());
+            setTitle(restaurant.getName() + " reviews");
+        } else if (dish != null && dish.getReviews() != null) {
+            reviewKeys.addAll(dish.getReviews().keySet());
+            setTitle(dish.getName() + " reviews");
+        } else if (menu != null && menu.getReviews() != null) {
+            reviewKeys.addAll(menu.getReviews().keySet());
+            setTitle(menu.getName() + " reviews");
+        }
 
         Review review;
         for (String key : reviewKeys) {
@@ -73,6 +84,18 @@ public class ReviewListActivity extends AppCompatActivity {
         }
 
         return reviewList;
+    }
+
+    private void initializeData() {
+        if (reviews.size() != 0) findViewById(R.id.review_list_mock).setVisibility(View.GONE);
+        else findViewById(R.id.review_list_mock).setVisibility(View.VISIBLE);
+
+        ReviewListAdapter reviewListAdapter = new ReviewListAdapter(reviews, ReviewListActivity.this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.review_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        assert recyclerView != null;
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(reviewListAdapter);
     }
 
 }
