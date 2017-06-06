@@ -132,10 +132,21 @@
             android:name=".activity.ReviewActivity"
             android:label="@string/title_activity_review"
             android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dev.wisebite.wisebite.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.ReviewListActivity"
+            android:label="@string/title_activity_review_list"
+            android:parentActivityName=".activity.ReviewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dev.wisebite.wisebite.activity.GetRestaurantActivity" />
         </activity>
     </application>
 

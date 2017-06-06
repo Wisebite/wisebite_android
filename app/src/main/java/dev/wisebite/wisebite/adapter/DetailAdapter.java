@@ -3,6 +3,7 @@ package dev.wisebite.wisebite.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import dev.wisebite.wisebite.R;
+import dev.wisebite.wisebite.activity.ReviewListActivity;
 import dev.wisebite.wisebite.domain.Dish;
 import dev.wisebite.wisebite.domain.Menu;
 import dev.wisebite.wisebite.service.RestaurantService;
 import dev.wisebite.wisebite.service.ServiceFactory;
+import dev.wisebite.wisebite.utils.Utils;
 
 /**
  * Created by albert on 20/03/17.
@@ -70,6 +73,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailHold
                 TextView orderedWeek = (TextView) extra.findViewById(R.id.ordered_week_refill);
                 TextView orderedMonth = (TextView) extra.findViewById(R.id.ordered_month_refill);
                 TextView priceDish = (TextView) extra.findViewById(R.id.price_refill);
+                TextView averagePunctuation = (TextView) extra.findViewById(R.id.average_punctuation_refill);
 
                 String id = "";
                 if (dishes != null) id = dishes.get(position).getId();
@@ -81,7 +85,11 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailHold
                 orderedWeek.setText(String.format("%s times", String.valueOf(restaurantService.getTimesOrdered(id, Calendar.WEEK_OF_YEAR))));
                 orderedMonth.setText(String.format("%s times", String.valueOf(restaurantService.getTimesOrdered(id, Calendar.MONTH))));
                 priceDish.setText(holder.price.getText().toString());
+                averagePunctuation.setText(restaurantService.getAveragePunctuationOfDish(id) == -1.0 ?
+                        "---" :
+                        Utils.toStringWithTwoDecimals(restaurantService.getAveragePunctuationOfDish(id)) + " / 5.0");
 
+                final String finalId = id;
                 AlertDialog alertDialog = new AlertDialog.Builder(context)
                         .setTitle(context.getResources().getString(R.string.extra_information))
                         .setView(extra)
@@ -89,6 +97,14 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailHold
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // do nothing
+                            }
+                        })
+                        .setNegativeButton(R.string.reviews, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(context, ReviewListActivity.class);
+                                intent.putExtra(ReviewListActivity.DISH_ID, finalId);
+                                context.startActivity(intent);
                             }
                         })
                         .setOnCancelListener(new DialogInterface.OnCancelListener() {

@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.google.firebase.database.DataSnapshot;
 
+import java.util.Date;
+
 import dev.wisebite.wisebite.domain.Review;
 import dev.wisebite.wisebite.firebase.FirebaseRepository;
 
@@ -17,6 +19,7 @@ public class ReviewRepository extends FirebaseRepository<Review> {
     public static final String POINTS_REFERENCE = "points";
     public static final String COMMENT_REFERENCE = "comment";
     public static final String USER_ID_REFERENCE = "userId";
+    public static final String DATE_REFERENCE = "date";
 
     /**
      * Constructor class
@@ -37,6 +40,8 @@ public class ReviewRepository extends FirebaseRepository<Review> {
                 review.setComment(d.getValue(String.class));
             } else if (d.getKey().equals(USER_ID_REFERENCE)) {
                 review.setUserId(d.getValue(String.class));
+            } else if (d.getKey().equals(DATE_REFERENCE)) {
+                review.setDate(d.getValue(Date.class));
             }
         }
         return review;

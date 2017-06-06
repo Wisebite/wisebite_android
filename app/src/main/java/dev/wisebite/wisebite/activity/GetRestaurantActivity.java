@@ -70,10 +70,22 @@ public class GetRestaurantActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.get_restaurant, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.action_reviews:
+                Intent intent = new Intent(GetRestaurantActivity.this, ReviewListActivity.class);
+                intent.putExtra(ReviewListActivity.DISH_ID, restaurantId);
+                startActivity(intent);
                 return true;
         }
 
@@ -82,17 +94,21 @@ public class GetRestaurantActivity extends BaseActivity {
 
     private void initializeGeneralInfo() {
         setTitle(restaurant.getName());
-        TextView description, location, phone, website, numberOfTables;
+        TextView description, location, phone, website, numberOfTables, averagePunctuation;
         description = (TextView) findViewById(R.id.description_refill);
         location = (TextView) findViewById(R.id.location_refill);
         phone = (TextView) findViewById(R.id.phone_refill);
         website = (TextView) findViewById(R.id.website_refill);
         numberOfTables = (TextView) findViewById(R.id.number_of_tables_refill);
+        averagePunctuation = (TextView) findViewById(R.id.average_punctuation_refill);
         description.setText(restaurant.getDescription());
         location.setText(restaurant.getLocation());
         phone.setText(String.valueOf(restaurant.getPhone()));
         website.setText(restaurant.getWebsite());
         numberOfTables.setText(String.valueOf(restaurant.getNumberOfTables() + " tables"));
+        averagePunctuation.setText(restaurantService.getAveragePunctuationOfRestaurant(restaurantId) == -1.0 ?
+                "---" :
+                Utils.toStringWithTwoDecimals(restaurantService.getAveragePunctuationOfRestaurant(restaurantId)) + " / 5.0");
 
         if (restaurantService.isPartOfTheStuff(restaurantId, Preferences.getCurrentUserEmail())) {
             fab.setOnClickListener(new View.OnClickListener() {

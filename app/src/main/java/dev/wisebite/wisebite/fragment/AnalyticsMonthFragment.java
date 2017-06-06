@@ -88,6 +88,8 @@ public class AnalyticsMonthFragment extends Fragment {
         TextView worstMenu = (TextView) view.findViewById(R.id.worst_menu_refill);
         TextView bestTimeRange = (TextView) view.findViewById(R.id.best_time_range_refill);
         TextView averageTime = (TextView) view.findViewById(R.id.average_time_refill);
+        TextView averagePunctuation = (TextView) view.findViewById(R.id.average_punctuation_refill);
+        TextView reviewsCount = (TextView) view.findViewById(R.id.reviews_count_refill);
 
         numberOfOrders.setText(String.valueOf(restaurantService.getOrdersCount(restaurantId, Calendar.MONTH)));
         averagePrice.setText(String.format("%s €", Utils.toStringWithTwoDecimals(restaurantService.getAveragePrice(restaurantId, Calendar.MONTH))));
@@ -98,6 +100,10 @@ public class AnalyticsMonthFragment extends Fragment {
         worstMenu.setText(restaurantService.getWorstMenu(restaurantId, Calendar.MONTH));
         bestTimeRange.setText(restaurantService.getBestTimeRange(restaurantId, Calendar.MONTH));
         averageTime.setText(restaurantService.getAverageTime(restaurantId, Calendar.MONTH));
+        averagePunctuation.setText(restaurantService.getAveragePunctuationOfRestaurant(restaurantId, Calendar.MONTH) == -1.0 ?
+                "---" :
+                Utils.toStringWithTwoDecimals(restaurantService.getAveragePunctuationOfRestaurant(restaurantId, Calendar.MONTH)));
+        reviewsCount.setText(String.valueOf(restaurantService.getReviewsCount(restaurantId, Calendar.MONTH)));
 
     }
 

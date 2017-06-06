@@ -1,5 +1,6 @@
 package dev.wisebite.wisebite.service;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -49,6 +50,7 @@ public class ReviewService extends Service<Review> {
                 .points(points)
                 .comment(comment)
                 .userId(Preferences.getCurrentUserEmail())
+                .date(new Date())
                 .build();
         String newId = repository.insert(review).getId();
 
@@ -60,8 +62,21 @@ public class ReviewService extends Service<Review> {
         restaurantRepository.update(restaurant);
     }
 
+    public void deleteOrderToReview(String orderId) {
+        User user = userRepository.get(Preferences.getCurrentUserEmail());
+        Map<String, Object> ordersToReview = user.getOrdersToReview();
+        if (ordersToReview != null) {
+            ordersToReview.remove(orderId);
+            user.setOrdersToReview(ordersToReview);
+            userRepository.update(user);
+        }
+    }
+
+    /** PRIVATE FUNCTIONS **/
+
     private void createDishReview(String dishId, Review review) {
         review.setUserId(Preferences.getCurrentUserEmail());
+        review.setDate(new Date());
         String newId = repository.insert(review).getId();
 
         Dish dish = dishRepository.get(dishId);
@@ -74,6 +89,7 @@ public class ReviewService extends Service<Review> {
 
     private void createMenuReview(String menuId, Review review) {
         review.setUserId(Preferences.getCurrentUserEmail());
+        review.setDate(new Date());
         String newId = repository.insert(review).getId();
 
         Menu menu = menuRepository.get(menuId);
@@ -82,15 +98,5 @@ public class ReviewService extends Service<Review> {
         reviews.put(newId, true);
         menu.setReviews(reviews);
         menuRepository.update(menu);
-    }
-
-    public void deleteOrderToReview(String orderId) {
-        User user = userRepository.get(Preferences.getCurrentUserEmail());
-        Map<String, Object> ordersToReview = user.getOrdersToReview();
-        if (ordersToReview != null) {
-            ordersToReview.remove(orderId);
-            user.setOrdersToReview(ordersToReview);
-            userRepository.update(user);
-        }
     }
 }
