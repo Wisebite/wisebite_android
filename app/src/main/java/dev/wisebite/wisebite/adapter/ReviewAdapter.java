@@ -19,7 +19,6 @@ import dev.wisebite.wisebite.domain.OrderItem;
 import dev.wisebite.wisebite.domain.Review;
 import dev.wisebite.wisebite.service.OrderItemService;
 import dev.wisebite.wisebite.service.ServiceFactory;
-import dev.wisebite.wisebite.utils.Preferences;
 
 /**
  * Created by albert on 20/03/17.

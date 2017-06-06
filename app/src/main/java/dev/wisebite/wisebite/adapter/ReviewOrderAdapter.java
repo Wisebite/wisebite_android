@@ -11,10 +11,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.activity.GetRestaurantActivity;
 import dev.wisebite.wisebite.activity.ReviewActivity;
 import dev.wisebite.wisebite.domain.Order;
-import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.firebase.Repository;
 import dev.wisebite.wisebite.service.OrderService;
 import dev.wisebite.wisebite.service.ServiceFactory;

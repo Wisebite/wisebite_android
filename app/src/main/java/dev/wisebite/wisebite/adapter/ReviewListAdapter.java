@@ -2,7 +2,6 @@ package dev.wisebite.wisebite.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import dev.wisebite.wisebite.R;
-import dev.wisebite.wisebite.activity.GetRestaurantActivity;
-import dev.wisebite.wisebite.domain.Restaurant;
 import dev.wisebite.wisebite.domain.Review;
 import dev.wisebite.wisebite.domain.User;
 import dev.wisebite.wisebite.service.ServiceFactory;
