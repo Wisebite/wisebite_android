@@ -99,6 +99,9 @@ public class EditUserActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Initialize edit user view
+     */
     private void initializeView() {
         imageView = (ImageView) findViewById(R.id.user_picture_nav);
         String url = userService.getProfilePhoto(user.getId());
@@ -126,6 +129,9 @@ public class EditUserActivity extends BaseActivity {
 
     }
 
+    /**
+     * Action to do when the user finishes to edit his/her user
+     */
     private void done() {
         processDialog.show();
         userService.editUser(user.getId(), nameView.getText().toString(),

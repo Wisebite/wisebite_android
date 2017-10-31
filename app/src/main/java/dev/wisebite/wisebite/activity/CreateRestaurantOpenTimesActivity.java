@@ -114,6 +114,10 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Show time pickers for selecting restaurant open times
+     * @param view view where the time picker will be shown
+     */
     public void showTimePicker(final View view) {
         final TimePicker firstTimePicker = (TimePicker) inflater.inflate(getResources().getLayout(R.layout.time_picker), null);
         firstTimePicker.setIs24HourView(true);
@@ -159,6 +163,10 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
 
     }
 
+    /**
+     * Action to do when the user wants to cancel a open time
+     * @param view view where the button will be shown
+     */
     public void setClosed(View view) {
         int datePickerId = getDatePickerIdByCloseId(view.getId());
         TextView textView = (TextView) findViewById(datePickerId);
@@ -170,6 +178,11 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         setCopyVisible();
     }
 
+    /**
+     * Get date pickers by close button id
+     * @param id close button id
+     * @return date picker id
+     */
     private int getDatePickerIdByCloseId(int id) {
         switch (id) {
             case R.id.monday_close:
@@ -190,6 +203,10 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         return -1;
     }
 
+    /**
+     * Show close button with id `id`
+     * @param id close button id
+     */
     private void setClosedVisible(int id) {
         switch (id) {
             case R.id.monday_date_picker:
@@ -209,6 +226,10 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Add open time to the current restaurant list
+     * @param openTime open time to add
+     */
     private void addOpenTimeToList(OpenTime openTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(openTime.getStartDate());
@@ -225,6 +246,10 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         this.openTimes.add(openTime);
     }
 
+    /**
+     * Remove open time to the current restaurant list by day
+     * @param day day of the open time to remove
+     */
     private void removeOpenTimeByDay(int day) {
         Calendar calendar = Calendar.getInstance();
         for (OpenTime time : this.openTimes) {
@@ -236,6 +261,9 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Show copy button visible
+     */
     private void setCopyVisible() {
         if (openTimes.isEmpty()) {
             this.menu.findItem(R.id.action_copy).setVisible(false);
@@ -248,6 +276,10 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Check if all open times in the list have the same hour
+     * @return true if all open times have the same hour, false otherwise
+     */
     private boolean sameHour() {
         if (this.openTimes.size() == 1) return true;
         else if (this.openTimes.size() == 7) return false;
@@ -274,6 +306,9 @@ public class CreateRestaurantOpenTimesActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * Make all open times with same hour
+     */
     private void copyOpenTimes() {
         OpenTime openTimeToCopy = this.openTimes.get(0);
 

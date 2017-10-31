@@ -92,6 +92,9 @@ public class GetRestaurantActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Initialize general restaurant information
+     */
     private void initializeGeneralInfo() {
         setTitle(restaurant.getName());
         TextView description, location, phone, website, numberOfTables, averagePunctuation;
@@ -127,17 +130,29 @@ public class GetRestaurantActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Initialize all restaurant open times
+     */
     private void initializeOpenTimes() {
         for (OpenTime openTime : restaurantService.getOpenTimes(restaurant)) {
             initializeOpenTimeTextView(openTime);
         }
     }
 
+    /**
+     * Initialize a specific open time
+     * @param openTime open time to initialize
+     */
     private void initializeOpenTimeTextView(OpenTime openTime) {
         TextView textView = (TextView) findViewById(getTextView(openTime.getStartDate()));
         textView.setText(Utils.parseStartEndDate(openTime.getStartDate(), openTime.getEndDate()));
     }
 
+    /**
+     * Get text view regarding a date
+     * @param date date 
+     * @return text view
+     */
     private int getTextView(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -160,6 +175,9 @@ public class GetRestaurantActivity extends BaseActivity {
         return 0;
     }
 
+    /**
+     * Initialize recycle view with dishes
+     */
     private void initializeDishes() {
         ArrayList<Dish> dishes = restaurantService.getDishes(restaurantId);
         if (dishes != null && !dishes.isEmpty()) {
@@ -174,6 +192,9 @@ public class GetRestaurantActivity extends BaseActivity {
         recyclerView.setAdapter(detailAdapter);
     }
 
+    /**
+     * Initialize recycle view with menus
+     */
     private void initializeMenus() {
         ArrayList<Menu> menus = restaurantService.getMenus(restaurantId);
         if (menus != null && !menus.isEmpty()) {
@@ -188,6 +209,10 @@ public class GetRestaurantActivity extends BaseActivity {
         recyclerView.setAdapter(detailAdapter);
     }
 
+    /**
+     * Add some user to the restaurant staff team
+     * @param view view where the button will be shown
+     */
     private void addUserToSomeRestaurant(final View view) {
         if (!restaurantService.isPartOfTheStuff(restaurantId, Preferences.getCurrentUserEmail())) return;
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.email_form), null);
@@ -223,6 +248,10 @@ public class GetRestaurantActivity extends BaseActivity {
         alertDialog.show();
     }
 
+    /**
+     * Show mini form to start creating a order in this restaurant
+     * @param v view where the button will be shown
+     */
     private void createOrder(final View v) {
         if (userService.hasActiveOrder(Preferences.getCurrentUserEmail()) != null) {
             Snackbar.make(v, getResources().getString(R.string.has_active_order), Snackbar.LENGTH_LONG).show();

@@ -269,6 +269,9 @@ public class MainActivity extends BaseActivity
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 
+    /**
+     * Set current user information
+     */
     private void setUserInfo() {
 
         if (restaurantId == null) {
@@ -316,6 +319,9 @@ public class MainActivity extends BaseActivity
 
     }
 
+    /**
+     * Check lists size
+     */
     private void checkListsSize() {
         if (findViewById(R.id.mock_active_orders) != null)
             checkList(R.id.mock_active_orders, orderService.getActiveOrders(restaurantId).size());
@@ -325,17 +331,29 @@ public class MainActivity extends BaseActivity
             checkList(R.id.restaurant_mock, restaurantService.getAll().size());
     }
 
+    /**
+     * Check if a list should be visible or not
+     * @param resourceId list id
+     * @param size current list size
+     */
     private void checkList(int resourceId, int size) {
         if (size != 0) findViewById(resourceId).setVisibility(View.GONE);
         else findViewById(resourceId).setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Remove tabs of application bar
+     */
     private void removeTabs() {
         if (tabs != null) {
             appBar.removeView(tabs);
         }
     }
 
+    /**
+     * Initialize fragment
+     * @param id fragment id
+     */
     private void initFragment(int id) {
         LayoutInflater inflater = getLayoutInflater();
         View v;
@@ -346,6 +364,10 @@ public class MainActivity extends BaseActivity
         frameLayout.addView(v);
     }
 
+    /**
+     * Show mini form to start creating a order in this restaurant
+     * @param view view where the button will be shown
+     */
     private void showTableNumberForm(final View view) {
         final LinearLayout tableNumberForm = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.table_number_form), null);
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
@@ -392,6 +414,9 @@ public class MainActivity extends BaseActivity
 
     }
 
+    /**
+     * Initialize active orders fragment
+     */
     private void initializeActiveOrders() {
         setTitle(getResources().getString(R.string.active_orders));
         removeTabs();
@@ -411,6 +436,9 @@ public class MainActivity extends BaseActivity
         recyclerView.setAdapter(orderAdapter);
     }
 
+    /**
+     * Initialize kitchen fragment
+     */
     private void initializeKitchen() {
         setTitle(getResources().getString(R.string.kitchen));
         removeTabs();
@@ -426,6 +454,9 @@ public class MainActivity extends BaseActivity
         recyclerView.setAdapter(kitchenAdapter);
     }
 
+    /**
+     * Initialize restaurant list fragment
+     */
     private void initializeListRestaurants() {
         setTitle(getResources().getString(R.string.list_restaurants));
         removeTabs();
@@ -441,6 +472,9 @@ public class MainActivity extends BaseActivity
         recyclerView.setAdapter(restaurantAdapter);
     }
 
+    /**
+     * Initialize analytics fragment
+     */
     private void initializeAnalytics() {
         setTitle(getResources().getString(R.string.analytics));
         removeTabs();
@@ -460,6 +494,9 @@ public class MainActivity extends BaseActivity
         tabs.setupWithViewPager(viewPager);
     }
 
+    /**
+     * Initialize current order fragment
+     */
     private void initializeCurrentOrder() {
         setTitle(getResources().getString(R.string.current_order));
         removeTabs();
@@ -502,6 +539,9 @@ public class MainActivity extends BaseActivity
         menusRecyclerView.setAdapter(menusOrderItemAdapter);
     }
 
+    /**
+     * Initialize pending reviews fragment
+     */
     private void initializePendingReviews() {
         setTitle(getResources().getString(R.string.pending_reviews));
         removeTabs();

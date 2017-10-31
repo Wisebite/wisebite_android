@@ -110,6 +110,9 @@ public class GetOrderActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Initialize recycle view with dishes
+     */
     private void initializeDishes() {
         ArrayList<OrderItem> orderItems = orderService.getOnlyDishItemsOf(order);
         if (orderItems != null && !orderItems.isEmpty()) {
@@ -125,6 +128,9 @@ public class GetOrderActivity extends BaseActivity {
         recyclerView.setAdapter(orderItemAdapter);
     }
 
+    /**
+     * Initialize recycle view with menus
+     */
     private void initializeMenus() {
         ArrayList<OrderItem> orderItems = orderService.getOnlyMenuItemsOf(order);
         if (orderItems != null && !orderItems.isEmpty()) {

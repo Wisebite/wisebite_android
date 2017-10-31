@@ -39,6 +39,9 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
 
     }
 
+    /**
+     * Initialize form inputs
+     */
     private void initializeForm() {
         inputName = (EditText) findViewById(R.id.input_name);
         inputLocation = (EditText) findViewById(R.id.input_location);
@@ -56,6 +59,9 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
 
     }
 
+    /**
+     * Initialize form submit button
+     */
     private void initializeSubmit() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -80,17 +86,29 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
         });
     }
 
+    /**
+     * Action to do when the user clicks to some input of the form
+     * @param view view where the input will be shown
+     */
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
 
+    /**
+     * Validate all data
+     * @return true if it's validated correctly, false otherwise
+     */
     private boolean validateAll() {
         return  validateName() && validateLocation() && validatePhone() && validateDescription() &&
                 validateWebsite() && validateNumberOfTables();
     }
 
+    /**
+     * Validate restaurant name
+     * @return true if it's validated correctly, false otherwise
+     */
     private boolean validateName() {
         String name = inputName.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
@@ -103,6 +121,10 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * Validate restaurant location
+     * @return true if it's validated correctly, false otherwise
+     */
     private boolean validateLocation() {
         String location = inputLocation.getText().toString().trim();
         if (TextUtils.isEmpty(location)) {
@@ -115,6 +137,10 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * Validate restaurant phone
+     * @return true if it's validated correctly, false otherwise
+     */
     private boolean validatePhone() {
         String phone = inputPhone.getText().toString().trim();
         if (TextUtils.isEmpty(phone) || !TextUtils.isDigitsOnly(phone)) {
@@ -127,6 +153,10 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * Validate restaurant description
+     * @return true if it's validated correctly, false otherwise
+     */
     private boolean validateDescription() {
         String description = inputDescription.getText().toString().trim();
         if (TextUtils.isEmpty(description)) {
@@ -139,6 +169,10 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * Validate restaurant website
+     * @return true if it's validated correctly, false otherwise
+     */
     private boolean validateWebsite() {
         String website = inputWebsite.getText().toString().trim();
         if (TextUtils.isEmpty(website)) {
@@ -151,6 +185,10 @@ public class CreateRestaurantInfoActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * Validate number of tables
+     * @return true if it's validated correctly, false otherwise
+     */
     private boolean validateNumberOfTables() {
         String numberOfTables = inputNumberOfTables.getText().toString().trim();
         if (TextUtils.isEmpty(numberOfTables) || !TextUtils.isDigitsOnly(numberOfTables)) {

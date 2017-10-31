@@ -74,6 +74,9 @@ public class CreateOrderActivity extends BaseActivity {
         overridePendingTransition(android.R.anim.slide_out_right, android.R.anim.slide_in_left);
     }
 
+    /**
+     * Initialize recycle view with dishes items
+     */
     private void initializeDishesItems() {
         selectedDishes = new ArrayList<>();
         totalPriceView = (TextView) findViewById(R.id.total_price);
@@ -87,6 +90,9 @@ public class CreateOrderActivity extends BaseActivity {
         recyclerView.setAdapter(orderItemDishAdapter);
     }
 
+    /**
+     * Initialize recycle view with menus items
+     */
     private void initializeMenusItems() {
         selectedMenusDishes = new ArrayList<>();
         totalPriceView = (TextView) findViewById(R.id.total_price);
@@ -101,6 +107,10 @@ public class CreateOrderActivity extends BaseActivity {
         recyclerView.setAdapter(orderItemMenuAdapter);
     }
 
+    /**
+     * Action to do when the user finish his/her order
+     * @param view view where the button will be shown
+     */
     private void done(View view) {
         if (selectedDishes.isEmpty() && selectedMenusDishes.isEmpty()) {
             Snackbar.make(view, getResources().getString(R.string.no_select_dishes), Snackbar.LENGTH_LONG).show();

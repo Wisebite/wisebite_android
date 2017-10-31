@@ -71,6 +71,9 @@ public class GetUserActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Initialize get user view
+     */
     private void initializeView() {
         String url = userService.getProfilePhoto(user.getId());
         if (url != null) {

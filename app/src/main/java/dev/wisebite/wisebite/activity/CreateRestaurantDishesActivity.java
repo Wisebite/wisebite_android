@@ -128,6 +128,9 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Initialize recycle view with menus
+     */
     private void initializeRecycleViewMenu() {
         menuAdapter = new MenuAdapter(menus);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_menu);
@@ -137,6 +140,9 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
         recyclerView.setAdapter(menuAdapter);
     }
 
+    /**
+     * Initialize recycle view with dishes
+     */
     private void initializeRecycleViewDish() {
         dishAdapter = new DishAdapter(dishes, false);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_dish);
@@ -146,6 +152,10 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
         recyclerView.setAdapter(dishAdapter);
     }
 
+    /**
+     * Show mini form for typing a dish
+     * @param view view when the form will be shown
+     */
     public void typeDish(View view) {
         floatingActionMenu.close(true);
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.dish_form), null);
@@ -182,6 +192,10 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
                 .show();
     }
 
+    /**
+     * Action to do when the user wants to create a menu
+     * @param view view when the button will be shown
+     */
     public void redirectToMenuActivity(View view) {
         floatingActionMenu.close(true);
         Intent intent = new Intent(CreateRestaurantDishesActivity.this, CreateMenuActivity.class);
@@ -189,6 +203,10 @@ public class CreateRestaurantDishesActivity extends BaseActivity {
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
+    /**
+     * Action to do when the user finish his/her dishes
+     * @param view view where the button will be shown
+     */
     public void done(View view) {
         if (dishes.isEmpty() && menus.isEmpty()) {
             Snackbar.make(view, getResources().getString(R.string.empty_dishes_menus), Snackbar.LENGTH_LONG)

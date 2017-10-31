@@ -74,6 +74,9 @@ public class ReviewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Initialize static data
+     */
     private void initializeStaticData() {
         TextView restaurantName = (TextView) findViewById(R.id.restaurant_name);
         TextView descriptionView = (TextView) findViewById(R.id.description);
@@ -89,6 +92,9 @@ public class ReviewActivity extends AppCompatActivity {
         ratingRestaurant.findViewById(R.id.dish_title).setVisibility(View.GONE);
     }
 
+    /**
+     * Initialize dynamic data
+     */
     private void initializeDynamicData() {
         List<OrderItem> orderItemList = orderService.getItems(order, false);
         this.reviews = createReviewMap(orderItemList);
@@ -100,6 +106,11 @@ public class ReviewActivity extends AppCompatActivity {
         recyclerView.setAdapter(reviewAdapter);
     }
 
+    /**
+     * Create a map with all items to have be reviewed
+     * @param orderItemList order items to review
+     * @return order items mapped
+     */
     private Map<String, Review> createReviewMap(List<OrderItem> orderItemList) {
         Map<String, Review> map = new HashMap<>();
         for (OrderItem item : orderItemList) {
@@ -112,6 +123,10 @@ public class ReviewActivity extends AppCompatActivity {
         return map;
     }
 
+    /**
+     * Save review
+     * @param view view where the button will be shown
+     */
     private void save(final View view) {
         LinearLayout ratingRestaurant = (LinearLayout) findViewById(R.id.rating_restaurant);
 
@@ -128,6 +143,10 @@ public class ReviewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Ask if the review is all completed
+     * @return true if it is completed, false otherwise
+     */
     private boolean isComplete() {
         Review review;
         for (String key : reviews.keySet()) {

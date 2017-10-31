@@ -90,6 +90,9 @@ public class CollectOrderActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Show a dialog when the activity is created
+     */
     private void showFirstDialog() {
         if (!orderService.isPartially(order)) {
             AlertDialog alertDialog = new AlertDialog.Builder(CollectOrderActivity.this)
@@ -151,14 +154,25 @@ public class CollectOrderActivity extends BaseActivity {
 
     }
 
+    /**
+     * Calculate price of all items in the current order
+     * @return Text to show
+     */
     private String getCollectAllMessage() {
         return "Do you have already collected " + orderService.getPriceOfOrder(order.getId()) + "€?";
     }
 
+    /**
+     * Calculate price of selected items in the current order
+     * @return Text to show
+     */
     private String getCollectInGroupsMessage() {
         return "Do you have already collected " + orderItemService.getPriceOfOrderItems(selectedItems) + "€?";
     }
 
+    /**
+     * Initialize recycle view with order items
+     */
     private void initializeOrderItems() {
         this.selectedItems = new ArrayList<>();
         ArrayList<OrderItem> orderItems = orderService.getItems(order, true);

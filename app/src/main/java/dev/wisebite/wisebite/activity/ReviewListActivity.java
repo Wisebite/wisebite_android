@@ -54,6 +54,10 @@ public class ReviewListActivity extends AppCompatActivity {
         initializeData();
     }
 
+    /**
+     * Get all reviews
+     * @return all reviews
+     */
     private List<Review> getReviews() {
         List<Review> reviewList = new ArrayList<>();
 
@@ -82,6 +86,9 @@ public class ReviewListActivity extends AppCompatActivity {
         return reviewList;
     }
 
+    /**
+     * Initialize recycle view with all data
+     */
     private void initializeData() {
         if (reviews.size() != 0) findViewById(R.id.review_list_mock).setVisibility(View.GONE);
         else findViewById(R.id.review_list_mock).setVisibility(View.VISIBLE);

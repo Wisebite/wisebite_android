@@ -83,6 +83,9 @@ public class CreateMenuActivity extends BaseActivity {
         overridePendingTransition(android.R.anim.slide_out_right, android.R.anim.slide_in_left);
     }
 
+    /**
+     * Show mini form for typing menu information
+     */
     private void showMenuInfoForm() {
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.dish_form), null);
         AlertDialog alertDialog = new AlertDialog.Builder(CreateMenuActivity.this)
@@ -132,6 +135,9 @@ public class CreateMenuActivity extends BaseActivity {
         alertDialog.show();
     }
 
+    /**
+     * Initialize recycle view with main dishes
+     */
     private void initializeRecycleViewMainDishes() {
         mainDishesAdapter = new DishAdapter(mainDishes, true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_main_dishes);
@@ -141,6 +147,9 @@ public class CreateMenuActivity extends BaseActivity {
         recyclerView.setAdapter(mainDishesAdapter);
     }
 
+    /**
+     * Initialize recycle view with secondary dishes
+     */
     private void initializeRecycleViewSecondaryDishes() {
         secondaryDishesAdapter = new DishAdapter(secondaryDishes, true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_secondary_dishes);
@@ -150,6 +159,9 @@ public class CreateMenuActivity extends BaseActivity {
         recyclerView.setAdapter(secondaryDishesAdapter);
     }
 
+    /**
+     * Initialize recycle view with other dishes
+     */
     private void initializeRecycleViewOtherDishes() {
         otherDishesAdapter = new DishAdapter(otherDishes, true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_other_dishes);
@@ -159,6 +171,10 @@ public class CreateMenuActivity extends BaseActivity {
         recyclerView.setAdapter(otherDishesAdapter);
     }
 
+    /**
+     * Show mini form for typing a main dish
+     * @param view view where the form will be shown
+     */
     public void typeMainDishes(View view) {
         floatingActionMenu.close(true);
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.dish_form), null);
@@ -193,6 +209,10 @@ public class CreateMenuActivity extends BaseActivity {
                 .show();
     }
 
+    /**
+     * Show mini form for typing a secondary dish
+     * @param view view where the form will be shown
+     */
     public void typeSecondaryDishes(View view) {
         floatingActionMenu.close(true);
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.dish_form), null);
@@ -224,6 +244,10 @@ public class CreateMenuActivity extends BaseActivity {
                 .show();
     }
 
+    /**
+     * Show mini form for typing a other dish
+     * @param view view where the form will be shown
+     */
     public void typeOtherDishes(View view) {
         floatingActionMenu.close(true);
         final LinearLayout form = (LinearLayout) inflater.inflate(getResources().getLayout(R.layout.dish_form), null);
@@ -255,6 +279,10 @@ public class CreateMenuActivity extends BaseActivity {
                 .show();
     }
 
+    /**
+     * Action to do when the user finish his/her menu
+     * @param view view where the button will be shown
+     */
     private void done(View view) {
         if (mainDishes.isEmpty() && secondaryDishes.isEmpty() && otherDishes.isEmpty()) {
             Snackbar.make(view, getResources().getString(R.string.no_select_dishes_menu), Snackbar.LENGTH_LONG).show();

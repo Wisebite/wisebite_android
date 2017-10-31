@@ -128,11 +128,18 @@ public class LoginActivity extends BaseActivity implements
         }
     }
 
+    /**
+     * Sign in user
+     */
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /**
+     * Catch when a user is signed in
+     * @param result data cached
+     */
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -158,6 +165,9 @@ public class LoginActivity extends BaseActivity implements
 
     }
 
+    /**
+     * Show progress dialog
+     */
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -168,12 +178,18 @@ public class LoginActivity extends BaseActivity implements
         mProgressDialog.show();
     }
 
+    /**
+     * Hide progress dialog
+     */
     private void hideProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();
         }
     }
 
+    /**
+     * Start animations
+     */
     private void startAnimations() {
         Animation alpha = AnimationUtils.loadAnimation(this, R.anim.alpha);
         Animation translate = AnimationUtils.loadAnimation(this, R.anim.translate);
@@ -189,6 +205,9 @@ public class LoginActivity extends BaseActivity implements
         this.mSignInButton.startAnimation(alpha);
     }
 
+    /**
+     * Initialise all application data
+     */
     private void initializeService() {
         this.userService = ServiceFactory.getUserService(LoginActivity.this);
         this.userService.setOnChangedListener(new Repository.OnChangedListener() {
@@ -228,12 +247,19 @@ public class LoginActivity extends BaseActivity implements
 
     }
 
+    /**
+     * Start application
+     */
     private void initApp() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         LoginActivity.this.finish();
     }
 
+    /**
+     * Increase data bases loaded counter
+     * @param type event listener type
+     */
     private void increaseLoaded(Repository.OnChangedListener.EventType type) {
         if (type.equals(Repository.OnChangedListener.EventType.Full)) {
             Utils.increaseLoaded();
